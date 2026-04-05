@@ -1037,6 +1037,9 @@
      * 重写图片渲染，限制最大宽度，显示文件名
      */
     renderer.image = function (href, title, text) {
+        if(!(/^https?:\/\//i.test(href))){
+            href = resolvePath(currentFilePath, href);
+        }
         const fileName = getFileBaseName(href);
         const displayName = (fileName==text? fileName : (text + '['+fileName+']')) || fileName || text || '';
         if(hasNoPreviewParam(href)){
