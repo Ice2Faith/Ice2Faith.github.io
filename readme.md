@@ -25,6 +25,23 @@
 - XML节点的DTD约束文件：[procedure.dtd](./procedure.dtd)
 - 产品对比分析文档：[product-compare.md](./product-compare.md)
 
+## 项目地址
+
+- 本文档以及文档中提到的实现代码
+- 均在项目地址中可以检索到
+
+**github 源仓库**
+
+- 核心模块：[i2f-jdbc-procedure](https://github.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-jdk/i2f-jdbc-procedure/src/main)
+- springboot 启动模块：[i2f-springboot-jdbc-bql-starter](https://github.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-jdbc-bql-starter/src/main/java/i2f/springboot/jdbc/bql/procedure)
+
+**gitee 镜像仓库**
+
+- 核心模块：[i2f-jdbc-procedure](https://gitee.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-jdk/i2f-jdbc-procedure/src/main)
+- springboot 启动模块：[i2f-springboot-jdbc-bql-starter](https://gitee.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-jdbc-bql-starter/src/main/java/i2f/springboot/jdbc/bql/procedure)
+
+
+
 ---
 
 **文档版本：** 1.0  
