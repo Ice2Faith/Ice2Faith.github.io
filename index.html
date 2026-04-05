@@ -1,185 +1,1389 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>Ice2Faith</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>文档查看器</title>
+
+    <!-- 可通过 https://cdnjs.com/ 查找在线CDN资源 -->
+
+    <!-- marked.js - Markdown 解析 -->
+    <script src="./libs/marked@9.1.6/marked.min.js"></script>
+    <!-- highlight.js - 代码高亮（id="hljs-css" 用于 JS 动态切换主题） -->
+    <link id="hljs-css" rel="stylesheet" href="./libs/highlight.js/11.9.0/styles/github.min.css"/>
+    <script src="./libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- highlight.js 常用语言包 -->
+    <script src="./libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/shell.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/groovy.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/ini.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/properties.min.js"></script>
+
+    <script src="./libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/css.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/go.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/kotlin.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/makefile.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/lua.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/nginx.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/perl.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/scala.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/vbscript.min.js"></script>
+    <script src="./libs/highlight.js/11.9.0/languages/accesslog.min.js"></script>
+
+    <style>
+        /* ===== 基础重置 ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --sidebar-width: 280px;
+            --toc-width: 240px;
+            --header-height: 52px;
+            --bg: #f6f8fa;
+            --surface: #ffffff;
+            --border: #e1e4e8;
+            --text: #24292f;
+            --text-muted: #6e7781;
+            --accent: #0969da;
+            --accent-hover: #0550ae;
+            --code-bg: #f6f8fa;
+            --sidebar-bg: #f0f2f5;
+            --toc-active: #0969da;
+            --scrollbar: #c8ccd0;
+        }
+
+        html {
+            font-size: 15px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== 顶部导航栏 ===== */
+        #top-bar {
+            height: var(--header-height);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+        }
+
+        #top-bar .logo {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: .3px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        #breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: .82rem;
+            color: var(--text-muted);
+            overflow: hidden;
+            flex: 1;
+        }
+
+        #breadcrumb span {
+            white-space: nowrap;
+        }
+
+        #breadcrumb .sep {
+            color: var(--border);
+        }
+
+        #breadcrumb .current {
+            color: var(--text);
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #top-bar .home-btn {
+            cursor: pointer;
+            color: var(--accent);
+            font-size: .82rem;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            white-space: nowrap;
+            transition: background .15s;
+            flex-shrink: 0;
+        }
+
+        #top-bar .home-btn:hover {
+            background: var(--bg);
+        }
+
+        /* ===== 主布局 ===== */
+        #layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ===== 左侧边栏（文件列表 / 标题目录） ===== */
+        #sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow: hidden;
+            transition: width 0.22s ease;
+        }
+
+        /* 桌面端 - 折叠态 */
+        body.sidebar-collapsed #sidebar {
+            width: 0;
+            border-right-width: 0;
+        }
+
+        #sidebar-header {
+            padding: 12px 14px 8px;
+            font-size: .72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        #toc-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        #toc-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #toc-container::-webkit-scrollbar-thumb {
+            background: var(--scrollbar);
+            border-radius: 2px;
+        }
+
+        .toc-item {
+            display: block;
+            padding: 5px 14px 5px calc(14px + var(--indent, 0px));
+            font-size: .83rem;
+            color: var(--text);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            line-height: 1.45;
+            cursor: pointer;
+            transition: background .1s, color .1s, border-color .1s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .toc-item:hover {
+            background: rgba(9, 105, 218, .06);
+            color: var(--accent);
+        }
+
+        .toc-item.active {
+            color: var(--toc-active);
+            border-left-color: var(--toc-active);
+            background: rgba(9, 105, 218, .07);
+            font-weight: 500;
+        }
+
+        .toc-item.h1 {
+            --indent: 0px;
+            font-weight: 600;
+        }
+
+        .toc-item.h2 {
+            --indent: 10px;
+        }
+
+        .toc-item.h3 {
+            --indent: 20px;
+            font-size: .8rem;
+            color: var(--text-muted);
+        }
+
+        .toc-item.h4 {
+            --indent: 30px;
+            font-size: .78rem;
+            color: var(--text-muted);
+        }
+
+        .toc-item.h5, .toc-item.h6 {
+            --indent: 38px;
+            font-size: .76rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== 内容区域 ===== */
+        #content-wrap {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            background: var(--bg);
+        }
+
+        #content-wrap::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #content-wrap::-webkit-scrollbar-thumb {
+            background: var(--scrollbar);
+            border-radius: 3px;
+        }
+
+        #content {
+            margin: 0 auto;
+            padding: 36px 40px 80px;
+            background: var(--surface);
+            min-height: 100%;
+            box-shadow: 0 0 0 1px var(--border);
+        }
+
+        /* ===== 加载/错误状态 ===== */
+        #loading, #error-msg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            font-size: .9rem;
+            color: var(--text-muted);
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #error-msg {
+            color: #cf222e;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== Markdown 内容样式 ===== */
+        #content h1, #content h2, #content h3,
+        #content h4, #content h5, #content h6 {
+            margin-top: 1.6em;
+            margin-bottom: .5em;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text);
+            scroll-margin-top: calc(var(--header-height) + 16px);
+        }
+
+        #content h1 {
+            font-size: 1.75rem;
+            padding-bottom: .4em;
+            border-bottom: 2px solid var(--border);
+        }
+
+        #content h2 {
+            font-size: 1.3rem;
+            padding-bottom: .3em;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #content h3 {
+            font-size: 1.1rem;
+        }
+
+        #content h4 {
+            font-size: 1rem;
+        }
+
+        #content h5 {
+            font-size: .9rem;
+        }
+
+        #content h6 {
+            font-size: .85rem;
+            color: var(--text-muted);
+        }
+
+        #content p {
+            margin: .75em 0;
+            line-height: 1.75;
+        }
+
+        #content ul, #content ol {
+            margin: .6em 0 .6em 1.6em;
+            line-height: 1.75;
+        }
+
+        #content li {
+            margin: .2em 0;
+        }
+
+        #content li > ul, #content li > ol {
+            margin-top: .1em;
+            margin-bottom: .1em;
+        }
+
+        #content blockquote {
+            margin: 1em 0;
+            padding: 10px 16px;
+            border-left: 4px solid #d0d7de;
+            background: #f6f8fa;
+            color: var(--text-muted);
+            border-radius: 0 6px 6px 0;
+        }
+
+        #content blockquote p {
+            margin: 0;
+        }
+
+        #content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.5em 0;
+        }
+
+        #content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+            font-size: .875rem;
+            overflow-x: auto;
+            display: block;
+        }
+
+        #content th, #content td {
+            border: 1px solid var(--border);
+            padding: 7px 13px;
+            text-align: left;
+        }
+
+        #content th {
+            background: #f6f8fa;
+            font-weight: 600;
+        }
+
+        #content tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        #content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        #content a:hover {
+            text-decoration: underline;
+            color: var(--accent-hover);
+        }
+
+        /* 行内代码 */
+        #content code:not(pre code) {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-size: .85em;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            color: #cf222e;
+        }
+
+        /* ===== 代码块容器 ===== */
+        #content pre {
+            margin: 1em 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            background: #f6f8fa;
+            position: relative;
+        }
+
+        /* 语言标签 */
+        #content pre .lang-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 2px 9px;
+            font-size: .7rem;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            color: var(--text-muted);
+            background: rgba(246, 248, 250, .9);
+            border-bottom-left-radius: 6px;
+            border-left: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            text-transform: lowercase;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 代码块滚动区 */
+        #content pre code.hljs {
+            display: block;
+            overflow-x: auto;
+            overflow-y: hidden; /* 防止 overflow-x:auto 隐式触发竖向滚动条 */
+            padding: 0;
+            background: transparent;
+            font-size: .83rem;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            line-height: 1.6;
+            border: none;
+            color: inherit;
+        }
+
+        /* ===== 代码行号 ===== */
+        .code-line {
+            display: inline-block;
+            min-width: 100%;
+        }
+
+        .code-line:hover {
+            background: rgba(9, 105, 218, .05);
+        }
+
+        .line-num {
+            flex-shrink: 0;
+            width: 44px;
+            min-width: 44px;
+            padding: 0 10px 0 0;
+            text-align: right;
+            color: #9ea7b3;
+            font-size: .8rem;
+            user-select: none;
+            border-right: 1px solid #e1e4e8;
+            margin-right: 14px;
+            line-height: 1.6;
+        }
+
+        .line-content {
+            flex: 1;
+            white-space: pre;
+            line-height: 1.6;
+        }
+
+        /* 代码块整体内容区 padding */
+        .hljs-line-wrapper {
+            display: block; /* span 默认 inline，需显式 block 否则高度计算异常 */
+            padding: 14px 16px 14px 0;
+        }
+
+        /* ===== 非 md 文件提示 ===== */
+        .non-md-notice {
+            background: #fff8c5;
+            border: 1px solid #d4a72c;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 1em 0;
+            font-size: .88rem;
+            color: #633c01;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 220px;
+            }
+
+            #content {
+                padding: 20px 18px 60px;
+            }
+        }
+
+        @media (max-width: 580px) {
+            /* 移动端：sidebar 改为固定定位抽屉，默认滑出屏幕外 */
+            #sidebar {
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                bottom: 0;
+                width: var(--sidebar-width) !important;
+                transform: translateX(-100%);
+                transition: transform 0.25s ease;
+                z-index: 60;
+                box-shadow: 3px 0 16px rgba(0, 0, 0, 0.18);
+            }
+
+            body.sidebar-open #sidebar {
+                transform: translateX(0);
+            }
+
+            body.sidebar-open #sidebar-overlay {
+                display: block;
+            }
+
+            #content {
+                padding: 16px 14px 60px;
+            }
+        }
+
+        /* ===== Logo 点击触发切换 ===== */
+        #app-logo {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #app-logo:hover {
+            opacity: 0.82;
+        }
+
+        /* ===== 侧边栏遮罩（移动端）===== */
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.32);
+            z-index: 55;
+        }
+
+        /* ===== 标题搜索框 ===== */
+        #toc-search-wrap {
+            padding: 7px 10px 6px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #toc-search {
+            display: block;
+            width: 100%;
+            padding: 5px 26px 5px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.79rem;
+            font-family: inherit;
+            background: var(--surface);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        #toc-search:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.14);
+        }
+
+        #toc-search::placeholder {
+            color: var(--text-muted);
+        }
+
+        #toc-search-clear {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1;
+            padding: 2px 4px;
+            border-radius: 3px;
+            display: none;
+        }
+
+        #toc-search-clear:hover {
+            color: var(--text);
+            background: var(--border);
+        }
+
+        #toc-search-clear.visible {
+            display: block;
+        }
+
+        /* 无匹配结果提示 */
+        #toc-no-match {
+            display: none;
+            padding: 10px 14px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== 深色主题 ===== */
+        body.dark {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #7d8590;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --code-bg: #1c2128;
+            --sidebar-bg: #13161d;
+            --toc-active: #58a6ff;
+            --scrollbar: #30363d;
+            color-scheme: dark;
+        }
+
+        /* 修正深色模式下硬编码颜色的元素 */
+        body.dark #content th {
+            background: #21262d;
+        }
+
+        body.dark #content tr:nth-child(even) {
+            background: #1c2128;
+        }
+
+        body.dark #content pre {
+            background: #1c2128;
+        }
+
+        body.dark #content blockquote {
+            background: #1c2128;
+            border-left-color: #30363d;
+        }
+
+        body.dark #content code:not(pre code) {
+            color: #ff7b72;
+            background: #1c2128;
+            border-color: #30363d;
+        }
+
+        body.dark .line-num {
+            color: #6e7681;
+            border-right-color: #30363d;
+        }
+
+        body.dark .non-md-notice {
+            background: #1b1f24;
+            border-color: #30363d;
+            color: #7d8590;
+        }
+
+        body.dark #error-msg {
+            color: #ff7b72;
+        }
+
+        body.dark #top-bar {
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+        }
+    </style>
 </head>
 <body>
-    <a class="nav-item"
-         href="https://github.com/Ice2Faith" target="_blank"
-         style="width: calc(100% - 64px);background: linear-gradient(to bottom right, #ffffff, #21c2c2);box-shadow: #21c2c2 5px 5px 8px 3px;">
-        Github Home
-    </a>
 
-    <div class="main-item">
-        <hr style="clear: both"/>
-        <a class="nav-item"
-           href="http://47.92.88.61:21024/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #1c92ff);box-shadow: #1c92ff 5px 5px 8px 3px;">
-            i2f-web
-        </a>
-        <a class="nav-item"
-           href="http://47.92.88.61:22048/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #46dc1d);box-shadow: #46dc1d 5px 5px 8px 3px;">
-            i2f-app
-        </a>
-        <a class="nav-item"
-           href="http://47.92.88.61:24096/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #808080);box-shadow: #808080 5px 5px 8px 3px;">
-            i2f-ui
-        </a>
-        <a class="nav-item"
-           href="http://47.92.88.61:8888/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #812fde);box-shadow: #812fde 5px 5px 8px 3px;">
-            sgp-web
-        </a>
-        <a class="nav-item"
-           href="http://47.92.88.61:9999/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #af25cd);box-shadow: #af25cd 5px 5px 8px 3px;">
-            sgp-app
-        </a>
-        <a class="nav-item"
-           href="http://47.92.88.61:10333/dist/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #ec9447);box-shadow: #ec9447 5px 5px 8px 3px;">
-            three-js-basic
-        </a>
-        <a class="nav-item"
-           href="http://47.92.88.61:10334/dist/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #a4c621);box-shadow: #a4c621 5px 5px 8px 3px;">
-            three-js-tree
-        </a>
-
-        <hr style="clear: both"/>
-        <a class="nav-item"
-           href="http://47.92.88.61:8849/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #2a71a7);box-shadow: #2a71a7 5px 5px 8px 3px;">
-            sentinel
-        </a>
-        <a class="nav-item"
-           href="http://47.92.88.61:8848/nacos/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #fc7821);box-shadow: #fc7821 5px 5px 8px 3px;">
-            nacos
-        </a>
-
-        <hr style="clear: both"/>
-        <a class="nav-item"
-           href="https://www.douyin.com/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #e81cff);box-shadow: #e81cff 5px 5px 8px 3px;">
-            抖音
-        </a>
-        <a class="nav-item"
-           href="https://www.weibo.com/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #ff2a2a);box-shadow: #ff2a2a 5px 5px 8px 3px;">
-            微博
-        </a>
-        <a class="nav-item"
-           href="https://www.toutiao.com/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #e31818);box-shadow: #e31818 5px 5px 8px 3px;">
-            头条
-        </a>
-        <a class="nav-item"
-           href="https://www.kuaishou.com/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #ff6c0e);box-shadow: #ff6c0e 5px 5px 8px 3px;">
-            快手
-        </a>
-
-        <hr style="clear: both"/>
-        <a class="nav-item"
-           href="https://spring.io/projects/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #1eea20);box-shadow: #1eea20 5px 5px 8px 3px;">
-            spring.io
-        </a>
-        <a class="nav-item"
-           href="https://mvnrepository.com/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #4291d0);box-shadow: #4291d0 5px 5px 8px 3px;">
-            maven
-        </a>
-        <a class="nav-item"
-           href="https://cn.vuejs.org/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #35c63c);box-shadow: #35c63c 5px 5px 8px 3px;">
-            vue
-        </a>
-        <a class="nav-item"
-           href="https://www.npmjs.com/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #ff9747);box-shadow: #ff9747 5px 5px 8px 3px;">
-            npm
-        </a>
-        <a class="nav-item"
-           href="https://echarts.apache.org/examples/zh/index.html#chart-type-line" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #bd34a0);box-shadow: #bd34a0 5px 5px 8px 3px;">
-            echarts
-        </a>
-        <a class="nav-item"
-           href="https://www.antdv.com/components/overview" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #589bff);box-shadow: #589bff 5px 5px 8px 3px;">
-            ant-design-vue
-        </a>
-        <a class="nav-item"
-           href="https://vant-ui.github.io/vant/#/zh-CN/" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #1b95ff);box-shadow: #1b95ff 5px 5px 8px 3px;">
-            vant
-        </a>
-        <a class="nav-item"
-           href="https://element.eleme.cn/#/zh-CN/component/form" target="_blank"
-           style="background: linear-gradient(to bottom right, #ffffff, #00a5ff);box-shadow: #00a5ff 5px 5px 8px 3px;">
-            element-ui
-        </a>
+<!-- 顶部导航栏 -->
+<div id="top-bar">
+    <div class="logo" id="app-logo">&#128196; Docs</div>
+    <div id="breadcrumb">
+        <span class="sep">/</span>
+        <span class="current" id="crumb-file">readme.md</span>
     </div>
+    <a class="home-btn" href="#" onclick="event.preventDefault();navigateTo(appConfig.index)">&#127968; 首页</a>
+    <button id="theme-btn" class="home-btn" title="切换深色/浅色主题">🌙</button>
+</div>
 
-    <div class="footer-item">
-        <hr/>
-        项目为预览项目，并无用户使用，属于个人学习使用<br/>
-        服务器或者服务可能随时关闭，不保证稳定性<br/>
-        服务器配置和带宽都很低，这已经是最多能运行的项目了<br/>
+<!-- 移动端侧边栏遮罩层 -->
+<div id="sidebar-overlay"></div>
+
+<!-- 主布局 -->
+<div id="layout">
+    <!-- 左侧目录 -->
+    <nav id="sidebar">
+        <div id="sidebar-header">目录导航</div>
+        <!-- 标题搜索框 -->
+        <div id="toc-search-wrap">
+            <input id="toc-search" type="text" placeholder="🔍 搜索标题..." autocomplete="off" spellcheck="false"/>
+            <button id="toc-search-clear" title="清除">&#10005;</button>
+        </div>
+        <div id="toc-container">
+            <div style="padding:20px 14px;color:var(--text-muted);font-size:.8rem;">加载中...</div>
+            <div id="toc-no-match">未找到匹配的标题</div>
+        </div>
+    </nav>
+
+    <!-- 内容区 -->
+    <div id="content-wrap">
+        <div id="content">
+            <div id="loading">
+                <div class="spinner"></div>
+                <span>正在加载文档...</span>
+            </div>
+        </div>
     </div>
+</div>
+
+<script>
+    /* ===================================================
+       工具函数
+       =================================================== */
+
+    /**
+     * 从 URL hash 中解析当前要加载的文件路径
+     * hash 格式: #readme.md 或 #./framework.md 等
+     */
+    function getFileFromHash() {
+        const hash = decodeURIComponent(location.hash);
+        if (!hash || hash === '#' || hash === '#/') return 'readme.md';
+        const raw = hash.startsWith('#') ? hash.slice(1) : hash;
+        // 清理开头的 ./
+        return raw.replace(/^\.\//, '');
+    }
+
+    /**
+     * 将一个相对路径相对于 basePath 进行解析
+     * 例如: resolvePath('subdir/a.md', '../b.md') => 'b.md'
+     *       resolvePath('readme.md', './framework.md') => 'framework.md'
+     */
+    function resolvePath(basePath, relativePath) {
+        // 如果是绝对路径 (http/https) 直接返回
+        if (/^https?:\/\//i.test(relativePath)) return relativePath;
+        // 如果相对路径以 / 开头，也直接返回（不跳转到其他md）
+        if (relativePath.startsWith('/')) return relativePath;
+
+        const baseDir = basePath.includes('/') ? basePath.replace(/\/[^/]+$/, '') : '';
+        const parts = (baseDir ? baseDir + '/' + relativePath : relativePath).split('/');
+        const resolved = [];
+        for (const part of parts) {
+            if (part === '..') {
+                resolved.pop();
+            } else if (part !== '.') {
+                resolved.push(part);
+            }
+        }
+        return resolved.join('/');
+    }
+
+    /**
+     * 判断路径是否是 markdown 文件
+     */
+    function isMdFile(path) {
+        const ext = getFileSuffix(path).toLowerCase();
+        return '.md' == ext;
+    }
+
+    /**
+     * 文本类文件扩展名 → 对应的语言标识（用于语法高亮）
+     * 空字符串表示纯文本无高亮
+     */
+    const TEXT_FILE_SUFFIX_LANGS = {
+        '.txt': '',
+        '.py': 'python',
+        '.java': 'java',
+        '.sql': 'sql',
+        '.xml': 'xml',
+        '.dtd': 'xml',
+        '.yaml': 'yaml',
+        '.yml': 'yaml',
+        '.json': 'json',
+        '.js': 'javascript',
+        '.jsp': 'xml',
+        '.properties': 'properties',
+        '.ini': 'ini',
+        '.conf': 'ini',
+        '.cnf': 'ini',
+        '.config': 'ini',
+        '.sh': 'shell',
+        '.bat': 'shell',
+        '.cmd': 'shell',
+        '.c': 'cpp',
+        '.h': 'cpp',
+        '.cpp': 'cpp',
+        '.hpp': 'cpp',
+        '.cs': 'cpp',
+        '.css': 'css',
+        '.sass': 'css',
+        '.less': 'css',
+        '.go': 'go',
+        '.kt': 'kotlin',
+        '.kts': 'kotlin',
+        '.lua': 'lua',
+        '.perl': 'perl',
+        '.scala': 'scala',
+        '.ts': 'typescript',
+        '.vbs': 'vbscript',
+        '.log': 'accesslog',
+        '.gitignore': '',
+        '.gitattributes': '',
+        '.bnf': '',
+        '.g4': '',
+        '.vue': 'xml',
+        '.csv': '',
+        '.lock': '',
+    };
+
+    const TEXT_FILE_NAME_LANGS = {
+        'dockerfile': 'dockerfile',
+        'makefile': 'makefile',
+        'nginx.conf': 'nginx',
+        'license': '',
+    }
+
+
+    /**
+     *
+     * @param path {string}
+     */
+    function getFileSuffix(path) {
+        if (!path || path == '') {
+            return '';
+        }
+        let idx = path.lastIndexOf('.');
+        if (idx >= 0) {
+            return path.substring(idx);
+        }
+        return '';
+    }
+
+    function getFileName(path) {
+        if (!path || path == '') {
+            return '';
+        }
+        let idx = path.lastIndexOf('/');
+        if (idx >= 0) {
+            return path.substring(idx + 1);
+        }
+        return '';
+    }
+
+    /** 判断是否为页内可渲染的文本文件 */
+    function isTextFile(path) {
+        const name = getFileName(path).toLowerCase();
+        if (name in TEXT_FILE_NAME_LANGS) {
+            return true;
+        }
+        const ext = getFileSuffix(path).toLowerCase();
+        if (ext in TEXT_FILE_SUFFIX_LANGS) {
+            return true;
+        }
+        return false;
+    }
+
+    /** 根据文件路径获取语言标识 */
+    function getFileLang(path) {
+        const name = getFileName(path).toLowerCase();
+        let lang = TEXT_FILE_NAME_LANGS[name];
+        if (lang && lang != '') {
+            return lang;
+        }
+        const ext = getFileSuffix(path).toLowerCase();
+        lang = TEXT_FILE_SUFFIX_LANGS[ext];
+        if (lang && lang != '') {
+            return lang;
+        }
+        return '';
+    }
+
+    /**
+     * 生成标题的锚点 id (与 marked 默认行为保持一致)
+     */
+    function headingId(text) {
+        return text
+            .toLowerCase()
+            .replace(/<[^>]+>/g, '')       // 去除 HTML 标签
+            .replace(/[^\w\u4e00-\u9fa5\- ]/g, '')
+            .trim()
+            .replace(/\s+/g, '-');
+    }
+
+    /* ===================================================
+       Marked 配置
+       =================================================== */
+    const renderer = new marked.Renderer();
+
+    // 记录当前文件路径（用于相对链接解析）
+    let currentFilePath = 'readme.md';
+
+    /**
+     * 重写链接渲染，拦截 .md 相对路径
+     */
+    renderer.link = function (href, title, text) {
+        if (!href) return `<a>${text}</a>`;
+
+        // 处理绝对外链
+        if (/^https?:\/\//i.test(href)) {
+            return `<a href="${href}" title="${title || ''}" target="_blank" rel="noopener">${text}</a>`;
+        }
+
+        // 相对路径
+        const resolved = resolvePath(currentFilePath, href);
+
+        if (isMdFile(resolved)) {
+            // md 文件：使用 JS 跳转
+            const encoded = encodeURIComponent(resolved);
+            return `<a href="#${encoded}" data-md-link="${resolved}" title="${title || ''}">${text}</a>`;
+        }
+
+        // 文本类文件：在页内作为代码块渲染，不外跳
+        if (isTextFile(resolved)) {
+            const encoded = encodeURIComponent(resolved);
+            return `<a href="#${encoded}" data-md-link="${resolved}" title="${title || ''}">${text}</a>`;
+        }
+
+        // 其他非文本文件：新窗口打开
+        return `<a href="${href}" title="${title || ''}" target="_blank" rel="noopener">${text}</a>`;
+    };
+
+    /**
+     * 重写标题渲染，添加锚点 id
+     */
+    renderer.heading = function (text, level) {
+        const id = headingId(text);
+        return `<h${level} id="${id}">${text}</h${level}>`;
+    };
+
+    /**
+     * 重写代码块渲染，添加语言标签（行号在后处理阶段添加）
+     */
+    renderer.code = function (code, language) {
+        const lang = language ? language.toLowerCase() : '';
+        const validLang = lang && hljs.getLanguage(lang) ? lang : null;
+        let highlighted;
+        try {
+            highlighted = validLang
+                ? hljs.highlight(code, {language: validLang, ignoreIllegals: true}).value
+                : hljs.highlightAuto(code).value;
+        } catch (e) {
+            highlighted = escapeHtml(code);
+        }
+        const badge = (validLang || lang) ? `<span class="lang-badge">${validLang || lang}</span>` : '';
+        // 用占位符 data-code，后处理添加行号
+        return `<pre data-lang="${validLang || lang || ''}">${badge}<code class="hljs${validLang ? ' language-' + validLang : ''}">${highlighted}</code></pre>`;
+    };
+
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    marked.setOptions({
+        renderer,
+        gfm: true,
+        breaks: false,
+        pedantic: false,
+    });
+
+    /* ===================================================
+       行号注入
+       =================================================== */
+    function injectLineNumbers(container) {
+        container.querySelectorAll('pre > code.hljs').forEach(codeEl => {
+            // 将 innerHTML 按行拆分并包裹行号
+            const rawHtml = codeEl.innerHTML;
+            const lines = rawHtml.split('\n');
+            // 去掉末尾多余的空行（highlight.js 会在末尾加换行）
+            if (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();
+
+            const totalLines = lines.length;
+            const numWidth = String(totalLines).length;
+
+            const wrapped = lines.map((lineHtml, i) => {
+                const num = String(i + 1).padStart(numWidth, ' ');
+                return `<span class="code-line"><span class="line-num">${num}</span><span class="line-content">${lineHtml}</span></span>`;
+            }).join('\n');
+
+            codeEl.innerHTML = `<span class="hljs-line-wrapper">${wrapped}</span>`;
+        });
+    }
+
+    /* ===================================================
+       目录生成
+       =================================================== */
+    function buildToc(container) {
+        const headings = container.querySelectorAll('h1,h2,h3,h4,h5,h6');
+        const tocEl = document.getElementById('toc-container');
+
+        if (headings.length === 0) {
+            tocEl.innerHTML = '<div style="padding:16px 14px;color:var(--text-muted);font-size:.8rem;">本文档无标题目录</div>';
+            return;
+        }
+
+        const items = [];
+        headings.forEach(h => {
+            const level = parseInt(h.tagName[1]);
+            const text = h.textContent.trim();
+            const id = h.id || headingId(text);
+            h.id = id; // 确保 id 已设置
+            items.push({level, text, id});
+        });
+
+        tocEl.innerHTML = items.map(item =>
+            `<a class="toc-item h${item.level}" href="#${encodeURIComponent(item.id)}"
+             data-anchor="${item.id}" title="${item.text}">${item.text}</a>`
+        ).join('');
+
+        // 点击目录项跳转（滚动到对应标题，不改变 URL hash 中的文件）
+        tocEl.querySelectorAll('.toc-item[data-anchor]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const anchor = a.dataset.anchor;
+                const target = document.getElementById(anchor);
+                if (target) {
+                    target.scrollIntoView({behavior: 'smooth', block: 'start'});
+                }
+                // 移动端点击条目后自动关闭抽屉
+                closeSidebarOnMobile();
+            });
+        });
+
+        // 滚动监听，高亮当前标题
+        setupScrollSpy(items.map(i => i.id));
+    }
+
+    /* ===================================================
+       滚动监听 - 高亮目录当前项
+       =================================================== */
+    let scrollSpyObserver = null;
+
+    function setupScrollSpy(ids) {
+        if (scrollSpyObserver) scrollSpyObserver.disconnect();
+
+        const tocEl = document.getElementById('toc-container');
+        const contentWrap = document.getElementById('content-wrap');
+        const headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 52;
+
+        scrollSpyObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    tocEl.querySelectorAll('.toc-item').forEach(a => {
+                        a.classList.toggle('active', a.dataset.anchor === id);
+                    });
+                    // 将激活项滚动进视口
+                    const active = tocEl.querySelector('.toc-item.active');
+                    if (active) {
+                        active.scrollIntoView({block: 'nearest'});
+                    }
+                }
+            });
+        }, {
+            root: contentWrap,
+            rootMargin: `-${headerOffset}px 0px -70% 0px`,
+            threshold: 0
+        });
+
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) scrollSpyObserver.observe(el);
+        });
+    }
+
+    /* ===================================================
+       加载并渲染 Markdown
+       =================================================== */
+    async function loadFile(filePath) {
+        // 规范化路径
+        filePath = filePath.replace(/^\.\//, '').replace(/^#/, '');
+        currentFilePath = filePath;
+
+        // 更新面包屑
+        document.getElementById('crumb-file').textContent = filePath;
+        document.title = filePath + ' — ' + appConfig.title;
+
+        // 显示加载状态
+        const content = document.getElementById('content');
+        content.innerHTML = `<div id="loading"><div class="spinner"></div><span>正在加载 ${filePath} ...</span></div>`;
+
+        // 清空目录
+        document.getElementById('toc-container').innerHTML =
+            '<div style="padding:16px 14px;color:var(--text-muted);font-size:.8rem;">加载中...</div>' +
+            '<div id="toc-no-match">未找到匹配的标题</div>';
+        resetTocSearch();
+
+        // 滚动到顶部
+        document.getElementById('content-wrap').scrollTop = 0;
+
+        if (!isMdFile(filePath)) {
+            if (isTextFile(filePath)) {
+                // 文本类文件：拓取内容后作为代码块在页内渲染
+                try {
+                    const resp = await fetch(filePath + '?t=' + Date.now());
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+                    const textContent = await resp.text();
+                    const lang = getFileLang(filePath);
+                    const validLang = lang && hljs.getLanguage(lang) ? lang : null;
+                    let highlighted;
+                    try {
+                        highlighted = validLang
+                            ? hljs.highlight(textContent, {language: validLang, ignoreIllegals: true}).value
+                            : escapeHtml(textContent);
+                    } catch (e) {
+                        highlighted = escapeHtml(textContent);
+                    }
+                    const badge = lang ? `<span class="lang-badge">${lang}</span>` : '';
+                    const fileName = filePath.split('/').pop();
+                    const fid = headingId(fileName);
+                    content.innerHTML =
+                        `<h1 id="${fid}">${fileName}</h1>` +
+                        `<pre data-lang="${lang || ''}">${badge}<code class="hljs${validLang ? ' language-' + validLang : ''}">${highlighted}</code></pre>`;
+                    injectLineNumbers(content);
+                    buildToc(content);
+                } catch (err) {
+                    content.innerHTML = `
+                      <div id="error-msg">
+                        <div style="font-size:2rem">&#10060;</div>
+                        <strong>加载失败：${err.message}</strong>
+                        <div style="font-size:.8rem;color:var(--text-muted)">
+                          文件路径: <code>${filePath}</code>
+                        </div>
+                      </div>`;
+                    document.getElementById('toc-container').innerHTML =
+                        '<div style="padding:16px 14px;color:var(--text-muted);font-size:.8rem;">加载失败</div>';
+                }
+                return;
+            }
+            // 非文本类文件：提示无法渲染
+            content.innerHTML = `
+                  <div class="non-md-notice">
+                    <strong>&#9432; 提示：</strong>该文件 <code>${filePath}</code> 不是 Markdown 文件，无法在此渲染。<br/>
+                    <a href="${filePath}" target="_blank">点击此处在新窗口中打开</a>
+                  </div>`;
+            document.getElementById('toc-container').innerHTML =
+                '<div style="padding:16px 14px;color:var(--text-muted);font-size:.8rem;">-</div>';
+            return;
+        }
+
+        try {
+            const resp = await fetch(filePath + '?t=' + Date.now());
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+            const mdText = await resp.text();
+            renderMarkdown(mdText, content);
+        } catch (err) {
+            content.innerHTML = `
+                  <div id="error-msg">
+                    <div style="font-size:2rem">&#10060;</div>
+                    <strong>加载失败：${err.message}</strong>
+                    <div style="font-size:.8rem;color:var(--text-muted)">
+                      文件路径: <code>${filePath}</code><br/>
+                      请确保文件存在，且 nginx 已正确配置静态文件服务。
+                    </div>
+                  </div>`;
+            document.getElementById('toc-container').innerHTML =
+                '<div style="padding:16px 14px;color:var(--text-muted);font-size:.8rem;">加载失败</div>';
+        }
+    }
+
+    function renderMarkdown(mdText, container) {
+        // 解析 markdown
+        const html = marked.parse(mdText);
+        container.innerHTML = html;
+
+        // 注入代码块行号
+        injectLineNumbers(container);
+
+        // 生成目录
+        buildToc(container);
+
+        // 绑定 md 链接点击事件
+        bindMdLinks(container);
+    }
+
+    /* ===================================================
+       绑定 md 文件内部链接的跳转行为
+       =================================================== */
+    function bindMdLinks(container) {
+        container.querySelectorAll('a[data-md-link]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                navigateTo(a.dataset.mdLink);
+                // 移动端切换文件时自动关闭抽屉
+                closeSidebarOnMobile();
+            });
+        });
+    }
+
+    /* ===================================================
+       侧边栏切换
+       =================================================== */
+
+    /** 关闭移动端抽屉 */
+    function closeSidebarOnMobile() {
+        if (window.innerWidth <= 580) {
+            document.body.classList.remove('sidebar-open');
+        }
+    }
+
+    /** Logo 点击：桌面端折叠/展开，移动端抽屉开/关 */
+    document.getElementById('app-logo').addEventListener('click', () => {
+        if (window.innerWidth <= 580) {
+            document.body.classList.toggle('sidebar-open');
+        } else {
+            document.body.classList.toggle('sidebar-collapsed');
+        }
+    });
+
+    /** 点击遮罩层关闭移动端抽屉 */
+    document.getElementById('sidebar-overlay').addEventListener('click', () => {
+        document.body.classList.remove('sidebar-open');
+    });
+
+    /** 窗口大小变化时，清理冲突的状态类名 */
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 580) {
+            document.body.classList.remove('sidebar-open');
+        } else {
+            document.body.classList.remove('sidebar-collapsed');
+        }
+    });
+
+    /* ===================================================
+       TOC 搜索过滤
+       =================================================== */
+
+    const _tocSearch = document.getElementById('toc-search');
+    const _tocSearchClear = document.getElementById('toc-search-clear');
+
+    /** 过滤 TOC 条目 */
+    function filterToc(query) {
+        const q = query.trim().toLowerCase();
+        const items = document.querySelectorAll('#toc-container .toc-item');
+        let matchCount = 0;
+        items.forEach(item => {
+            const hit = !q || item.textContent.trim().toLowerCase().includes(q);
+            item.style.display = hit ? '' : 'none';
+            if (hit) matchCount++;
+        });
+        // 显示/隐藏无匹配提示
+        const noMatch = document.getElementById('toc-no-match');
+        if (noMatch) noMatch.style.display = (q && matchCount === 0) ? 'block' : 'none';
+        // 清除按钞可见性
+        _tocSearchClear.classList.toggle('visible', q.length > 0);
+    }
+
+    /** 切换文件时重置搜索状态 */
+    function resetTocSearch() {
+        _tocSearch.value = '';
+        _tocSearchClear.classList.remove('visible');
+        const noMatch = document.getElementById('toc-no-match');
+        if (noMatch) noMatch.style.display = 'none';
+    }
+
+    _tocSearch.addEventListener('input', () => filterToc(_tocSearch.value));
+
+    _tocSearchClear.addEventListener('click', () => {
+        _tocSearch.value = '';
+        filterToc('');
+        _tocSearch.focus();
+    });
+
+    /* ===================================================
+       配置加载
+       =================================================== */
+
+    /** 默认配置 */
+    const DEFAULT_CONFIG = {title: 'Docs', index: 'readme.md'};
+
+    /** 当前全局配置（初始化前先使用默认值） */
+    let appConfig = Object.assign({}, DEFAULT_CONFIG);
+
+    /**
+     * 加载 manifest.json，成功则应用配置，失败则保持默认
+     */
+    async function loadManifest() {
+        try {
+            const resp = await fetch('manifest.json?t=' + Date.now());
+            if (!resp.ok) throw new Error('not found');
+            const data = await resp.json();
+            if (data.title) appConfig.title = String(data.title);
+            if (data.index) appConfig.index = String(data.index).replace(/^\.\//, '');
+        } catch (e) {
+            // 加载失败，保持默认配置，不作任何提示
+        }
+        // 将 logo 更新为配置的 title
+        document.getElementById('app-logo').textContent = '\uD83D\uDCC4 ' + appConfig.title;
+        document.title = appConfig.title;
+    }
+
+    /* ===================================================
+       初始化 & 路由
+       =================================================== */
+
+    /**
+     * 通过修改 hash 进行导航（会触发 hashchange，由 hashchange 触发加载）
+     */
+    function navigateTo(filePath) {
+        const clean = filePath.replace(/^\.\//, '').replace(/^#/, '');
+        const encoded = encodeURIComponent(clean);
+        const current = decodeURIComponent((location.hash || '#').slice(1));
+        if (current !== clean) {
+            location.hash = '#' + encoded;
+            // hashchange 将自动触发 loadFile
+        } else {
+            // 相同文件，直接重新加载（如刷新）
+            loadFile(clean);
+        }
+    }
+
+    /* ===================================================
+       主题切换
+       =================================================== */
+    const HLJS_LIGHT = './libs/highlight.js/11.9.0/styles/github.min.css';
+    const HLJS_DARK = './libs/highlight.js/11.9.0/styles/github-dark.min.css';
+
+    function applyTheme(isDark) {
+        document.body.classList.toggle('dark', isDark);
+        document.getElementById('hljs-css').href = isDark ? HLJS_DARK : HLJS_LIGHT;
+        document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    document.getElementById('theme-btn').addEventListener('click', () => {
+        applyTheme(!document.body.classList.contains('dark'));
+    });
+
+    // 初始化主题：优先读 localStorage，其次跟随系统偏好
+    (function initTheme() {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(saved ? saved === 'dark' : prefersDark);
+    })();
+
+    // hash 变化（用户前进/后退/手动改 URL / navigateTo 调用）
+    window.addEventListener('hashchange', () => {
+        loadFile(getFileFromHash());
+    });
+
+    // 首次加载（先加载 manifest.json 配置，再决定默认页）
+    (async function init() {
+        await loadManifest();
+        // 如果 URL 中已有 hash（用户直接访问某个文件）则加载对应文件；否则加载配置中的 index
+        const hashFile = getFileFromHash();
+        const fileToLoad = (location.hash && location.hash !== '#') ? hashFile : appConfig.index;
+        loadFile(fileToLoad);
+    })();
+</script>
 </body>
-<style>
-    ::-webkit-scrollbar {
-        width: 5px;
-        height: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-        background-color: #b9b9b9;
-    }
-
-    ::-webkit-scrollbar-track {
-        /*加不加这个阴影都可*/
-        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-        border-radius: 10px;
-        background-color: #f0f0f0;
-    }
-    .nav-item{
-        border: none;
-        padding: 15px;
-        font-size: 22px;
-        margin: 15px;
-        color: white;
-        font-weight: bold;
-        border-radius: 12px;
-        background: linear-gradient(to bottom right, transparent, black);
-        width: 20%;
-        float: left;
-        text-align: center;
-        box-shadow: black 8px 8px 8px 3px;
-        text-decoration: none;
-    }
-    .main-item{
-        width: 100%;
-        height: calc(100vh - 180px);
-        overflow: auto;
-    }
-    .footer-item{
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        font-size: 16px;
-        color: #aaa;
-        text-align: center;
-        padding: 12px;
-    }
-</style>
 </html>

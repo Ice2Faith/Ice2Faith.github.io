@@ -1,0 +1,133 @@
+<!-- mybatis-xml.dtd -->
+
+        <!ELEMENT mapper (
+                resultMap*
+                |sql*
+                |select*
+                |update*
+                |insert*
+                |delete*
+                )>
+        <!ATTLIST mapper namespace CDATA #IMPLIED>
+
+        <!ELEMENT resultMap (id|result*)>
+        <!ATTLIST resultMap id CDATA #IMPLIED>
+        <!ATTLIST resultMap type CDATA #IMPLIED>
+
+        <!ELEMENT id (EMPTY)>
+        <!ATTLIST id property CDATA #IMPLIED>
+        <!ATTLIST id column CDATA #IMPLIED>
+
+        <!ELEMENT result (EMPTY)>
+        <!ATTLIST result property CDATA #IMPLIED>
+        <!ATTLIST result column CDATA #IMPLIED>
+
+
+        <!ELEMENT sql (EMPTY
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST sql id CDATA #IMPLIED>
+
+        <!ELEMENT select (EMPTY
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST select id CDATA #IMPLIED>
+        <!ATTLIST select resultType CDATA #IMPLIED>
+        <!ATTLIST select resultMap CDATA #IMPLIED>
+
+        <!ELEMENT update (EMPTY
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST update id CDATA #IMPLIED>
+
+        <!ELEMENT insert (EMPTY
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST insert id CDATA #IMPLIED>
+
+        <!ELEMENT delete (EMPTY
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST delete id CDATA #IMPLIED>
+
+        <!ELEMENT dialect (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST dialect databases CDATA #REQUIRED>
+
+        <!ELEMENT dialect-choose (dialect-when*|dialect-otherwise)>
+
+        <!ELEMENT dialect-when (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST dialect-when databases CDATA #REQUIRED>
+
+        <!ELEMENT dialect-otherwise (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+
+        <!-- for mybatis tag begin -->
+        <!ELEMENT where (#PCDATA
+                |if*|foreach*|trim*|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+
+        <!ELEMENT if (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST if test CDATA #REQUIRED>
+
+        <!ELEMENT foreach (#PCDATA
+                |if*|foreach*|trim*|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST foreach collection CDATA #REQUIRED>
+        <!ATTLIST foreach item CDATA #REQUIRED>
+        <!ATTLIST foreach open CDATA #IMPLIED>
+        <!ATTLIST foreach separator CDATA #IMPLIED>
+        <!ATTLIST foreach close CDATA #IMPLIED>
+
+        <!ELEMENT trim (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST trim prefix CDATA #IMPLIED>
+        <!ATTLIST trim suffix CDATA #IMPLIED>
+        <!ATTLIST trim prefixOverrides CDATA #IMPLIED>
+        <!ATTLIST trim suffixOverrides CDATA #IMPLIED>
+
+        <!ELEMENT set (#PCDATA
+                |if*|foreach*|trim*|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+
+        <!ELEMENT choose (when*|otherwise)>
+
+        <!ELEMENT when (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST when test CDATA #REQUIRED>
+
+        <!ELEMENT otherwise (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+
+        <!ELEMENT include (EMPTY|#PCDATA)>
+        <!ATTLIST include refid CDATA #REQUIRED>
+
+        <!ELEMENT bind (EMPTY|#PCDATA)>
+        <!ATTLIST bind name CDATA #REQUIRED>
+        <!ATTLIST bind value CDATA #REQUIRED>
+
+        <!-- for mybatis tag end -->

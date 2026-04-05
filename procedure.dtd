@@ -1,0 +1,1251 @@
+<!-- procedure.dtd -->
+
+        <!ELEMENT procedure (ANY|EMPTY)>
+        <!ATTLIST procedure id CDATA #IMPLIED>
+
+        <!ELEMENT log-info (ANY|EMPTY)>
+        <!ATTLIST log-info value CDATA #IMPLIED>
+        <!ATTLIST log-info e CDATA #IMPLIED>
+
+        <!ATTLIST log-info value.visit CDATA #IMPLIED>
+        <!ATTLIST log-info value.string CDATA #IMPLIED>
+        <!ATTLIST log-info value.render CDATA #IMPLIED>
+        <!ATTLIST log-info value.body-text CDATA #IMPLIED>
+        <!ATTLIST log-info value.body-text.render CDATA #IMPLIED>
+        <!ATTLIST log-info value.body-text.trim.render CDATA #IMPLIED>
+
+        <!ELEMENT log-debug (ANY|EMPTY)>
+        <!ATTLIST log-debug value CDATA #IMPLIED>
+        <!ATTLIST log-debug e CDATA #IMPLIED>
+
+        <!ATTLIST log-debug value.visit CDATA #IMPLIED>
+        <!ATTLIST log-debug value.string CDATA #IMPLIED>
+        <!ATTLIST log-debug value.render CDATA #IMPLIED>
+        <!ATTLIST log-debug value.body-text CDATA #IMPLIED>
+        <!ATTLIST log-debug value.body-text.render CDATA #IMPLIED>
+        <!ATTLIST log-debug value.body-text.trim.render CDATA #IMPLIED>
+
+        <!ELEMENT log-warn (ANY|EMPTY)>
+        <!ATTLIST log-warn value CDATA #IMPLIED>
+        <!ATTLIST log-warn e CDATA #IMPLIED>
+
+        <!ATTLIST log-warn value.visit CDATA #IMPLIED>
+        <!ATTLIST log-warn value.string CDATA #IMPLIED>
+        <!ATTLIST log-warn value.render CDATA #IMPLIED>
+        <!ATTLIST log-warn value.body-text CDATA #IMPLIED>
+        <!ATTLIST log-warn value.body-text.render CDATA #IMPLIED>
+        <!ATTLIST log-warn value.body-text.trim.render CDATA #IMPLIED>
+
+        <!ELEMENT log-error (ANY|EMPTY)>
+        <!ATTLIST log-error value CDATA #IMPLIED>
+        <!ATTLIST log-error e CDATA #IMPLIED>
+
+        <!ATTLIST log-error value.visit CDATA #IMPLIED>
+        <!ATTLIST log-error value.string CDATA #IMPLIED>
+        <!ATTLIST log-error value.render CDATA #IMPLIED>
+        <!ATTLIST log-error value.body-text CDATA #IMPLIED>
+        <!ATTLIST log-error value.body-text.render CDATA #IMPLIED>
+        <!ATTLIST log-error value.body-text.trim.render CDATA #IMPLIED>
+
+        <!ELEMENT debugger (ANY|EMPTY)>
+        <!ATTLIST debugger test CDATA #IMPLIED>
+        <!ATTLIST debugger tag CDATA #IMPLIED>
+
+        <!ATTLIST debugger test.eval-ts CDATA #IMPLIED>
+
+        <!ELEMENT lang-println (ANY|EMPTY)>
+        <!ATTLIST lang-println tag CDATA #IMPLIED>
+        <!ATTLIST lang-println tag.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-printf (ANY|EMPTY)>
+        <!ATTLIST lang-printf tag CDATA #IMPLIED>
+        <!ATTLIST lang-printf value CDATA #IMPLIED>
+        <!ATTLIST lang-printf tag.string CDATA #IMPLIED>
+
+        <!ATTLIST lang-printf value.string CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.render CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.trim CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.align CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.body-text CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.body-xml CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.body-text.trim CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.body-xml.trim CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.body-xml.trim.render CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.body-text.align CDATA #IMPLIED>
+        <!ATTLIST lang-printf value.body-xml.align CDATA #IMPLIED>
+
+        <!ELEMENT script-segment (ANY)>
+        <!ATTLIST script-segment id CDATA #REQUIRED>
+
+        <!ELEMENT script-include (ANY|EMPTY)>
+        <!ATTLIST script-include refid CDATA #IMPLIED>
+        <!ATTLIST script-include refid.visit CDATA #IMPLIED>
+
+        <!ELEMENT lang-set (ANY|EMPTY)>
+        <!ATTLIST lang-set value CDATA #IMPLIED>
+        <!ATTLIST lang-set radix CDATA #IMPLIED>
+        <!ATTLIST lang-set pattern CDATA #IMPLIED>
+        <!ATTLIST lang-set result CDATA #IMPLIED>
+
+        <!ATTLIST lang-set value.int CDATA #IMPLIED>
+        <!ATTLIST lang-set value.double #IMPLIED>
+        <!ATTLIST lang-set value.float #IMPLIED>
+        <!ATTLIST lang-set value.string CDATA #IMPLIED>
+        <!ATTLIST lang-set value.long #IMPLIED>
+        <!ATTLIST lang-set value.short #IMPLIED>
+        <!ATTLIST lang-set value.char #IMPLIED>
+        <!ATTLIST lang-set value.byte #IMPLIED>
+        <!ATTLIST lang-set value.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-set value.render CDATA #IMPLIED>
+        <!ATTLIST lang-set value.visit CDATA #IMPLIED>
+        <!ATTLIST lang-set value.eval CDATA #IMPLIED>
+        <!ATTLIST lang-set value.test CDATA #IMPLIED>
+        <!ATTLIST lang-set value.null CDATA #IMPLIED>
+        <!ATTLIST lang-set value.date CDATA #IMPLIED>
+        <!ATTLIST lang-set value.trim CDATA #IMPLIED>
+        <!ATTLIST lang-set value.align CDATA #IMPLIED>
+        <!ATTLIST lang-set value.body-text CDATA #IMPLIED>
+        <!ATTLIST lang-set value.body-xml CDATA #IMPLIED>
+        <!ATTLIST lang-set value.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-set value.eval-js CDATA #IMPLIED>
+        <!ATTLIST lang-set value.eval-tinyscript CDATA #IMPLIED>
+        <!ATTLIST lang-set value.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-set value.class CDATA #IMPLIED>
+        <!ATTLIST lang-set value.not CDATA #IMPLIED>
+        <!ATTLIST lang-set value.body-text.trim CDATA #IMPLIED>
+        <!ATTLIST lang-set value.body-xml.trim CDATA #IMPLIED>
+        <!ATTLIST lang-set value.body-text.align CDATA #IMPLIED>
+        <!ATTLIST lang-set value.body-xml.align CDATA #IMPLIED>
+
+        <!ATTLIST lang-set value.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-set value.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-set value.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-set value.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-set value.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-set value.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-set value.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-set value.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-set result.int CDATA #IMPLIED>
+        <!ATTLIST lang-set result.double #IMPLIED>
+        <!ATTLIST lang-set result.float #IMPLIED>
+        <!ATTLIST lang-set result.string CDATA #IMPLIED>
+        <!ATTLIST lang-set result.long #IMPLIED>
+        <!ATTLIST lang-set result.short #IMPLIED>
+        <!ATTLIST lang-set result.char #IMPLIED>
+        <!ATTLIST lang-set result.byte #IMPLIED>
+        <!ATTLIST lang-set result.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-set result.render CDATA #IMPLIED>
+        <!ATTLIST lang-set result.visit CDATA #IMPLIED>
+        <!ATTLIST lang-set result.eval CDATA #IMPLIED>
+        <!ATTLIST lang-set result.test CDATA #IMPLIED>
+        <!ATTLIST lang-set result.null CDATA #IMPLIED>
+        <!ATTLIST lang-set result.date CDATA #IMPLIED>
+        <!ATTLIST lang-set result.trim CDATA #IMPLIED>
+        <!ATTLIST lang-set result.align CDATA #IMPLIED>
+        <!ATTLIST lang-set result.body-text CDATA #IMPLIED>
+        <!ATTLIST lang-set result.body-xml CDATA #IMPLIED>
+        <!ATTLIST lang-set result.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-set result.eval-js CDATA #IMPLIED>
+        <!ATTLIST lang-set result.eval-tinyscript CDATA #IMPLIED>
+        <!ATTLIST lang-set result.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-set result.class CDATA #IMPLIED>
+        <!ATTLIST lang-set result.not CDATA #IMPLIED>
+        <!ATTLIST lang-set result.body-text.trim CDATA #IMPLIED>
+        <!ATTLIST lang-set result.body-xml.trim CDATA #IMPLIED>
+        <!ATTLIST lang-set result.body-text.align CDATA #IMPLIED>
+        <!ATTLIST lang-set result.body-xml.align CDATA #IMPLIED>
+
+        <!ATTLIST lang-set result.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-set result.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-set result.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-set result.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-set result.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-set result.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-set result.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-set result.snow-uid CDATA #IMPLIED>
+
+
+        <!ELEMENT lang-format-date (ANY|EMPTY)>
+        <!ATTLIST lang-format-date value CDATA #IMPLIED>
+        <!ATTLIST lang-format-date pattern CDATA #IMPLIED>
+        <!ATTLIST lang-format-date result CDATA #REQUIRED>
+
+        <!ATTLIST lang-format-date value.visit CDATA #IMPLIED>
+        <!ATTLIST lang-format-date value.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-format-date value.date-now CDATA #IMPLIED>
+
+        <!ELEMENT lang-format (ANY|EMPTY)>
+        <!ATTLIST lang-format value CDATA #IMPLIED>
+        <!ATTLIST lang-format pattern CDATA #IMPLIED>
+        <!ATTLIST lang-format result CDATA #REQUIRED>
+
+        <!ATTLIST lang-format value.visit CDATA #IMPLIED>
+        <!ATTLIST lang-format value.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-format value.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-format value.int CDATA #IMPLIED>
+        <!ATTLIST lang-format value.long CDATA #IMPLIED>
+        <!ATTLIST lang-format value.double CDATA #IMPLIED>
+        <!ATTLIST lang-format value.float CDATA #IMPLIED>
+        <!ATTLIST lang-format value.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-string-join (ANY|EMPTY)>
+        <!ATTLIST lang-string-join separator CDATA #IMPLIED>
+        <!ATTLIST lang-string-join result CDATA #IMPLIED>
+        <!ATTLIST lang-string-join result.trim CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg0 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9 CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.int CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.string CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.render CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.double CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.long CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.null CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg0.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.eval CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.eval CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg0.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.eval-java CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg0.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.eval-ts CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg0.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg0.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg1.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg1.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg2.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg2.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg3.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg3.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg4.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg4.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg5.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg5.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg6.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg6.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg7.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg7.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg8.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg8.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-string-join arg9.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-string-join arg9.snow-uid CDATA #IMPLIED>
+
+        <!ELEMENT lang-new-params (ANY|EMPTY)>
+        <!ATTLIST lang-new-params result CDATA #REQUIRED>
+
+        <!ELEMENT procedure-call (ANY|EMPTY)>
+        <!ATTLIST procedure-call params CDATA #IMPLIED>
+        <!ATTLIST procedure-call refid CDATA #IMPLIED>
+        <!ATTLIST procedure-call result CDATA #IMPLIED>
+        <!ATTLIST procedure-call params-share CDATA #IMPLIED>
+
+        <!ATTLIST procedure-call refid.visit CDATA #IMPLIED>
+
+        <!ELEMENT function-call (ANY|EMPTY)>
+        <!ATTLIST function-call params CDATA #IMPLIED>
+        <!ATTLIST function-call refid CDATA #IMPLIED>
+        <!ATTLIST function-call result CDATA #IMPLIED>
+        <!ATTLIST function-call params-share CDATA #IMPLIED>
+
+        <!ATTLIST function-call refid.visit CDATA #IMPLIED>
+
+        <!ELEMENT java-call (ANY|EMPTY)>
+        <!ATTLIST java-call target CDATA #IMPLIED>
+        <!ATTLIST java-call result CDATA #IMPLIED>
+
+        <!ELEMENT lang-return (EMPTY)>
+        <!ATTLIST lang-return value CDATA #IMPLIED>
+        <!ATTLIST lang-return radix CDATA #IMPLIED>
+        <!ATTLIST lang-return pattern CDATA #IMPLIED>
+
+        <!ATTLIST lang-return value.int CDATA #IMPLIED>
+        <!ATTLIST lang-return value.double #IMPLIED>
+        <!ATTLIST lang-return value.float #IMPLIED>
+        <!ATTLIST lang-return value.string CDATA #IMPLIED>
+        <!ATTLIST lang-return value.long #IMPLIED>
+        <!ATTLIST lang-return value.short #IMPLIED>
+        <!ATTLIST lang-return value.char #IMPLIED>
+        <!ATTLIST lang-return value.byte #IMPLIED>
+        <!ATTLIST lang-return value.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-return value.render CDATA #IMPLIED>
+        <!ATTLIST lang-return value.visit CDATA #IMPLIED>
+        <!ATTLIST lang-return value.eval CDATA #IMPLIED>
+        <!ATTLIST lang-return value.test CDATA #IMPLIED>
+        <!ATTLIST lang-return value.null CDATA #IMPLIED>
+        <!ATTLIST lang-return value.date CDATA #IMPLIED>
+        <!ATTLIST lang-return value.trim CDATA #IMPLIED>
+        <!ATTLIST lang-return value.align CDATA #IMPLIED>
+        <!ATTLIST lang-return value.body-text CDATA #IMPLIED>
+        <!ATTLIST lang-return value.body-xml CDATA #IMPLIED>
+        <!ATTLIST lang-return value.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-return value.eval-js CDATA #IMPLIED>
+        <!ATTLIST lang-return value.eval-tinyscript CDATA #IMPLIED>
+        <!ATTLIST lang-return value.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-return value.class CDATA #IMPLIED>
+        <!ATTLIST lang-return value.not CDATA #IMPLIED>
+
+        <!ATTLIST lang-return value.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-return value.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-return value.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-return value.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-return value.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-return value.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-return value.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-return value.snow-uid CDATA #IMPLIED>
+
+        <!ELEMENT lang-throw (ANY|EMPTY)>
+        <!ATTLIST lang-throw value CDATA #IMPLIED>
+        <!ATTLIST lang-throw type CDATA #REQUIRED>
+        <!ATTLIST lang-throw cause CDATA #IMPLIED>
+
+        <!ELEMENT lang-eval (ANY|EMPTY)>
+        <!ATTLIST lang-eval value CDATA #IMPLIED>
+        <!ATTLIST lang-eval result CDATA #IMPLIED>
+
+        <!ELEMENT lang-string (ANY|EMPTY)>
+        <!ATTLIST lang-string result CDATA #IMPLIED>
+        <!ATTLIST lang-string result.trim CDATA #IMPLIED>
+        <!ATTLIST lang-string _lang CDATA #IMPLIED>
+
+        <!ELEMENT lang-render (ANY|EMPTY)>
+        <!ATTLIST lang-render result CDATA #IMPLIED>
+        <!ATTLIST lang-render result.trim CDATA #IMPLIED>
+        <!ATTLIST lang-render _lang CDATA #IMPLIED>
+
+        <!ELEMENT lang-if (ANY|EMPTY)>
+        <!ATTLIST lang-if test CDATA #IMPLIED>
+        <!ATTLIST lang-if datasource CDATA #IMPLIED>
+
+        <!ATTLIST lang-if test.visit CDATA #IMPLIED>
+        <!ATTLIST lang-if test.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-if test.dialect CDATA #IMPLIED>
+        <!ATTLIST lang-if test.eval-ts CDATA #IMPLIED>
+
+        <!ATTLIST lang-if datasource.visit CDATA #IMPLIED>
+        <!ATTLIST lang-if datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-choose (lang-when*|lang-otherwise?)>
+
+        <!ELEMENT lang-when (ANY|EMPTY)>
+        <!ATTLIST lang-when test CDATA #IMPLIED>
+        <!ATTLIST lang-when datasource CDATA #IMPLIED>
+
+        <!ATTLIST lang-when test.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-when test.dialect CDATA #IMPLIED>
+        <!ATTLIST lang-when test.eval-ts CDATA #IMPLIED>
+
+        <!ATTLIST lang-when datasource.visit CDATA #IMPLIED>
+        <!ATTLIST lang-when datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-otherwise (ANY|EMPTY)>
+
+        <!ELEMENT lang-foreach (ANY|EMPTY)>
+        <!ATTLIST lang-foreach collection CDATA #REQUIRED>
+        <!ATTLIST lang-foreach item CDATA #IMPLIED>
+        <!ATTLIST lang-foreach first CDATA #IMPLIED>
+        <!ATTLIST lang-foreach index CDATA #IMPLIED>
+
+        <!ELEMENT lang-fori (ANY|EMPTY)>
+        <!ATTLIST lang-fori begin CDATA #IMPLIED>
+        <!ATTLIST lang-fori end CDATA #IMPLIED>
+        <!ATTLIST lang-fori incr CDATA #IMPLIED>
+        <!ATTLIST lang-fori item CDATA #IMPLIED>
+        <!ATTLIST lang-fori first CDATA #IMPLIED>
+        <!ATTLIST lang-fori index CDATA #IMPLIED>
+        <!ATTLIST lang-fori enclose CDATA #IMPLIED>
+
+        <!ATTLIST lang-fori begin.int CDATA #IMPLIED>
+        <!ATTLIST lang-fori end.int CDATA #IMPLIED>
+        <!ATTLIST lang-fori incr.int CDATA #IMPLIED>
+
+        <!ELEMENT lang-while (ANY|EMPTY)>
+        <!ATTLIST lang-while first CDATA #IMPLIED>
+        <!ATTLIST lang-while index CDATA #IMPLIED>
+        <!ATTLIST lang-while test CDATA #IMPLIED>
+        <!ATTLIST lang-while datasource CDATA #IMPLIED>
+
+        <!ATTLIST lang-while test.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-while test.dialect CDATA #IMPLIED>
+        <!ATTLIST lang-while test.eval-ts CDATA #IMPLIED>
+
+        <!ATTLIST lang-while datasource.visit CDATA #IMPLIED>
+        <!ATTLIST lang-while datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-do-while (ANY|EMPTY)>
+        <!ATTLIST lang-do-while first CDATA #IMPLIED>
+        <!ATTLIST lang-do-while index CDATA #IMPLIED>
+        <!ATTLIST lang-do-while test CDATA #IMPLIED>
+        <!ATTLIST lang-do-while datasource CDATA #IMPLIED>
+
+        <!ATTLIST lang-do-while test.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-do-while test.dialect CDATA #IMPLIED>
+        <!ATTLIST lang-do-while test.eval-ts CDATA #IMPLIED>
+
+        <!ATTLIST lang-do-while datasource.visit CDATA #IMPLIED>
+        <!ATTLIST lang-do-while datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-continue (EMPTY)>
+
+        <!ELEMENT lang-break (EMPTY)>
+
+        <!ELEMENT lang-invoke (ANY|EMPTY)>
+        <!ATTLIST lang-invoke method CDATA #REQUIRED>
+        <!ATTLIST lang-invoke target CDATA #IMPLIED>
+        <!ATTLIST lang-invoke result CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg0 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9 CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.int CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.string CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.render CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.double CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.long CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.long CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg0.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.eval CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.eval CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg0.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.eval-java CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.eval-java CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg0.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.eval-ts CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg0.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg0.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg1.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg1.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg2.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg2.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg3.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg3.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg4.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg4.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg5.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg5.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg6.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg6.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg7.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg7.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg8.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg8.snow-uid CDATA #IMPLIED>
+
+        <!ATTLIST lang-invoke arg9.is-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.is-not-null CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.is-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.is-not-empty CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.date-now CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.uuid CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.current-time-millis CDATA #IMPLIED>
+        <!ATTLIST lang-invoke arg9.snow-uid CDATA #IMPLIED>
+
+        <!ELEMENT lang-shell (ANY|EMPTY)>
+        <!ATTLIST lang-shell result CDATA #IMPLIED>
+        <!ATTLIST lang-shell await CDATA #IMPLIED>
+        <!ATTLIST lang-shell timeout CDATA #IMPLIED>
+        <!ATTLIST lang-shell time-unit CDATA #IMPLIED>
+        <!ATTLIST lang-shell script CDATA #IMPLIED>
+        <!ATTLIST lang-shell run-as-file CDATA #IMPLIED>
+        <!ATTLIST lang-shell workdir CDATA #IMPLIED>
+        <!ATTLIST lang-shell envp CDATA #IMPLIED>
+
+        <!ATTLIST lang-shell result CDATA #IMPLIED>
+        <!ATTLIST lang-shell result.int CDATA #IMPLIED>
+        <!ATTLIST lang-shell result.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-shell result trim #IMPLIED>
+        <!ATTLIST lang-shell script.string CDATA #IMPLIED>
+        <!ATTLIST lang-shell await.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-shell run-as-file.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-shell script.body-text CDATA #IMPLIED>
+        <!ATTLIST lang-shell script.body-text.render CDATA #IMPLIED>
+        <!ATTLIST lang-shell script.body-text.render.trim CDATA #IMPLIED>
+
+
+        <!ELEMENT lang-file-exists (ANY|EMPTY)>
+        <!ATTLIST lang-file-exists result CDATA #IMPLIED>
+        <!ATTLIST lang-file-exists file CDATA #IMPLIED>
+        <!ATTLIST lang-file-exists file.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-file-mkdirs (ANY|EMPTY)>
+        <!ATTLIST lang-file-mkdirs file CDATA #IMPLIED>
+        <!ATTLIST lang-file-mkdirs file.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-file-delete (ANY|EMPTY)>
+        <!ATTLIST lang-file-delete file CDATA #IMPLIED>
+        <!ATTLIST lang-file-delete file.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-file-list (ANY|EMPTY)>
+        <!ATTLIST lang-file-list result CDATA #IMPLIED>
+        <!ATTLIST lang-file-list file CDATA #IMPLIED>
+        <!ATTLIST lang-file-list file.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-file-tree (ANY|EMPTY)>
+        <!ATTLIST lang-file-tree result CDATA #IMPLIED>
+        <!ATTLIST lang-file-tree file CDATA #IMPLIED>
+        <!ATTLIST lang-file-tree file.string CDATA #IMPLIED>
+
+        <!ELEMENT lang-file-read-text (ANY|EMPTY)>
+        <!ATTLIST lang-file-read-text result CDATA #IMPLIED>
+        <!ATTLIST lang-file-read-text file CDATA #IMPLIED>
+        <!ATTLIST lang-file-read-text file.string CDATA #IMPLIED>
+        <!ATTLIST lang-file-read-text charset CDATA #IMPLIED>
+
+        <!ELEMENT lang-file-write-text (ANY|EMPTY)>
+        <!ATTLIST lang-file-write-text content CDATA #IMPLIED>
+        <!ATTLIST lang-file-write-text file CDATA #IMPLIED>
+        <!ATTLIST lang-file-write-text file.string CDATA #IMPLIED>
+        <!ATTLIST lang-file-write-text charset CDATA #IMPLIED>
+
+        <!ATTLIST lang-file-write-text content.string CDATA #IMPLIED>
+        <!ATTLIST lang-file-write-text content.render CDATA #IMPLIED>
+        <!ATTLIST lang-file-write-text content.text-body CDATA #IMPLIED>
+        <!ATTLIST lang-file-write-text content.text-body.render CDATA #IMPLIED>
+        <!ATTLIST lang-file-write-text content.text-body.render.trim CDATA #IMPLIED>
+
+        <!ELEMENT lang-try (lang-body|lang-catch*|lang-finally?)>
+
+        <!ELEMENT lang-body (ANY|EMPTY)>
+
+        <!ELEMENT lang-catch (ANY|EMPTY)>
+        <!ATTLIST lang-catch type CDATA #IMPLIED>
+        <!ATTLIST lang-catch e CDATA #IMPLIED>
+        <!ATTLIST lang-catch test CDATA #IMPLIED>
+
+        <!ATTLIST lang-catch type.cause-first CDATA #IMPLIED>
+        <!ATTLIST lang-catch type.cause-last CDATA #IMPLIED>
+        <!ATTLIST lang-catch type.cause-raw CDATA #IMPLIED>
+        <!ATTLIST lang-catch type.cause-root CDATA #IMPLIED>
+
+        <!ATTLIST lang-catch test.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-catch test.dialect CDATA #IMPLIED>
+        <!ATTLIST lang-catch test.eval-ts CDATA #IMPLIED>
+
+        <!ELEMENT lang-finally (ANY|EMPTY)>
+
+        <!ELEMENT lang-retry (ANY|EMPTY)>
+        <!ATTLIST lang-retry result CDATA #IMPLIED>
+        <!ATTLIST lang-retry count CDATA #IMPLIED>
+        <!ATTLIST lang-retry type CDATA #IMPLIED>
+        <!ATTLIST lang-retry delay CDATA #IMPLIED>
+        <!ATTLIST lang-retry time-unit CDATA #IMPLIED>
+        <!ATTLIST lang-retry incr CDATA #IMPLIED>
+        <!ATTLIST lang-retry max-delay CDATA #IMPLIED>
+
+        <!ELEMENT lang-synchronized (ANY|EMPTY)>
+        <!ATTLIST lang-synchronized target CDATA #IMPLIED>
+
+        <!ELEMENT lang-lock (ANY|EMPTY)>
+        <!ATTLIST lang-lock value CDATA #IMPLIED>
+        <!ATTLIST lang-lock result CDATA #IMPLIED>
+        <!ATTLIST lang-lock type CDATA #IMPLIED>
+        <!ATTLIST lang-lock test CDATA #IMPLIED>
+
+        <!ATTLIST lang-lock value.visit CDATA #IMPLIED>
+        <!ATTLIST lang-lock value.string CDATA #IMPLIED>
+        <!ATTLIST lang-lock value.render CDATA #IMPLIED>
+
+        <!ATTLIST lang-lock type.string CDATA #IMPLIED>
+        <!ATTLIST lang-lock type.visit CDATA #IMPLIED>
+
+        <!ATTLIST lang-lock test.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-lock test.visit CDATA #IMPLIED>
+
+        <!ELEMENT lang-ai (ANY|EMPTY)>
+        <!ATTLIST lang-ai value CDATA #IMPLIED>
+        <!ATTLIST lang-ai result CDATA #IMPLIED>
+        <!ATTLIST lang-ai type CDATA #IMPLIED>
+        <!ATTLIST lang-ai role CDATA #IMPLIED>
+
+        <!ATTLIST lang-ai value.visit CDATA #IMPLIED>
+        <!ATTLIST lang-ai value.string CDATA #IMPLIED>
+        <!ATTLIST lang-ai value.render CDATA #IMPLIED>
+        <!ATTLIST lang-ai value.body-text CDATA #IMPLIED>
+        <!ATTLIST lang-ai value.body-text.render CDATA #IMPLIED>
+
+        <!ATTLIST lang-ai type.string CDATA #IMPLIED>
+        <!ATTLIST lang-ai type.visit CDATA #IMPLIED>
+
+        <!ATTLIST lang-ai role.string CDATA #IMPLIED>
+        <!ATTLIST lang-ai role.render CDATA #IMPLIED>
+        <!ATTLIST lang-ai role.visit CDATA #IMPLIED>
+
+        <!ELEMENT lang-listener (ANY|EMPTY)>
+        <!ATTLIST lang-listener name CDATA #IMPLIED>
+        <!ATTLIST lang-listener type CDATA #IMPLIED>
+        <!ATTLIST lang-listener target CDATA #IMPLIED>
+        <!ATTLIST lang-listener params-share CDATA #IMPLIED>
+
+        <!ELEMENT sql-query-row (EMPTY|sql-dialect*
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*
+                )>
+        <!ATTLIST sql-query-row datasource CDATA #IMPLIED>
+        <!ATTLIST sql-query-row script CDATA #IMPLIED>
+        <!ATTLIST sql-query-row result CDATA #IMPLIED>
+        <!ATTLIST sql-query-row result-type CDATA #IMPLIED>
+        <!ATTLIST sql-query-row limited CDATA #IMPLIED>
+
+        <!ATTLIST sql-query-row datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-query-row datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-query-list (EMPTY|sql-dialect*
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*
+                )>
+        <!ATTLIST sql-query-list datasource CDATA #IMPLIED>
+        <!ATTLIST sql-query-list script CDATA #IMPLIED>
+        <!ATTLIST sql-query-list result CDATA #IMPLIED>
+        <!ATTLIST sql-query-list result-type CDATA #IMPLIED>
+        <!ATTLIST sql-query-list offset CDATA #IMPLIED>
+        <!ATTLIST sql-query-list limit CDATA #IMPLIED>
+
+        <!ATTLIST sql-query-list datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-query-list datasource.visit.string CDATA #IMPLIED>
+
+
+        <!ELEMENT sql-query-columns (EMPTY|sql-dialect*
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*
+                )>
+        <!ATTLIST sql-query-columns datasource CDATA #IMPLIED>
+        <!ATTLIST sql-query-columns script CDATA #IMPLIED>
+        <!ATTLIST sql-query-columns result CDATA #IMPLIED>
+
+        <!ATTLIST sql-query-columns datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-query-columns datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-query-object (EMPTY|sql-dialect*
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*
+                )>
+        <!ATTLIST sql-query-object datasource CDATA #IMPLIED>
+        <!ATTLIST sql-query-object script CDATA #IMPLIED>
+        <!ATTLIST sql-query-object result CDATA #IMPLIED>
+        <!ATTLIST sql-query-object result-type CDATA #IMPLIED>
+        <!ATTLIST sql-query-object limited CDATA #IMPLIED>
+
+        <!ATTLIST sql-query-object datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-query-object datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-update (EMPTY|sql-dialect*
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*
+                )>
+        <!ATTLIST sql-update datasource CDATA #IMPLIED>
+        <!ATTLIST sql-update script CDATA #IMPLIED>
+        <!ATTLIST sql-update result CDATA #IMPLIED>
+
+        <!ATTLIST sql-update datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-update datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-script (EMPTY|sql-dialect*
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*
+                )>
+        <!ATTLIST sql-script datasource CDATA #IMPLIED>
+        <!ATTLIST sql-script result CDATA #IMPLIED>
+
+        <!ATTLIST sql-script datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-script datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-dialect (EMPTY
+                |#PCDATA|where|if*|foreach*|trim*|set|choose*|include*
+                )>
+        <!ATTLIST sql-dialect script CDATA #IMPLIED>
+        <!ATTLIST sql-dialect databases CDATA #IMPLIED>
+
+
+        <!-- for mybatis tag begin -->
+        <!ELEMENT dialect (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST dialect databases CDATA #REQUIRED>
+
+        <!ELEMENT dialect-choose (dialect-when*|dialect-otherwise)>
+
+        <!ELEMENT dialect-when (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST dialect-when databases CDATA #REQUIRED>
+
+        <!ELEMENT dialect-otherwise (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+
+        <!ELEMENT where (#PCDATA
+                |if*|foreach*|trim*|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+
+        <!ELEMENT if (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST if test CDATA #REQUIRED>
+
+        <!ELEMENT foreach (#PCDATA
+                |if*|foreach*|trim*|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST foreach collection CDATA #REQUIRED>
+        <!ATTLIST foreach item CDATA #REQUIRED>
+        <!ATTLIST foreach open CDATA #IMPLIED>
+        <!ATTLIST foreach separator CDATA #IMPLIED>
+        <!ATTLIST foreach close CDATA #IMPLIED>
+
+        <!ELEMENT trim (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST trim prefix CDATA #IMPLIED>
+        <!ATTLIST trim suffix CDATA #IMPLIED>
+        <!ATTLIST trim prefixOverrides CDATA #IMPLIED>
+        <!ATTLIST trim suffixOverrides CDATA #IMPLIED>
+
+        <!ELEMENT set (#PCDATA
+                |if*|foreach*|trim*|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+
+        <!ELEMENT choose (when*|otherwise)>
+
+        <!ELEMENT when (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+        <!ATTLIST when test CDATA #REQUIRED>
+
+        <!ELEMENT otherwise (#PCDATA
+                |where|if*|foreach*|trim*|set|choose*|include*|bind*
+                |dialect*|dialect-choose*|dialect-when*|dialect-otherwise*
+                )>
+
+        <!ELEMENT include (EMPTY|#PCDATA)>
+        <!ATTLIST include refid CDATA #REQUIRED>
+
+        <!ELEMENT bind (EMPTY|#PCDATA)>
+        <!ATTLIST bind name CDATA #REQUIRED>
+        <!ATTLIST bind value CDATA #REQUIRED>
+
+        <!-- for mybatis tag end -->
+
+        <!ELEMENT sql-trans-begin (EMPTY)>
+        <!ATTLIST sql-trans-begin datasource CDATA #IMPLIED>
+        <!ATTLIST sql-trans-begin isolation CDATA #IMPLIED>
+
+        <!ATTLIST sql-trans-begin datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-trans-begin datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-trans-commit (EMPTY)>
+        <!ATTLIST sql-trans-commit datasource CDATA #IMPLIED>
+
+        <!ATTLIST sql-trans-commit datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-trans-commit datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-trans-rollback (EMPTY)>
+        <!ATTLIST sql-trans-rollback datasource CDATA #IMPLIED>
+
+        <!ATTLIST sql-trans-rollback datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-trans-rollback datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-trans-none (EMPTY)>
+        <!ATTLIST sql-trans-none datasource CDATA #IMPLIED>
+
+        <!ATTLIST sql-trans-none datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-trans-none datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT sql-transactional (EMPTY|ANY)>
+        <!ATTLIST sql-transactional datasources CDATA #IMPLIED>
+        <!ATTLIST sql-transactional propagation CDATA #IMPLIED>
+        <!ATTLIST sql-transactional isolation CDATA #IMPLIED>
+        <!ATTLIST sql-transactional read-only CDATA #IMPLIED>
+        <!ATTLIST sql-transactional rollback-for CDATA #IMPLIED>
+        <!ATTLIST sql-transactional no-rollback-for CDATA #IMPLIED>
+
+        <!ATTLIST sql-transactional rollback-for.cause-first CDATA #IMPLIED>
+        <!ATTLIST sql-transactional rollback-for.cause-last CDATA #IMPLIED>
+        <!ATTLIST sql-transactional rollback-for.cause-raw CDATA #IMPLIED>
+        <!ATTLIST sql-transactional rollback-for.cause-root CDATA #IMPLIED>
+
+        <!ATTLIST sql-transactional no-rollback-for.cause-first CDATA #IMPLIED>
+        <!ATTLIST sql-transactional no-rollback-for.cause-last CDATA #IMPLIED>
+        <!ATTLIST sql-transactional no-rollback-for.cause-raw CDATA #IMPLIED>
+        <!ATTLIST sql-transactional no-rollback-for.cause-root CDATA #IMPLIED>
+
+        <!ELEMENT sql-runner (EMPTY|ANY)>
+        <!ATTLIST sql-runner datasource CDATA #IMPLIED>
+        <!ATTLIST sql-runner result CDATA #IMPLIED>
+        <!ATTLIST sql-runner script CDATA #IMPLIED>
+        <!ATTLIST sql-runner separator CDATA #IMPLIED>
+        <!ATTLIST sql-runner full-send CDATA #IMPLIED>
+        <!ATTLIST sql-runner jump-error CDATA #IMPLIED>
+
+        <!ATTLIST sql-runner datasource.visit CDATA #IMPLIED>
+        <!ATTLIST sql-runner result.trim CDATA #IMPLIED>
+        <!ATTLIST sql-runner script.visit CDATA #IMPLIED>
+        <!ATTLIST sql-runner script.body-text CDATA #IMPLIED>
+        <!ATTLIST sql-runner script.body-text.render CDATA #IMPLIED>
+        <!ATTLIST sql-runner separator.string CDATA #IMPLIED>
+        <!ATTLIST sql-runner full-send.boolean CDATA #IMPLIED>
+        <!ATTLIST sql-runner jump-error.boolean CDATA #IMPLIED>
+
+        <!ELEMENT lang-async (ANY|EMPTY)>
+        <!ATTLIST lang-async await CDATA #IMPLIED>
+        <!ATTLIST lang-async delay CDATA #IMPLIED>
+        <!ATTLIST lang-async time-unit CDATA #IMPLIED>
+
+        <!ATTLIST lang-async await.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-async await.test CDATA #IMPLIED>
+
+        <!ELEMENT lang-latch (EMPTY)>
+        <!ATTLIST lang-latch count CDATA #IMPLIED>
+        <!ATTLIST lang-latch result CDATA #REQUIRED>
+
+        <!ATTLIST lang-latch count.int CDATA #IMPLIED>
+        <!ATTLIST lang-latch count.visit CDATA #IMPLIED>
+        <!ATTLIST lang-latch count.eval CDATA #IMPLIED>
+        <!ATTLIST lang-latch count.eval-ts CDATA #IMPLIED>
+
+        <!ELEMENT lang-async-all (ANY|EMPTY)>
+        <!ATTLIST lang-async-all await CDATA #IMPLIED>
+
+        <!ATTLIST lang-async-all await.boolean CDATA #IMPLIED>
+        <!ATTLIST lang-async-all await.test CDATA #IMPLIED>
+
+        <!ELEMENT lang-latch-down (EMPTY)>
+        <!ATTLIST lang-latch-down name CDATA #REQUIRED>
+
+        <!ELEMENT lang-latch-await (EMPTY)>
+        <!ATTLIST lang-latch-await name CDATA #REQUIRED>
+        <!ATTLIST lang-latch-await timeout CDATA #IMPLIED>
+        <!ATTLIST lang-latch-await time-unit CDATA #IMPLIED>
+
+        <!ELEMENT lang-thread-pool-shutdown (EMPTY)>
+        <!ATTLIST lang-thread-pool-shutdown result CDATA #IMPLIED>
+        <!ATTLIST lang-thread-pool-shutdown pool CDATA #REQUIRED>
+        <!ATTLIST lang-thread-pool-shutdown force CDATA #IMPLIED>
+        <!ATTLIST lang-thread-pool-shutdown await CDATA #IMPLIED>
+        <!ATTLIST lang-thread-pool-shutdown timeout CDATA #IMPLIED>
+        <!ATTLIST lang-thread-pool-shutdown time-unit CDATA #IMPLIED>
+
+        <!ELEMENT lang-thread-pool-submit (EMPTY|ANY)>
+        <!ATTLIST lang-thread-pool-submit result CDATA #IMPLIED>
+        <!ATTLIST lang-thread-pool-submit pool CDATA #REQUIRED>
+
+        <!ELEMENT lang-thread-pool (EMPTY)>
+        <!ATTLIST lang-thread-pool result CDATA #IMPLIED>
+        <!ATTLIST lang-thread-pool type CDATA #IMPLIED>
+        <!ATTLIST lang-thread-pool count CDATA #REQUIRED>
+
+        <!ELEMENT sql-cursor (sql-query-list|lang-body)>
+        <!ATTLIST sql-cursor batch-size CDATA #IMPLIED>
+        <!ATTLIST sql-cursor item CDATA #IMPLIED>
+        <!ATTLIST sql-cursor accept-batch CDATA #IMPLIED>
+        <!ATTLIST sql-cursor use-cursor CDATA #IMPLIED>
+
+        <!ELEMENT lang-eval-java (lang-java-import?|lang-java-member?|lang-java-body?|#PCDATA)>
+        <!ATTLIST lang-eval-java result CDATA #IMPLIED>
+
+        <!ELEMENT lang-java-import (#PCDATA)>
+
+        <!ELEMENT lang-java-member (#PCDATA)>
+
+        <!ELEMENT lang-java-body (#PCDATA)>
+
+        <!ELEMENT lang-eval-javascript (#PCDATA)>
+        <!ATTLIST lang-eval-javascript result CDATA #IMPLIED>
+
+        <!ELEMENT lang-eval-js (#PCDATA)>
+        <!ATTLIST lang-eval-js result CDATA #IMPLIED>
+
+        <!ELEMENT lang-eval-tinyscript (#PCDATA)>
+        <!ATTLIST lang-eval-tinyscript result CDATA #IMPLIED>
+
+        <!ELEMENT lang-eval-ts (#PCDATA)>
+        <!ATTLIST lang-eval-ts result CDATA #IMPLIED>
+
+        <!ELEMENT lang-eval-groovy (#PCDATA)>
+        <!ATTLIST lang-eval-groovy result CDATA #IMPLIED>
+
+        <!ELEMENT sql-scope (ANY)>
+        <!ATTLIST sql-scope datasources CDATA #IMPLIED>
+
+        <!ELEMENT lang-sleep (EMPTY)>
+        <!ATTLIST lang-sleep timeout CDATA #IMPLIED>
+        <!ATTLIST lang-sleep time-unit CDATA #IMPLIED>
+
+        <!ELEMENT sql-etl (sql-query-list|etl-extra|etl-transform+|etl-load|etl-before|etl-after)>
+        <!ATTLIST sql-etl read-batch-size CDATA #IMPLIED>
+        <!ATTLIST sql-etl write-batch-size CDATA #IMPLIED>
+        <!ATTLIST sql-etl before-truncate CDATA #IMPLIED>
+        <!ATTLIST sql-etl commit-size CDATA #IMPLIED>
+        <!ATTLIST sql-etl use-cursor CDATA #IMPLIED>
+        <!ATTLIST sql-etl item CDATA #IMPLIED>
+        <!ATTLIST sql-etl sync CDATA #IMPLIED>
+
+        <!ELEMENT etl-extra (EMPTY)>
+        <!ATTLIST etl-extra datasource CDATA #IMPLIED>
+        <!ATTLIST etl-extra table CDATA #IMPLIED>
+
+        <!ATTLIST etl-extra datasource.visit CDATA #IMPLIED>
+        <!ATTLIST etl-extra datasource.visit.string CDATA #IMPLIED>
+
+        <!ELEMENT etl-transform (EMPTY)>
+        <!ATTLIST etl-transform source CDATA #IMPLIED>
+        <!ATTLIST etl-transform target CDATA #IMPLIED>
+        <!ATTLIST etl-transform type CDATA #IMPLIED>
+        <!ATTLIST etl-transform jdbc-type CDATA #IMPLIED>
+        <!ATTLIST etl-transform include CDATA #IMPLIED>
+        <!ATTLIST etl-transform exclude CDATA #IMPLIED>
+        <!ATTLIST etl-transform external CDATA #IMPLIED>
+
+        <!ATTLIST etl-transform source.visit CDATA #IMPLIED>
+        <!ATTLIST etl-transform source.eval CDATA #IMPLIED>
+        <!ATTLIST etl-transform source.eval-java CDATA #IMPLIED>
+        <!ATTLIST etl-transform source.test CDATA #IMPLIED>
+        <!ATTLIST etl-transform source.string CDATA #IMPLIED>
+        <!ATTLIST etl-transform source.render CDATA #IMPLIED>
+        <!ATTLIST etl-transform source.int CDATA #IMPLIED>
+        <!ATTLIST etl-transform source.date-now CDATA #IMPLIED>
+
+        <!ELEMENT etl-load (EMPTY)>
+        <!ATTLIST etl-load datasource CDATA #IMPLIED>
+        <!ATTLIST etl-load table CDATA #IMPLIED>
+
+        <!ATTLIST etl-load datasource.visit CDATA #IMPLIED>
+        <!ATTLIST etl-load datasource.visit.string CDATA #IMPLIED>
+        <!ATTLIST etl-load datasource.string CDATA #IMPLIED>
+        <!ATTLIST etl-load datasource.render CDATA #IMPLIED>
+
+        <!ELEMENT etl-before (ANY)>
+
+        <!ELEMENT etl-after (ANY)>
+
+        <!ELEMENT context-load-package (EMPTY)>
+        <!ATTLIST context-load-package package CDATA #IMPLIED>
+        <!ATTLIST context-load-package class CDATA #IMPLIED>
+
+        <!ELEMENT context-invoke-method-class (EMPTY)>
+        <!ATTLIST context-invoke-method-class class CDATA #IMPLIED>
+
+        <!ELEMENT context-convert-method-class (EMPTY)>
+        <!ATTLIST context-convert-method-class class CDATA #IMPLIED>
+
+        <!ELEMENT event-send (EMPTY)>
+        <!ATTLIST event-send event-type CDATA #IMPLIED>
+
+        <!ELEMENT event-publish (EMPTY)>
+        <!ATTLIST event-publish event-type CDATA #IMPLIED>

@@ -1,0 +1,86 @@
+######################################################################
+# Build Tools
+
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+######################################################################
+# IDE
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+*.iws
+*.iml
+*.ipr
+
+### JRebel ###
+rebel.xml
+### NetBeans ###
+nbproject/private/
+build/*
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+######################################################################
+# Others
+*.log
+*.xml.versionsBackup
+*.swp
+
+
+## vcs
+**/.github
+**/.gitee
+**/.git
+**/.DS_Store
+**/CVS
+
+## ide
+**/.idea
+**/.mvn
+**/*.log
+**/*.iml
+**/.eclipse
+**/.vscode
+
+# webpack
+**/node_modules
+**/.pnpm
+**/*.lock
+**/yarn.lock
+
+## output
+**/target
+**/output
+**/dist
+
+## packge
+**/*.jar
+**/*.exe
+**/*.elf
+**/*.zip
+**/*.tar.gz
+**/*.xz
+**/*.gz
+**/*.tar
+
+## temp file
+**/~$*
+**/*.bak
+**/*.tmp
+
+!resources/assets/**
+!resources/bundles/**
