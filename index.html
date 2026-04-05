@@ -52,15 +52,15 @@
             --sidebar-width: 280px;
             --toc-width: 240px;
             --header-height: 52px;
-            --bg: #f6f8fa;
-            --surface: #ffffff;
+            --bg: #f6f8faaa;
+            --surface: #ffffff77;
             --border: #e1e4e8;
             --text: #24292f;
             --text-muted: #6e7781;
             --accent: #0969da;
             --accent-hover: #0550ae;
-            --code-bg: #f6f8fa;
-            --sidebar-bg: #f0f2f5;
+            --code-bg: #f6f8faaa;
+            --sidebar-bg: #f0f2f5dd;
             --toc-active: #0969da;
             --scrollbar: #c8ccd0;
         }
@@ -550,10 +550,15 @@
 
             body.sidebar-open #sidebar-overlay {
                 display: block;
+                background: rgba(0,0,0,0.8);
             }
 
             #content {
                 padding: 16px 14px 60px;
+            }
+
+            #print-page{
+                display: none;
             }
         }
 
@@ -642,15 +647,15 @@
 
         /* ===== 深色主题 ===== */
         body.dark {
-            --bg: #0d1117;
-            --surface: #161b22;
+            --bg: #0d1117aa;
+            --surface: #161b2277;
             --border: #30363d;
             --text: #e6edf3;
             --text-muted: #7d8590;
             --accent: #58a6ff;
             --accent-hover: #79c0ff;
-            --code-bg: #1c2128;
-            --sidebar-bg: #13161d;
+            --code-bg: #1c2128aa;
+            --sidebar-bg: #13161ddd;
             --toc-active: #58a6ff;
             --scrollbar: #30363d;
             color-scheme: dark;
@@ -698,6 +703,75 @@
         body.dark #top-bar {
             box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
         }
+
+        /* ===== 媒体文件（图片/音视频）包装器 ===== */
+        .media-wrapper {
+            margin: 1em 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--surface);
+        }
+
+        .media-label {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: var(--code-bg);
+            border-bottom: 1px solid var(--border);
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .media-wrapper img,
+        .media-wrapper video,
+        .media-wrapper audio {
+            display: block;
+            width: 100%;
+        }
+
+        .media-wrapper img,
+        .media-wrapper video {
+            max-width: 100%;
+            height: auto;
+            max-height: calc(100vh - 160px);
+        }
+
+        .media-wrapper audio {
+            padding: 12px;
+            background: var(--surface);
+        }
+
+        /* 深色模式适配 */
+        body.dark .media-wrapper {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+
+        body.dark .media-label {
+            background: #1c2128;
+            border-bottom-color: var(--border);
+        }
+
+        body.dark .media-wrapper audio {
+            background: var(--surface);
+        }
+
+        /* ===== 页面背景图片 ===== */
+        #page-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -709,7 +783,10 @@
         <span class="sep">/</span>
         <span class="current" id="crumb-file">readme.md</span>
     </div>
+
+    <button id="print-page" class="home-btn" title="打印页面">🖨</button>
     <a class="home-btn" href="#" onclick="event.preventDefault();navigateTo(appConfig.index)">&#127968; 首页</a>
+    <button id="bgimg-bth" class="home-btn" title="显示/关闭背景图片">🏞</button>
     <button id="theme-btn" class="home-btn" title="切换深色/浅色主题">🌙</button>
 </div>
 
@@ -858,6 +935,7 @@
         if (!path || path == '') {
             return '';
         }
+        path=getFileBaseName(path);
         let idx = path.lastIndexOf('.');
         if (idx >= 0) {
             return path.substring(idx);
@@ -865,20 +943,10 @@
         return '';
     }
 
-    function getFileName(path) {
-        if (!path || path == '') {
-            return '';
-        }
-        let idx = path.lastIndexOf('/');
-        if (idx >= 0) {
-            return path.substring(idx + 1);
-        }
-        return '';
-    }
 
     /** 判断是否为页内可渲染的文本文件 */
     function isTextFile(path) {
-        const name = getFileName(path).toLowerCase();
+        const name = getFileBaseName(path).toLowerCase();
         if (name in TEXT_FILE_NAME_LANGS) {
             return true;
         }
@@ -891,7 +959,7 @@
 
     /** 根据文件路径获取语言标识 */
     function getFileLang(path) {
-        const name = getFileName(path).toLowerCase();
+        const name = getFileBaseName(path).toLowerCase();
         let lang = TEXT_FILE_NAME_LANGS[name];
         if (lang && lang != '') {
             return lang;
@@ -925,18 +993,169 @@
     let currentFilePath = 'readme.md';
 
     /**
-     * 重写链接渲染，拦截 .md 相对路径
+     * 获取文件名（不含路径）
+     */
+    function getFileBaseName(path) {
+        if (!path || path == '') {
+            return '';
+        }
+        // 处理 URL 中的查询参数
+        const cleanPath = path.split('?')[0];
+        let idx = cleanPath.lastIndexOf('/');
+        if (idx >= 0) {
+            return cleanPath.substring(idx + 1);
+        }
+        return cleanPath;
+    }
+
+    /**
+     * 是否有不预览的参数
+     * @param href {string}
+     */
+    function hasNoPreviewParam(href){
+        if(!href){
+            return false;
+        }
+        let idx=href.indexOf("?");
+        if(idx<0){
+            return false;
+        }
+        href=href.substring(idx+1);
+        idx=href.indexOf('#')
+        if(idx>=0){
+            href=href.substring(0,idx);
+        }
+        let urlParams = new URLSearchParams(href);
+        let val = urlParams.get('_preview');
+        if(val == 'no' || val=='0' || val=='false'){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 重写图片渲染，限制最大宽度，显示文件名
+     */
+    renderer.image = function (href, title, text) {
+        const fileName = getFileBaseName(href);
+        const displayName = (fileName==text? fileName : (text + '['+fileName+']')) || fileName || text || '';
+        if(hasNoPreviewParam(href)){
+            return `<a href="${href}" target="_blank">🎵 ${escapeHtml(displayName)}</a>`;
+        }
+        if (!href){
+            return `<img alt="${text || ''}" title="${title || ''}" />`;
+        }
+        return `<div class="media-wrapper">
+            <div class="media-label"><a href="${href}" target="_blank">🎵 ${escapeHtml(displayName)}</a></div>
+            <img src="${href}" alt="${text || ''}" title="${title || ''}" style="max-width:100%;height:auto;" />
+        </div>`;
+    };
+
+    /**
+     * 判断是否为视频文件
+     */
+    function isVideoFile(path) {
+        const ext = getFileSuffix(path).toLowerCase();
+        return ['.mp4', '.webm', '.mov', '.mkv', '.avi', '.flv'].includes(ext);
+    }
+
+    /**
+     * 判断是否为音频文件
+     */
+    function isAudioFile(path) {
+        const ext = getFileSuffix(path).toLowerCase();
+        return ['.mp3', '.wav', '.ogg', '.aac', '.flac', '.m4a', '.wma'].includes(ext);
+    }
+
+    /**
+     * 判断是否为PDF文件
+     */
+    function isPdfFile(path) {
+        const ext = getFileSuffix(path).toLowerCase();
+        return ['.pdf'].includes(ext);
+    }
+
+    /**
+     * 重写链接渲染，拦截 .md 相对路径，同时支持音视频渲染
      */
     renderer.link = function (href, title, text) {
         if (!href) return `<a>${text}</a>`;
 
         // 处理绝对外链
         if (/^https?:\/\//i.test(href)) {
+            // 检测是否为音视频链接
+            if (isVideoFile(href) && !hasNoPreviewParam(href)) {
+                const fileName = getFileBaseName(href);
+                const displayName = (fileName==text? fileName : (text + '['+fileName+']')) || fileName || text || '';
+                return `<div class="media-wrapper">
+                    <div class="media-label"><a href="${href}" target="_blank">🎵 ${escapeHtml(displayName)}</a></div>
+                    <video src="${href}" controls style="max-width:100%;" title="${title || ''}">${text}</video>
+                </div>`;
+            }
+            if (isAudioFile(href) && !hasNoPreviewParam(href)) {
+                const fileName = getFileBaseName(href);
+                const displayName = (fileName==text? fileName : (text + '['+fileName+']')) || fileName || text || '';
+                return `<div class="media-wrapper">
+                    <div class="media-label"><a href="${href}" target="_blank">🎵 ${escapeHtml(displayName)}</a></div>
+                    <audio src="${href}" controls title="${title || ''}">${text}</audio>
+                </div>`;
+            }
+
+            // pdf文件：渲染 object 标签，显示文件名
+            if (isPdfFile(href) && !hasNoPreviewParam(href)) {
+                const fileName = getFileBaseName(href);
+                const displayName = (fileName==text? fileName : (text + '['+fileName+']')) || fileName || text || '';
+                return `<div class="media-wrapper">
+                <div class="media-label"><a href="${href}" target="_blank">🎵 ${escapeHtml(displayName)}</a></div>
+                <object name="output.pdf" style="width: 100%;" width="100%" height="${window.innerHeight-160}px"
+                data="${href}#navpanes=0&amp;toolbar=0"
+                type="application/pdf">
+                    <div style="width: 100%;text-align: center;margin: 5px;">您的浏览器不支持预览PDF！请点击查看</div>
+                </object>
+            </div>`;
+
+            }
+
             return `<a href="${href}" title="${title || ''}" target="_blank" rel="noopener">${text}</a>`;
         }
 
         // 相对路径
         const resolved = resolvePath(currentFilePath, href);
+
+        // 视频文件：渲染 video 标签，显示文件名
+        if (isVideoFile(resolved) && !hasNoPreviewParam(href)) {
+            const fileName = getFileBaseName(href);
+            const displayName = (fileName==text? fileName : (text + '['+fileName+']')) || fileName || text || '';
+            return `<div class="media-wrapper">
+                <div class="media-label"><a href="${href}" target="_blank">🎵 ${escapeHtml(displayName)}</a></div>
+                <video src="${href}" controls style="max-width:100%;" title="${title || ''}">${text}</video>
+            </div>`;
+        }
+
+        // 音频文件：渲染 audio 标签，显示文件名
+        if (isAudioFile(resolved) && !hasNoPreviewParam(href)) {
+            const fileName = getFileBaseName(href);
+            const displayName = (fileName==text? fileName : (text + '['+fileName+']')) || fileName || text || '';
+            return `<div class="media-wrapper">
+                <div class="media-label"><a href="${href}" target="_blank">🎵 ${escapeHtml(displayName)}</a></div>
+                <audio src="${href}" controls title="${title || ''}">${text}</audio>
+            </div>`;
+        }
+
+        // pdf文件：渲染 object 标签，显示文件名
+        if (isPdfFile(resolved) && !hasNoPreviewParam(href)) {
+            const fileName = getFileBaseName(href);
+            const displayName = (fileName==text? fileName : (text + '['+fileName+']')) || fileName || text || '';
+            return `<div class="media-wrapper">
+                <div class="media-label"><a href="${href}" target="_blank">🎵 ${escapeHtml(displayName)}</a></div>
+                <object name="output.pdf" style="width: 100%;" width="100%" height="${window.innerHeight-160}px"
+                data="${href}#navpanes=0&amp;toolbar=0"
+                type="application/pdf">
+                    <div style="width: 100%;text-align: center;margin: 5px;">您的浏览器不支持预览PDF！请点击查看</div>
+                </object>
+            </div>`;
+
+        }
 
         if (isMdFile(resolved)) {
             // md 文件：使用 JS 跳转
@@ -1304,7 +1523,7 @@
        =================================================== */
 
     /** 默认配置 */
-    const DEFAULT_CONFIG = {title: 'Docs', index: 'readme.md'};
+    const DEFAULT_CONFIG = {title: 'Docs', index: 'readme.md', background: ''};
 
     /** 当前全局配置（初始化前先使用默认值） */
     let appConfig = Object.assign({}, DEFAULT_CONFIG);
@@ -1317,14 +1536,39 @@
             const resp = await fetch('manifest.json?t=' + Date.now());
             if (!resp.ok) throw new Error('not found');
             const data = await resp.json();
-            if (data.title) appConfig.title = String(data.title);
-            if (data.index) appConfig.index = String(data.index).replace(/^\.\//, '');
+            if (data.title){
+                appConfig.title = String(data.title);
+            }
+            if (data.index){
+                appConfig.index = String(data.index).replace(/^\.\//, '');
+            }
+            if (data.background){
+                appConfig.background = String(data.background);
+            }
         } catch (e) {
             // 加载失败，保持默认配置，不作任何提示
         }
         // 将 logo 更新为配置的 title
         document.getElementById('app-logo').textContent = '\uD83D\uDCC4 ' + appConfig.title;
         document.title = appConfig.title;
+        // 应用背景图片
+        applyBackground();
+    }
+
+    /**
+     * 应用背景图片配置
+     */
+    function applyBackground() {
+        if (!appConfig.background){
+            return;
+        }
+        let bgEl = document.getElementById('page-background');
+        if (!bgEl) {
+            bgEl = document.createElement('div');
+            bgEl.id = 'page-background';
+            document.body.insertBefore(bgEl, document.body.firstChild);
+        }
+        bgEl.style.backgroundImage = `url(${appConfig.background})`;
     }
 
     /* ===================================================
@@ -1362,6 +1606,34 @@
 
     document.getElementById('theme-btn').addEventListener('click', () => {
         applyTheme(!document.body.classList.contains('dark'));
+    });
+
+    function closeBackgroundImage(){
+        let dom=document.getElementById('page-background');
+        dom.style.display='none';
+    }
+
+    document.getElementById('bgimg-bth').addEventListener('click',()=>{
+        let dom=document.getElementById('page-background');
+        if(dom.style.display=='none'){
+            dom.style.display='unset';
+        }else{
+            dom.style.display='none';
+        }
+    })
+
+    function printPage(){
+        closeBackgroundImage();
+        document.getElementById('top-bar').style.display='none';
+        document.getElementById('sidebar-overlay').style.display='none';
+        document.getElementById('sidebar').style.display='none';
+        document.body.style.height='auto';
+        document.body.style.overflow='auto';
+        window.print();
+    }
+
+    document.getElementById('print-page').addEventListener('click',()=>{
+       printPage()
     });
 
     // 初始化主题：优先读 localStorage，其次跟随系统偏好
