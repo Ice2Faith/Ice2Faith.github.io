@@ -1,0 +1,245 @@
+<!DOCTYPE procedure SYSTEM "procedure.dtd">
+<procedure id="demo_main"
+           in_sum_date.int=""
+           o_code.int=""
+           o_msg.string="">
+    <!--
+
+    这里只是演示主要的功能，不具备任何业务逻辑在内
+    因此，不必纠结于内部的逻辑没有实际意义的情况 demo_sub
+    只是用于展示各项功能及其用法
+    -->
+    <lang-eval-ts>
+        global.v_comm_insert_columns="user_id,channel_id";
+        global.v_comm_select_columns="user_id,channel_id";
+    </lang-eval-ts>
+    <!--
+    定义内部子过程
+    这里只是为了能够在一份XML文件中编写
+    也可以将这一个节点提取为单独的XML文件，并将节点script-segment重命名为procedure
+    使之成为一个独立的过程，而不是一个内部子过程
+     -->
+    <script-segment id="demo_log"
+                    in_code.int=""
+                    in_msg.string="">
+        <!-- 日志就算发生异常，也不要进行抛出异常，影响正常逻辑 -->
+        <lang-try>
+            <lang-body>
+                <!-- 日志使用独立的数据源连接，避免失败时污染正常逻辑 -->
+                <sql-scope datasources="all">
+                    <sql-update>
+                        insert into sys_log
+                        (code,msg,create_time)
+                        values
+                        (#{in_code},#{in_msg},now())
+                    </sql-update>
+                </sql-scope>
+            </lang-body>
+            <lang-catch type="Throwable" e="e">
+                <lang-printf value.render="记录日志发生异常：${e}"/>
+            </lang-catch>
+        </lang-try>
+    </script-segment>
+
+    <script-segment id="demo_sub_calc"
+                    in_rule_id.int=""
+                    in_sum_date.int=""
+                    o_code.int=""
+                    o_msg.string="">
+        <lang-if test.eval-ts="is_empty(${in_rule_id}) or is_empty(${in_sum_date})">
+            <lang-eval-groovy>
+                params.o_code=0;
+                params.o_msg="无参数，不需要进行计算";
+            </lang-eval-groovy>
+            <lang-return/>
+        </lang-if>
+
+        <sql-query-row result="v_rule">
+            select *
+            from sys_rule
+            where rule_id=#{in_rule_id}
+        </sql-query-row>
+
+        <lang-if test="v_rule.source_table==null or v_rule.source_table==''">
+            <lang-eval-java>
+                params.put("o_code",-1);
+                params.put("o_msg","规则"+params.get("in_rule_id")+"没有配置有效的数据源表");
+                return null;
+            </lang-eval-java>
+            <lang-return/>
+        </lang-if>
+
+        <lang-if test="v_rule.target_table==null or v_rule.target_table==''">
+            <lang-eval-ts>
+                o_code=-1;
+                o_msg=R"规则$!{in_sule_id}没有配置有效的目标表";
+            </lang-eval-ts>
+            <lang-return/>
+        </lang-if>
+
+        <lang-eval-ts>
+            v_rule.condition=replace(${v_rule.condition},"{{sum_date}}",${in_sum_date});
+        </lang-eval-ts>
+
+        <lang-eval-ts>
+            v_select_columns=${global.v_comm_select_columns};
+            if(!is_empty(${v_rule.source_alias})){
+                v_alias=","+${v_rule.source_alias}+".";
+                v_select_columns=replace(${v_select_columns},',',${v_alias});
+                if(!starts_with(${v_select_columns},${v_alias})){
+                    v_select_columns=$!{v_alias}+$!{v_select_columns};
+                };
+            };
+
+        </lang-eval-ts>
+
+        <sql-update>
+            delete from $!{v_rule.target_table}
+            where sum_date=#{in_sum_date}
+        </sql-update>
+
+        <sql-update>
+            insert into $!{v_rule.target_table}
+            (
+                $!{global.v_comm_insert_columns},
+                sum_date,
+                update_time
+            )
+            select $!{v_select_columns},
+                #{in_sum_date} as sum_date,
+                now() as update_time
+            from $!{v_rule.target_table}
+            <where>
+                <if test="v_rule.condition!=null and v_rule.condition!=''">
+                    $!{v_rule.condition}
+                </if>
+            </where>
+        </sql-update>
+
+        <lang-set result="o_code" value.int="0"/>
+        <lang-set result="o_msg" value.render="结束计算规则：${in_rule_id}"/>
+    </script-segment>
+
+
+    <!-- 捕获异常 -->
+    <lang-try>
+        <lang-body>
+            <lang-eval-ts>
+                v_sum_date=${in_sum_date};
+                // 得到任务开始的日期
+                v_now=now();
+                v_begin_task_day=${v_now}.getDate();
+
+                if(${v_sum_date} > ${v_now}){
+                    v_sum_date=to_number(to_char(${v_now},'yyyyMMdd'));
+                };
+
+                // 计算取数的区间
+                v_sum_begin_day=first_day(to_date(${v_sum_date},'yyyyMMdd'));
+
+            </lang-eval-ts>
+            <lang-while test.boolean="true">
+                <lang-eval-ts>
+                    v_curr_day=new Date().getDate();
+                </lang-eval-ts>
+                <lang-if test="v_begin_task_day != v_curr_day">
+                    <lang-break/>
+                </lang-if>
+
+                <sql-query-object result="v_count" result-type="long">
+                    select count(1)
+                    from sys_task
+                    where status=0
+                    and sum_date=#{v_sum_date}
+                </sql-query-object>
+
+                <lang-if test="v_count==0">
+                    <lang-sleep timeout.int="30" time-unit="MILLISECONDS"/>
+                    <lang-continue/>
+                </lang-if>
+
+                <sql-cursor item="tmpRowMap">
+                    <sql-query-list>
+                        select *
+                        from sys_task
+                        where status=0
+                          and sum_date=#{v_sum_date}
+                    </sql-query-list>
+                    <lang-body>
+                        <lang-eval-ts>
+                            v_rule_id=${tmpRowMap.RULE_ID};
+                        </lang-eval-ts>
+                        <lang-if test.eval-ts="is_empty(${v_rule_id})">
+                            <lang-continue/>
+                        </lang-if>
+
+                        <procedure-call refid="demo_log"
+                                        in_code.int="0"
+                                        in_msg.render="开始计算规则，rule_id=$!{v_rule_id}"/>
+
+                        <sql-update>
+                            update sys_task
+                            set status=1,
+                                begin_time=now()
+                            where id=#{tmpRowMap.id}
+                        </sql-update>
+
+                        <procedure-call refid="demo_sub_calc"
+                                        result="callParams"
+                                       in_rule_id="v_rule_id"
+                                       in_sum_date="v_sum_date"/>
+                        <lang-set result="v_calc_code" value="callParams.o_code"/>
+                        <lang-set result="v_calc_msg" value="callParams.o_msg"/>
+
+                        <lang-if test="v_calc_code!=0">
+                            <!--
+                            <lang-eval-ts>
+                                o_code=${v_calc_code};
+                                o_msg=${v_calc_msg};
+                            </lang-eval-ts>
+                            <procedure-call refid="demo_log"
+                                            in_code.int="-1"
+                                            in_msg.render="调用子过程出现异常：code=$!{o_code}, msg=${o_msg}"/>
+                            <lang-return/>
+                            -->
+                            <lang-printf value.render="调用子过程出现异常：code=$!{o_code}, msg=${o_msg}"/>
+                            <sql-update>
+                                update sys_task
+                                set status=3,
+                                    end_time=now()
+                                where id=#{tmpRowMap.id}
+                            </sql-update>
+                        </lang-if>
+
+                        <sql-update>
+                            update sys_task
+                            set status=2,
+                                end_time=now()
+                            where id=#{tmpRowMap.id}
+                        </sql-update>
+
+                    </lang-body>
+                </sql-cursor>
+            </lang-while>
+
+            <procedure-call refid="demo_log"
+                            in_code.int="0"
+                            in_msg.render="结束今日计算循环：$!{v_begin_task_day}"/>
+
+            <lang-set result="o_code" value.int="0"/>
+            <lang-set result="o_msg" value.string="结束今日计算循环"/>
+        </lang-body>
+        <lang-catch type="RuntimeException" e="e">
+            <lang-set result="o_code" value.int="-1"/>
+            <lang-render result.trim="o_msg">
+                今日计算出现异常：$!{v_begin_task_day}, $!{trace.errmsg}
+            </lang-render>
+
+            <procedure-call refid="demo_log"
+                            in_code.int="-1"
+                            in_msg="o_msg"/>
+        </lang-catch>
+    </lang-try>
+
+
+</procedure>

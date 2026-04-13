@@ -24,6 +24,7 @@
 - XML节点语法定义参考：[procedure.xml](./procedure.xml)
 - XML节点的DTD约束文件：[procedure.dtd](./procedure.dtd)
 - 产品对比分析文档：[product-compare.md](./product-compare.md)
+- 插件预览：[demo-preview.md](plugin/demo-preview.md)
 
 ## 项目地址
 
