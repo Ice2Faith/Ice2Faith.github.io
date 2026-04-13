@@ -3856,7 +3856,7 @@ test.xml
 - 首先，在Java代码中调用此过程
 
 ```java
-import ....springboot.jdbc.bql.procedure.JdbcProcedureHelper;
+import ....springboot.xproc4j.JdbcProcedureHelper;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;

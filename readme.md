@@ -33,12 +33,12 @@
 **github 源仓库**
 
 - 核心模块：[i2f-jdbc-procedure](https://github.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-jdk/i2f-jdbc-procedure/src/main)
-- springboot 启动模块：[i2f-springboot-jdbc-bql-starter](https://github.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-jdbc-bql-starter/src/main/java/i2f/springboot/jdbc/bql/procedure)
+- springboot 启动模块：[i2f-springboot-xproc4j-starter](https://github.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-xproc4j-starter/src/main/java/i2f/springboot/xproc4j)
 
 **gitee 镜像仓库**
 
 - 核心模块：[i2f-jdbc-procedure](https://gitee.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-jdk/i2f-jdbc-procedure/src/main)
-- springboot 启动模块：[i2f-springboot-jdbc-bql-starter](https://gitee.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-jdbc-bql-starter/src/main/java/i2f/springboot/jdbc/bql/procedure)
+- springboot 启动模块：[i2f-springboot-xproc4j-starter](https://gitee.com/Ice2Faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-xproc4j-starter/src/main/java/i2f/springboot/xproc4j)
 
 
 

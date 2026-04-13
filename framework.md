@@ -49,7 +49,7 @@ jdbc-procedure/
    │    ├── signal/         # 信号异常
    │    ├── test/           # 测试代码
    │    └── util/           # 工具类
-   └── src/main/java/.../springboot/jdbc/bql/procedure/ # Spring Boot集成模块
+   └── src/main/java/.../springboot/xproc4j/ # Spring Boot集成模块
        └── SpringContextJdbcProcedureExecutorAutoConfiguration.java
 ```
 
@@ -575,7 +575,7 @@ void publishEvent(XProc4jEvent event)
 
 ### 8.1 自动配置类
 
-根据 [SpringContextJdbcProcedureExecutorAutoConfiguration.java](/src/main/java/.../springboot/jdbc/bql/procedure/SpringContextJdbcProcedureExecutorAutoConfiguration.java)：
+根据 [SpringContextJdbcProcedureExecutorAutoConfiguration.java](/src/main/java/.../springboot/xproc4j/SpringContextJdbcProcedureExecutorAutoConfiguration.java)：
 
 **配置项（通过SpringJdbcProcedureProperties）：**
 ```java
@@ -601,7 +601,7 @@ xproc4j.executor.enable               // 执行器
 
 ### 8.2 配置属性类
 
-根据 [SpringJdbcProcedureProperties.java](/src/main/java/.../springboot/jdbc/bql/procedure/SpringJdbcProcedureProperties.java)：
+根据 [SpringJdbcProcedureProperties.java](/src/main/java/.../springboot/xproc4j/procedure/SpringJdbcProcedureProperties.java)：
 
 ```java
 // XML文件位置

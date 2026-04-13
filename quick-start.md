@@ -97,7 +97,7 @@ xproc4j:
 ### 2.4 Java 代码调用
 
 ```java
-import ....springboot.jdbc.bql.procedure.JdbcProcedureHelper;
+import ....springboot.xproc4j.JdbcProcedureHelper;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -704,7 +704,7 @@ TinyScript 是专门为存储过程转换设计的脚本语言。
 **方式一：使用静态Helper**
 
 ```java
-import ....springboot.jdbc.bql.procedure.JdbcProcedureHelper;
+import ....springboot.xproc4j.JdbcProcedureHelper;
 
 // 函数调用
 int result = JdbcProcedureHelper.invoke("F_GET_NAME", map -> {
