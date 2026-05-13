@@ -6,7 +6,7 @@
 - 调用返回最后一条语句执行的结果
 - 基于一个根上下文进行操作
 
-![favicon.png](favicon.png)
+![funic.png](./funic.png)
 
 ## 核心设计
 
