@@ -16,6 +16,7 @@
 - 存储过程转换对照指南：[convert-guide.md](./convert-guide.md)
 - XML节点定义白皮书：[node-definition.md](./node-definition.md)
 - TinyScript语法：[TinyScript.md](./TinyScript.md)
+- Funic语法：[Funic.md](./Funic.md)
 
 ## 过程文档
 

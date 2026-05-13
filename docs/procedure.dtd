@@ -110,6 +110,7 @@
         <!ATTLIST lang-set value.eval-js CDATA #IMPLIED>
         <!ATTLIST lang-set value.eval-tinyscript CDATA #IMPLIED>
         <!ATTLIST lang-set value.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-set value.eval-funic CDATA #IMPLIED>
         <!ATTLIST lang-set value.class CDATA #IMPLIED>
         <!ATTLIST lang-set value.not CDATA #IMPLIED>
         <!ATTLIST lang-set value.body-text.trim CDATA #IMPLIED>
@@ -149,6 +150,7 @@
         <!ATTLIST lang-set result.eval-js CDATA #IMPLIED>
         <!ATTLIST lang-set result.eval-tinyscript CDATA #IMPLIED>
         <!ATTLIST lang-set result.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-set result.eval-funic CDATA #IMPLIED>
         <!ATTLIST lang-set result.class CDATA #IMPLIED>
         <!ATTLIST lang-set result.not CDATA #IMPLIED>
         <!ATTLIST lang-set result.body-text.trim CDATA #IMPLIED>
@@ -449,6 +451,7 @@
         <!ATTLIST lang-return value.eval-js CDATA #IMPLIED>
         <!ATTLIST lang-return value.eval-tinyscript CDATA #IMPLIED>
         <!ATTLIST lang-return value.eval-ts CDATA #IMPLIED>
+        <!ATTLIST lang-return value.eval-funic CDATA #IMPLIED>
         <!ATTLIST lang-return value.class CDATA #IMPLIED>
         <!ATTLIST lang-return value.not CDATA #IMPLIED>
 
@@ -1179,6 +1182,9 @@
 
         <!ELEMENT lang-eval-groovy (#PCDATA)>
         <!ATTLIST lang-eval-groovy result CDATA #IMPLIED>
+
+        <!ELEMENT lang-eval-funic (#PCDATA)>
+        <!ATTLIST lang-eval-funic result CDATA #IMPLIED>
 
         <!ELEMENT sql-scope (ANY)>
         <!ATTLIST sql-scope datasources CDATA #IMPLIED>

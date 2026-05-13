@@ -107,6 +107,7 @@
 | `.eval-js`                      | JavaScript脚本执行，属性内就需要是符合JavaScript的表达式 | `value.eval-js="1+1"`              |
 | `.eval-tinyscript` / `.eval-ts` | TinyScript脚本执行，属性内就需要是符合TinyScript的表达式 | `value.eval-ts="${a}+1"`           |
 | `.eval-groovy`                  | Groovy脚本执行，属性内就需要是符合Groovy的表达式         | `value.eval-groovy="println 'hi'"` |
+| `.eval-funic`                   | Funic脚本执行，属性内就需要是符合Funic的表达式           | `value.eval-funic="a+1"`           |
 
 ### 2.8 异常Cause链修饰符
 
@@ -144,6 +145,9 @@
 
         <!-- test默认是test修饰符，使用test.eval-ts使用TinyScript表达式 -->
 <lang-if test.eval-ts="${V_STATUS} == 1">
+
+<!-- test默认是test修饰符，使用test.eval-funic使用Funic表达式 -->
+<lang-if test.eval-funic="V_STATUS == 1">
 ```
 
 ---
@@ -460,6 +464,9 @@ username: ${user.name}
 
         <!-- TinyScript表达式 -->
 <lang-set result="v_now" value.eval-ts="new Date()"/>
+
+        <!-- Funic表达式 -->
+<lang-set result="v_now" value.eval-funic="new Date()"/>
 
         <!-- 标签内部文本 -->
 <lang-set result.body-text.trim="">
@@ -1106,6 +1113,10 @@ text
     <lang-catch type="java.sql.SQLException" e="e" test.eval-ts='${e}.getSQLState()=="22011"'>
         <!-- 处理其他SQL错误 -->
     </lang-catch>
+  <!-- 使用Funic判断 -->
+  <lang-catch type="java.sql.SQLException" e="e" test.eval-funic='e.getSQLState()=="22011"'>
+    <!-- 处理其他SQL错误 -->
+  </lang-catch>
     <!-- 最终捕获 -->
     <lang-catch type="RuntimeException" e="e">
         <lang-println tag="runError" SQL="v_sql" EXCEPTION="e"/>
@@ -2400,6 +2411,42 @@ params.v_cnt+1
 
 **验证依据：
 ** [LangEvalGroovyNode.java](/src/main/java/.../jdbc/procedure/node/impl/LangEvalGroovyNode.java)
+
+### 5.47 lang-eval-funic
+
+**功能说明：**
+执行Funic脚本。
+
+**DTD定义：**
+
+```xml
+
+<!ELEMENT lang-eval-funic (#PCDATA)>
+<!ATTLIST lang-eval-funic result CDATA #IMPLIED>
+```
+
+**属性定义：**
+
+| 属性名    | 类型     | 默认修饰符 | 说明    |
+|--------|--------|-------|-------|
+| result | String | -     | 结果变量名 |
+
+**使用示例：**
+
+```xml
+
+<lang-eval-funic>
+  v_i=v_i+1;
+</lang-eval-funic>
+
+<lang-eval-funic result="v_i">
+v_i+1
+</lang-eval-funic>
+```
+
+**验证依据：
+** [LangEvalFunicNode.java](/src/main/java/.../jdbc/procedure/node/impl/LangEvalFunicNode.java)
+
 
 ---
 
@@ -3818,8 +3865,8 @@ delete from sys_user where del_flag = $!{v_del_flag};
 
 本文档中所有节点定义均经过以下源代码验证：
 
-| 节点类                           | 文件路径                                                                                                          |
-|-------------------------------|---------------------------------------------------------------------------------------------------------------|
+| 节点类                           | 文件路径                                                                           |
+|-------------------------------|--------------------------------------------------------------------------------|
 | LogDebugNode                  | /src/main/java/.../jdbc/procedure/node/impl/LogDebugNode.java                  |
 | LogInfoNode                   | /src/main/java/.../jdbc/procedure/node/impl/LogInfoNode.java                   |
 | LogWarnNode                   | /src/main/java/.../jdbc/procedure/node/impl/LogWarnNode.java                   |
@@ -3875,6 +3922,7 @@ delete from sys_user where del_flag = $!{v_del_flag};
 | LangEvalJavascriptNode        | /src/main/java/.../jdbc/procedure/node/impl/LangEvalJavascriptNode.java        |
 | LangEvalTinyScriptNode        | /src/main/java/.../jdbc/procedure/node/impl/LangEvalTinyScriptNode.java        |
 | LangEvalGroovyNode            | /src/main/java/.../jdbc/procedure/node/impl/LangEvalGroovyNode.java            |
+| LangEvaFunicNode              | /src/main/java/.../jdbc/procedure/node/impl/LangEvalFunicNode.java             |
 | SqlScriptNode                 | /src/main/java/.../jdbc/procedure/node/impl/SqlScriptNode.java                 |
 | SqlQueryRowNode               | /src/main/java/.../jdbc/procedure/node/impl/SqlQueryRowNode.java               |
 | SqlQueryListNode              | /src/main/java/.../jdbc/procedure/node/impl/SqlQueryListNode.java              |
@@ -3927,6 +3975,7 @@ delete from sys_user where del_flag = $!{v_del_flag};
 | lang-eval-js      | JavaScript脚本   |
 | lang-eval-ts      | TinyScript脚本   |
 | lang-eval-groovy  | Groovy脚本       |
+| lang-eval-funic   | Funic脚本        |
 | lang-render       | 模板渲染           |
 | lang-string       | 字符串定义          |
 | lang-invoke       | 方法调用           |
