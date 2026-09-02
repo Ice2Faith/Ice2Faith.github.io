@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>vue2 converter</title>
+    <script src="./vue2-converter.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .card{
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            border: solid 1px #aaa;
+        }
+        button{
+            margin: 5px;
+            padding: 8px;
+            background: dodgerblue;
+            border: none;
+            font-size: 12px;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h4 style="text-align: center;margin: 15px;">Vue2 Loader Project Files Convertor</h4>
+        <hr/>
+        <button onclick="getProjectFiles()">加载项目文件</button>
+        <button onclick="refreshProjectFiles()">刷新项目</button>
+        <button onclick="convertFiles()">开始转换</button>
+        <button onclick="removeGeneratedFiles()">清理文件</button>
+    </div>
+    <div class="card">
+        <h4>项目文件</h4>
+        <hr/>
+        <ol id="list">
+
+        </ol>
+    </div>
+    <div class="card">
+        <h4>转换日志</h4>
+        <hr/>
+        <ol id="logger">
+
+        </ol>
+    </div>
+</body>
+<script>
+    let projectDirHandle=null
+    let projectFiles=[]
+    let listDom=document.querySelector('#list')
+    let loggerDom=document.querySelector('#logger')
+    async function getProjectFiles() {
+        projectDirHandle=null
+        refreshProjectFiles()
+    }
+    async function refreshProjectFiles(){
+        if(!projectDirHandle){
+            projectDirHandle = await Vue2Converter.getDirectoryHandle()
+        }
+        projectFiles = await Vue2Converter.scanFilesMapping(projectDirHandle)
+        window.projectFiles=projectFiles
+        listDom.innerHTML=''
+        for(let i=0;i<projectFiles.length;i++){
+            let item=projectFiles[i]
+            let child=document.createElement('li')
+            child.innerText=item.path
+            listDom.appendChild(child)
+        }
+    }
+    async function convertFiles() {
+        loggerDom.innerHTML=''
+        await Vue2Converter.convertFiles(projectFiles,(str)=>{
+            let child=document.createElement('li')
+            child.innerText=str
+            loggerDom.appendChild(child)
+        })
+        setTimeout(() => {
+            refreshProjectFiles()
+        }, 1000)
+    }
+    async function removeGeneratedFiles(){
+        loggerDom.innerHTML=''
+        await Vue2Converter.removeGeneratedFiles(projectFiles,(str)=>{
+            let child=document.createElement('li')
+            child.innerText=str
+            loggerDom.appendChild(child)
+        })
+        setTimeout(() => {
+            refreshProjectFiles()
+        }, 1000)
+    }
+</script>
+<style>
+
+</style>
+</html>

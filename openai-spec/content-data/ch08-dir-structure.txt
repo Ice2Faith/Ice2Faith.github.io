@@ -1,0 +1,9 @@
+skills/
+├── search_website/
+│   ├── SKILL.md   # 技能声明：YAML 头 + Markdown 正文
+│   └── script/
+│       └── search.py  # 附带脚本，可被 run_skill_script 执行
+└── data_report/
+    ├── SKILL.md
+    └── resources/
+        └── template.md  # 静态资源，可被 get_skill_resource 读取

@@ -1,0 +1,10 @@
+<span class="cm"># 一轮完整的工具调用对话</span>
+[1u] <span class="cm"># 用户发送消息</span>
+↓ 注入工具声明
+[1u] → LLM 推理
+↓ 返回调用契约
+[1u, 2ac] <span class="cm"># 2ac = 助手消息 + tool_calls</span>
+↓ 执行工具 · 反馈结果
+[1u, 2ac, 3t] <span class="cm"># 3t = 工具消息</span>
+↓ LLM 继续推理（客户端自动触发）
+[1u, 2ac, 3t, 4a] <span class="cm"># 4a = 最终归纳答复</span>

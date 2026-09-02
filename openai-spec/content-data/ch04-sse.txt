@@ -1,0 +1,15 @@
+event: delta
+data: {"choices":[{"delta":{"content":"你好"},"index":0}]}
+
+# 推理过程（思考内容）独立字段推送
+event: delta
+data: {"choices":[{"delta":{"reasoning_content":"..."}}]}
+
+# 工具调用契约（流式拼接 arguments）
+event: delta
+data: {"choices":[{"delta":{"tool_calls":[{
+  "id":"call_xxx",
+  "function":{"name":"rag_search","arguments":"{}"}}]}}]}
+
+event: done
+data: [DONE]

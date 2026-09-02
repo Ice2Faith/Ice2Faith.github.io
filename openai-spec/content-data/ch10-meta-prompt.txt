@@ -1,0 +1,6 @@
+当现有工具无法满足任务需求时：
+1. 调用 tools_provider_list 列举可用的 MCP 工具供应商
+2. 调用 list_tools_from_providers 按供应商名查看其工具清单
+3. 调用 load_tools_by_names 将所需工具装载到当前会话
+装载后的工具将参与后续推理；会话内工具数量受 LRU 策略约束，
+超容量时最久未使用的工具将被淘汰。

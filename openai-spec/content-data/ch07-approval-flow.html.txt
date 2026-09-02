@@ -1,0 +1,8 @@
+<span class="cm"># 模型返回 tool_calls 后的前端审批决策</span>
+查找工具定义的 tags
+├── tags 包含 "auto" 且用户勾选了 "auto"
+│   └── → 自动放行执行
+├── tags 全部被 autoApprovalToolTags 覆盖
+│   └── → 自动放行执行
+└── 未被覆盖
+    └── → 弹出审批弹窗（HITL 人工确认）

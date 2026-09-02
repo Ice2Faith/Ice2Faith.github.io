@@ -1,0 +1,10 @@
+<span class="cm"># 后端组装报文时的注入顺序（每步均同步回显独立事件）</span>
+<span class="num">1.</span> 事实内容 (Truth) <span class="cm">→ messages[0] 系统消息 · echo_truth_content</span>
+<span class="num">2.</span> 事实使用方式 <span class="cm">→ TruthStoreTools 工具使用指引 · echo_truth_prompt</span>
+<span class="num">3.</span> 循环工程 <span class="cm">→ SessionRecordTools 五步工作流提示词 · echo_loop_engineering</span>
+<span class="num">4.</span> MCP 动态工具提示词 <span class="cm">→ messages[0] 系统消息 · echo_dynamic_tool</span>
+<span class="num">5.</span> 技能系统提示词 <span class="cm">→ messages[0] 系统消息 · echo_skill</span>
+<span class="num">6.</span> 角色 System Prompt <span class="cm">→ 用户手动添加的角色人设</span>
+<span class="num">7.</span> 用户消息 + 附件 <span class="cm">→ 消息列表末尾（&lt;upload_files&gt;）；若开启图片视觉，图片经压缩后以 base64 内嵌</span>
+<span class="num">8.</span> 系统重排 (可选) <span class="cm">→ 合并全部 system 为一条置于首位</span>
+<span class="cm"># 工具执行后，事实可能被 store_truth 改写，再发 echo_truth_sync 同步最新事实</span>

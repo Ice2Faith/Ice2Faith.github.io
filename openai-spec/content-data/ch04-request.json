@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "apiKey": "sk-***"
+  },
+  "completion": {
+    "model": "qwen-max",
+    "stream": true,
+    "messages": [
+      { "role": "system", "content": "..." },
+      { "role": "user", "content": "..." }
+    ],
+    "temperature": 0.7,
+    "maxTokens": 2048
+  },
+  "enableTools": true,
+  "enableSkills": true,
+  "enableRags": true,
+  "enableLruTools": false,
+  "enableToolRecommendByIntentRecognize": false,
+  "enableTruth": false,
+  "encryptOutput": false,
+  "enableMemories": false,
+  "memoryBucket": "user-001",
+  "enableMergedSystemMsg": false,
+  "stream_options": { "include_usage": true },
+  "enableVisionImage": false,
+  "enableLoopEngineering": true,
+  "sessionRecordsMap": { },
+  "toolApprovalList": [ ]
+}

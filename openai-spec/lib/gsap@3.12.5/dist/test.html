@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gsap Demo</title>
+
+    <!-- https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ -->
+    <script src="./all.js"></script>
+    <script src="./gsap.min.js"></script>
+    <script src="./CSSRulePlugin.min.js"></script>
+    <script src="./CustomEase.min.js"></script>
+    <script src="./Draggable.min.js"></script>
+    <script src="./EaselPlugin.min.js"></script>
+    <script src="./EasePack.min.js"></script>
+    <script src="./Flip.min.js"></script>
+    <script src="./MotionPathPlugin.min.js"></script>
+    <script src="./Observer.min.js"></script>
+    <script src="./PixiPlugin.min.js"></script>
+    <script src="./ScrollToPlugin.min.js"></script>
+    <script src="./ScrollTrigger.min.js"></script>
+    <script src="./TextPlugin.min.js"></script>
+</head>
+<body>
+
+<!-- 1. 基础动画 to -->
+<h2>1. gsap.to() — 基础动画</h2>
+<p class="desc">元素向右移动 300px 并旋转 360°</p>
+<div id="box1" class="box"></div>
+
+<!-- 2. from 动画 -->
+<h2>2. gsap.from() — 入场动画</h2>
+<p class="desc">元素从左侧 -200px 滑入，同时淡入</p>
+<div id="box2" class="box green"></div>
+
+<!-- 3. fromTo -->
+<h2>3. gsap.fromTo() — 指定起止状态</h2>
+<p class="desc">从 scale(0) 弹到 scale(1)</p>
+<div id="box3" class="box orange"></div>
+
+<!-- 4. 按钮控制 -->
+<h2>4. 按钮控制动画</h2>
+<p class="desc">点击按钮播放 / 反转动画</p>
+<button class="btn" id="playBtn">▶ 播放</button>
+<button class="btn" id="reverseBtn">◀ 反转</button>
+<div id="box4" class="box purple" style="margin-top:15px;"></div>
+
+<!-- 5. Timeline 时间线 -->
+<h2>5. gsap.timeline() — 时间线序列动画</h2>
+<p class="desc">三个方块依次执行不同动画</p>
+<div class="timeline-boxes">
+  <div id="tl1" class="box"></div>
+  <div id="tl2" class="box green"></div>
+  <div id="tl3" class="box orange"></div>
+</div>
+
+<!-- 6. Draggable 拖拽 -->
+<h2>6. Draggable — 拖拽交互</h2>
+<p class="desc">拖拽红色方块，限制在容器内</p>
+<div class="drag-area">
+  <div id="dragBox" class="drag-box"></div>
+</div>
+
+<!-- 7. MotionPath 路径动画 -->
+<h2>7. MotionPath — 沿路径运动</h2>
+<p class="desc">粉色圆点沿曲线路径运动</p>
+<div class="path-area">
+  <div id="pathBox" class="path-box"></div>
+</div>
+
+<!-- 8. TextPlugin 文字动画 -->
+<h2>8. TextPlugin — 文字替换动画</h2>
+<p class="desc">文字逐字替换变化</p>
+<div id="textDemo" class="text-demo">Hello GSAP</div>
+
+<!-- 9. ScrollTrigger 滚动触发 -->
+<h2>9. ScrollTrigger — 滚动触发动画</h2>
+<p class="desc">向下滚动页面，青色方块会触发旋转缩放</p>
+<div style="height: 600px;"></div>
+<div id="scrollBox" class="scroll-box"></div>
+<div style="height: 600px;"></div>
+
+<script>
+
+
+    gsap.registerPlugin(
+        CSSRulePlugin,
+        CustomEase,
+        Draggable,
+        EaselPlugin,
+        EasePack,
+        Flip,
+        MotionPathPlugin,
+        Observer,
+        PixiPlugin,
+        ScrollToPlugin,
+        ScrollTrigger,
+        TextPlugin,
+    );
+
+    // ===== 1. gsap.to() =====
+    gsap.to("#box1", {
+      x: 300,
+      rotation: 360,
+      duration: 2,
+      ease: "power2.inOut"
+    });
+
+    // ===== 2. gsap.from() =====
+    gsap.from("#box2", {
+      x: -200,
+      opacity: 0,
+      duration: 1.5,
+      ease: "back.out(1.7)"
+    });
+
+    // ===== 3. gsap.fromTo() =====
+    gsap.fromTo("#box3",
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 1, ease: "elastic.out(1, 0.5)" }
+    );
+
+    // ===== 4. 按钮控制 =====
+    let controlledTl = gsap.timeline({ paused: true })
+            .to("#box4", { x: 300, duration: 1, ease: "power2.out" })
+            .to("#box4", { rotation: 180, backgroundColor: "#f97316", duration: 0.5 });
+
+    document.getElementById("playBtn").addEventListener("click", () => controlledTl.play());
+    document.getElementById("reverseBtn").addEventListener("click", () => controlledTl.reverse());
+
+    // ===== 5. Timeline 时间线 =====
+    let tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
+    tl.to("#tl1", { y: -50, duration: 0.5, ease: "power2.out" })
+            .to("#tl1", { y: 0, duration: 0.5, ease: "bounce.out" })
+            .to("#tl2", { scale: 1.5, duration: 0.5, ease: "power2.inOut" }, "-=0.3")
+            .to("#tl2", { scale: 1, duration: 0.5 })
+            .to("#tl3", { rotation: 360, duration: 1, ease: "power1.inOut" });
+
+    // ===== 6. Draggable =====
+    Draggable.create("#dragBox", {
+      type: "x,y",
+      bounds: ".drag-area",
+      inertia: true
+    });
+
+    // ===== 7. MotionPath =====
+    gsap.to("#pathBox", {
+      motionPath: {
+        path: [
+          { x: 0, y: 0 },
+          { x: 150, y: 100 },
+          { x: 300, y: 50 },
+          { x: 350, y: 250 },
+          { x: 100, y: 200 },
+          { x: 0, y: 0 }
+        ],
+        curviness: 1.5
+      },
+      duration: 4,
+      ease: "none",
+      repeat: -1
+    });
+
+    // ===== 8. TextPlugin =====
+    gsap.to("#textDemo", {
+      duration: 2,
+      text: "GSAP 真好用！",
+      ease: "none",
+      repeat: -1,
+      yoyo: true,
+      repeatDelay: 1
+    });
+
+    // ===== 9. ScrollTrigger =====
+    gsap.to("#scrollBox", {
+      rotation: 360,
+      scale: 1.5,
+      backgroundColor: "#f97316",
+      scrollTrigger: {
+        trigger: "#scrollBox",
+        start: "top 80%",
+        end: "top 20%",
+        scrub: true
+      }
+    });
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; padding: 40px; background: #f5f5f5; }
+  h2 { margin: 40px 0 10px; color: #333; }
+  p.desc { color: #888; margin-bottom: 15px; font-size: 14px; }
+
+  .box {
+    width: 100px; height: 100px;
+    background: #3b82f6; border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  .box.green { background: #22c55e; }
+  .box.orange { background: #f97316; }
+  .box.purple { background: #a855f7; }
+
+  .drag-area {
+    width: 400px; height: 200px;
+    background: #e5e7eb; border-radius: 8px;
+    position: relative; overflow: hidden;
+  }
+  .drag-box {
+    width: 80px; height: 80px;
+    background: #ef4444; border-radius: 8px;
+    position: absolute; top: 60px; left: 160px;
+    cursor: grab;
+  }
+
+  .scroll-section {
+    height: 100vh; padding: 60px 0;
+    display: flex; align-items: center;
+  }
+  .scroll-box {
+    width: 120px; height: 120px;
+    background: #06b6d4; border-radius: 12px;
+  }
+
+  .path-area {
+    width: 400px; height: 300px;
+    background: #e5e7eb; border-radius: 8px;
+    position: relative;
+  }
+  .path-box {
+    width: 40px; height: 40px;
+    background: #ec4899; border-radius: 50%;
+    position: absolute; top: 0; left: 0;
+  }
+
+  .text-demo { font-size: 32px; font-weight: bold; color: #1e293b; }
+
+  .timeline-boxes { display: flex; gap: 20px; }
+  .timeline-boxes .box { width: 60px; height: 60px; }
+
+  .btn {
+    padding: 8px 20px; background: #3b82f6;
+    color: #fff; border: none; border-radius: 6px;
+    cursor: pointer; font-size: 14px; margin-right: 10px;
+  }
+  .btn:hover { background: #2563eb; }
+</style>
+</html>

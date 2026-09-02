@@ -1,0 +1,9 @@
+<span class="cm"># 启动要求：JDK 1.8+ · Spring Boot 2.x · 网络连通 LLM API</span>
+<span class="cm"># （可选）Embedding 模型服务（RAG）· 数据库连接（数据库工具）</span>
+${base-dir}/
+├── <span class="pkg">tmp-files</span>/ <span class="cm"># 临时文件存储（keep-days 15 天自动清理）</span>
+├── <span class="pkg">rags-docs</span>/ <span class="cm"># RAG 文档投放目录</span>
+│   └── <span class="pkg">rags_history</span>/ <span class="cm"># 已处理文档归档（自动创建）</span>
+└── <span class="pkg">skills</span>/ <span class="cm"># 技能目录（30s 热扫描）</span>
+    └── {技能名称}/
+        └── SKILL.md <span class="cm"># 技能定义文件</span>

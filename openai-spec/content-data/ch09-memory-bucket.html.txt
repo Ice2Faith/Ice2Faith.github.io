@@ -1,0 +1,10 @@
+<span class="cm"># 记忆桶的读写规则</span>
+BucketRagEmbeddingStore
+├── public 桶 <span class="cm"># 全局共享记忆（默认写入桶）</span>
+└── {memoryBucket} 桶 <span class="cm"># 用户专属记忆（请求级指定）</span>
+<span class="cm"># memory_search 检索范围</span>
+检索桶 = [public] + [memoryBucket]
+<span class="cm"># 即：公共记忆 + 用户私有记忆一并召回</span>
+<span class="cm"># memory_save 写入规则</span>
+写入桶 = memoryBucket ?? public
+<span class="cm"># 有用户桶写用户桶，无则写公共桶</span>

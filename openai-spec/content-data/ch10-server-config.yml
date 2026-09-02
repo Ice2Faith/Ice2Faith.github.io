@@ -1,0 +1,19 @@
+i2f:
+  springboot:
+    ai:
+      mcp:
+        server:
+          enable: true
+          simple-server:
+            app-list:
+              - app-id: "ai-master"
+                app-key: "secret-key-1"
+          netty:
+            enable: false  # 使用 Spring Web MVC 模式
+
+ai:
+  tools:
+    enable: true
+    file:
+      enable: true
+      root-path: "/data/ai-files"

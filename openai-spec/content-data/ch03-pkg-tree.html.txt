@@ -1,0 +1,22 @@
+<span class="dir">i2f.springboot.ops.openai</span>
+├── <span class="pkg">controller</span>/
+│   ├── OpenAiOpsController <span class="cm"># 7 个 REST 端点 · SSE 编排核心</span>
+│   └── QwenTtsOpsController <span class="cm"># 千问语音合成代理</span>
+├── <span class="pkg">data</span>/
+│   ├── OpenAiOperateDto <span class="cm"># 操作请求：功能开关集合</span>
+│   ├── OpenAiCompletionVo / Dto <span class="cm"># 补全请求 VO/DTO</span>
+│   ├── OpenAiMessageVo <span class="cm"># 多态消息载体</span>
+│   ├── OpenAiMeta <span class="cm"># baseUrl · apiKey</span>
+│   ├── OpenAiToolApprovalDto <span class="cm"># 工具审批决定</span>
+│   └── <span class="pkg">message</span>/ OpsOpenAiConsts <span class="cm"># 12 种回显类型常量</span>
+├── <span class="pkg">tool</span>/
+│   ├── SpringContextToolAutoConfiguration
+│   ├── <span class="pkg">impl</span>/ 17 个工具类 <span class="cm"># @Tool 注解驱动</span>
+│   │   ├── GroovyTools <span class="cm"># groovy_run_script（条件装配）</span>
+│   │   ├── LoopEngineeringTools <span class="cm"># 循环工程五步工作流提示词</span>
+│   └── SessionRecordTools <span class="cm"># 循环工程会话记录读写</span>
+│   └── <span class="pkg">impl.sql</span>/ SQL 校验器 <span class="cm"># AST + 正则双校验</span>
+├── <span class="pkg">skill</span>/ SkillAutoConfiguration <span class="cm"># 30s 热扫描</span>
+├── <span class="pkg">rag</span>/ RagAutoConfiguration <span class="cm"># 向量化 + SQLite 存储</span>
+├── <span class="pkg">async</span>/ AsyncTaskDispatcher / AsyncTaskResolver <span class="cm"># 异步任务调度与状态轮询</span>
+└── <span class="pkg">tts</span>/ QwenAudioTtsWebSocket <span class="cm"># 千问语音合成 WebSocket 客户端</span>

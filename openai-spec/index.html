@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="max-age=3600, public">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="i2f-springboot-ops-starter OpenAI 兼容 AI 对话框架 · 技术全景文档">
+    <title>OpenAI 兼容 AI 对话框架 · 技术全景</title>
+
+    <link rel="stylesheet" href="./assets/app.css">
+
+    <script src="./lib/vue/vue-2.js"></script>
+
+    <script src="./lib/moment/moment-2.24.0.js"></script>
+    <script src="./lib/element-ui/element-ui-2.15.10.js"></script>
+    <link rel="stylesheet" href="./lib/element-ui/element-ui-2.15.10.css"/>
+    <link rel="stylesheet" href="./lib/element-ui/element-ui-2.15.10-icon.css"/>
+    <link href="./lib/element-ui/fonts/element-icons.ttf"/>
+    <link href="./lib/element-ui/fonts/element-icons.woff"/>
+
+    <script src="./lib/highlight.js/11.11.1/highlight.min.js"></script>
+    <link rel="stylesheet" href="./lib/highlight.js/11.11.1/styles/github.min.css"/>
+
+    <script src="./lib/@panzoom/panzoom@4.4.3/dist/panzoom.min.js"></script>
+
+    <script src="./lib/gsap@3.12.5/dist/all.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/CSSRulePlugin.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/CustomEase.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/Draggable.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/EaselPlugin.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/EasePack.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/Flip.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/MotionPathPlugin.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/Observer.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/PixiPlugin.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="./lib/gsap@3.12.5/dist/TextPlugin.min.js"></script>
+
+    <!-- Vue2Loader：非 webpack 环境下加载 .vue 单文件组件 -->
+    <script src="./vue2-loader/loader/Vue2Loader.js"></script>
+
+</head>
+<body>
+
+<!-- Vue 挂载点 -->
+<div id="app"></div>
+
+<!-- GSAP 插件注册 -->
+<script>
+    gsap.registerPlugin(
+        CSSRulePlugin, CustomEase, Draggable, EaselPlugin,
+        EasePack, Flip, MotionPathPlugin, Observer,
+        PixiPlugin, ScrollToPlugin, ScrollTrigger, TextPlugin
+    );
+</script>
+
+<!-- Mermaid 模块加载 -->
+<script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({startOnLoad: false});
+        window.mermaid = mermaid;
+</script>
+
+<!-- 应用初始化链 -->
+<script src="./assets/render-utils.js"></script>
+<script src="./assets/data.js"></script>
+<script src="./assets/state.js"></script>
+<script src="./assets/animations.js"></script>
+<script>
+    /* 由 Vue2Loader 加载根组件 app.vue 并挂载到 #app */
+    Vue2Loader.createVue('./components/app.vue', 'app').then(function (app) {
+        window.app = app;
+    });
+</script>
+
+</body>
+</html>

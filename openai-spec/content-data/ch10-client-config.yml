@@ -1,0 +1,24 @@
+i2f:
+  springboot:
+    ai:
+      mcp:
+        client:
+          enable: true
+          simple:
+            instances:
+              - name: "file_svr"
+                base-url: "http://file-service:8080"
+                app-id: "ai-master"
+                app-key: "secret-key-1"
+                description: "文件操作工具服务"
+              - name: "db_svr"
+                base-url: "http://db-service:8080"
+                app-id: "ai-master"
+                app-key: "secret-key-2"
+                description: "数据库查询工具服务"
+
+ai:
+  tools:
+    enable: true
+    mcp-gateway:
+      enable: true  # 启用 MCP 动态工具网关
