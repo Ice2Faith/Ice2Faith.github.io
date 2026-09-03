@@ -1,0 +1,37 @@
+<svg viewBox="0 0 940 460" role="img" aria-label="ToolManager 三层架构图">
+<defs>
+<marker id="tm-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#46607a"/></marker>
+<marker id="tm-ah-o" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#e8590c"/></marker>
+<marker id="tm-ah-t" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#0b7285"/></marker>
+</defs>
+<rect class="svg-node svg-node-teal" x="20" y="20" width="280" height="68" rx="3"/>
+<text class="svg-lbl" x="160" y="44" text-anchor="middle">ContextAppMcpToolProvider</text>
+<text class="svg-lbl-sm" x="160" y="62" text-anchor="middle">name: app_context · 扫描 @Tool Bean</text>
+<text class="svg-lbl-sm" x="160" y="78" text-anchor="middle">本地工具直接映射为 ToolDefinition</text>
+<rect class="svg-node svg-node-teal" x="330" y="20" width="280" height="68" rx="3"/>
+<text class="svg-lbl" x="470" y="44" text-anchor="middle">远程 McpToolProvider Bean(s)</text>
+<text class="svg-lbl-sm" x="470" y="62" text-anchor="middle">name: 由配置决定 (如 file_svr)</text>
+<text class="svg-lbl-sm" x="470" y="78" text-anchor="middle">HTTP → 远程 MCP Server 拉取工具</text>
+<text class="svg-lbl-sm" x="20" y="14" style="fill:#0b7285;">LAYER 1 · 工具提供者 (McpToolProvider)</text>
+<path class="svg-line" d="M160,88 L160,130" marker-end="url(#tm-ah)"/>
+<path class="svg-line" d="M470,88 L400,130" marker-end="url(#tm-ah)"/>
+<rect class="svg-node svg-node-dark pulse-node" x="130" y="132" width="440" height="68" rx="3"/>
+<text class="svg-lbl-w" x="350" y="158" text-anchor="middle">ContextMcpToolGatewayManager (ToolManager 实现)</text>
+<text class="svg-lbl-sm" x="350" y="176" text-anchor="middle" style="fill:#8fb3d6;">聚合所有 McpToolProvider · 工具名加前缀：{providerName}.{toolName}</text>
+<text class="svg-lbl-sm" x="350" y="192" text-anchor="middle" style="fill:#8fb3d6;">如 app_context.get_current_datetime · file_svr.read_file</text>
+<text class="svg-lbl-sm" x="130" y="124" style="fill:#0b7285;">LAYER 2 · 工具管理器 (ToolManager)</text>
+<path class="svg-line" d="M350,200 L350,242" marker-end="url(#tm-ah)"/>
+<rect class="svg-node svg-node-acc" x="90" y="244" width="520" height="78" rx="3"/>
+<text class="svg-lbl" x="350" y="270" text-anchor="middle">McpProviderTools — 3 个元工具 (Meta-Tools)</text>
+<text class="svg-lbl-sm" x="350" y="290" text-anchor="middle">① tools_provider_list → 列出所有工具供应商</text>
+<text class="svg-lbl-sm" x="350" y="306" text-anchor="middle">② list_tools_from_providers → 列出某供应商提供的工具 ③ load_tools_by_names → 按名称动态加载（LRU 淘汰）</text>
+<text class="svg-lbl-sm" x="90" y="236" style="fill:#e8590c;">LAYER 3 · 元工具 (Meta-Tools)</text>
+<path class="svg-line svg-dash" d="M640,54 L700,54 L700,160 L574,160" marker-end="url(#tm-ah-t)"/>
+<rect class="svg-node svg-node-teal" x="640" y="20" width="280" height="68" rx="3" style="stroke:#2b8a3e;"/>
+<text class="svg-lbl" x="780" y="44" text-anchor="middle" style="fill:#2b8a3e;">ContextAppToolManager</text>
+<text class="svg-lbl-sm" x="780" y="62" text-anchor="middle">直接管理 @Tool Bean · 不经过 MCP 聚合</text>
+<text class="svg-lbl-sm" x="780" y="78" text-anchor="middle">单机场景 · 与 MCP 网关互斥装配</text>
+<text class="svg-lbl-sm" x="640" y="14" style="fill:#2b8a3e;">旁路 · 单机直连模式</text>
+<text class="svg-lbl-sm" x="20" y="362" style="fill:#7b90a5;">装配逻辑：SpringContextToolAutoConfiguration 根据配置开关按需装配上述 4 个 Bean</text>
+<text class="svg-lbl-sm" x="20" y="380" style="fill:#7b90a5;">数据流向：AI 模型 → ToolManager.getTools() → McpToolProvider → @Tool 反射 → JSON Schema → OpenAI tools 字段</text>
+</svg>

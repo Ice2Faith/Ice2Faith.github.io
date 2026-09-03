@@ -1,0 +1,61 @@
+<svg viewBox="0 0 940 292" role="img" aria-label="对话核心状态机">
+<defs>
+<marker id="st-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#46607a"/></marker>
+<marker id="st-ah-o" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#e8590c"/></marker>
+</defs>
+<!-- 主链节点 -->
+<rect class="svg-node svg-node-green" x="20" y="40" width="100" height="48" rx="3"/>
+<text class="svg-lbl" x="70" y="61" text-anchor="middle">IDLE</text>
+<text class="svg-lbl-sm" x="70" y="78" text-anchor="middle">空闲态</text>
+<rect class="svg-node" x="150" y="40" width="110" height="48" rx="3"/>
+<text class="svg-lbl" x="205" y="61" text-anchor="middle">SENDING</text>
+<text class="svg-lbl-sm" x="205" y="78" text-anchor="middle">消息发送态</text>
+<rect class="svg-node" x="290" y="40" width="120" height="48" rx="3"/>
+<text class="svg-lbl" x="350" y="61" text-anchor="middle">INJECTING</text>
+<text class="svg-lbl-sm" x="350" y="78" text-anchor="middle">提示词注入态</text>
+<rect class="svg-node svg-node-dark pulse-node" x="440" y="40" width="140" height="48" rx="3"/>
+<text class="svg-lbl-w" x="510" y="61" text-anchor="middle">STREAMING</text>
+<text class="svg-lbl-sm" x="510" y="78" text-anchor="middle" style="fill:#8fb3d6;">LLM 流式推理态</text>
+<rect class="svg-node" x="660" y="40" width="120" height="48" rx="3"/>
+<text class="svg-lbl" x="720" y="61" text-anchor="middle">RENDERING</text>
+<text class="svg-lbl-sm" x="720" y="78" text-anchor="middle">响应渲染态</text>
+<rect class="svg-node svg-node-acc" x="810" y="40" width="110" height="48" rx="3"/>
+<text class="svg-lbl" x="865" y="61" text-anchor="middle">COMPLETED</text>
+<text class="svg-lbl-sm" x="865" y="78" text-anchor="middle">完成态</text>
+<!-- 工具循环节点 -->
+<rect class="svg-node svg-node-acc" x="290" y="180" width="130" height="48" rx="3"/>
+<text class="svg-lbl" x="355" y="201" text-anchor="middle">HITL_AWAIT</text>
+<text class="svg-lbl-sm" x="355" y="218" text-anchor="middle">工具待授权态</text>
+<rect class="svg-node svg-node-teal" x="470" y="180" width="120" height="48" rx="3"/>
+<text class="svg-lbl" x="530" y="201" text-anchor="middle">TOOL_EXEC</text>
+<text class="svg-lbl-sm" x="530" y="218" text-anchor="middle">工具执行态</text>
+<rect class="svg-node svg-node-teal" x="640" y="180" width="120" height="48" rx="3"/>
+<text class="svg-lbl" x="700" y="201" text-anchor="middle">FEEDBACK</text>
+<text class="svg-lbl-sm" x="700" y="218" text-anchor="middle">结果反馈态</text>
+<!-- 主链箭头 -->
+<path class="svg-line" d="M120,64 L146,64" marker-end="url(#st-ah)"/>
+<path class="svg-line" d="M260,64 L286,64" marker-end="url(#st-ah)"/>
+<path class="svg-line" d="M410,64 L436,64" marker-end="url(#st-ah)"/>
+<path class="svg-line" d="M580,64 L656,64" marker-end="url(#st-ah)"/>
+<path class="svg-line" d="M780,64 L806,64" marker-end="url(#st-ah)"/>
+<text class="svg-lbl-sm" x="126" y="56">输入</text>
+<text class="svg-lbl-sm" x="262" y="56">解密</text>
+<text class="svg-lbl-sm" x="412" y="56">转发</text>
+<text class="svg-lbl-sm" x="588" y="56">流结束/无 tool_calls</text>
+<text class="svg-lbl-sm" x="782" y="56">渲染完</text>
+<!-- 工具循环箭头 -->
+<path class="svg-line-acc" d="M480,88 C480,132 355,132 355,176" marker-end="url(#st-ah-o)"/>
+<text class="svg-lbl-sm" x="388" y="136" style="fill:#e8590c;">tool_calls 待授权</text>
+<path class="svg-line" d="M420,204 L466,204" marker-end="url(#st-ah)"/>
+<text class="svg-lbl-sm" x="424" y="196">允许</text>
+<path class="svg-line" d="M590,204 L636,204" marker-end="url(#st-ah)"/>
+<text class="svg-lbl-sm" x="594" y="196">执行完</text>
+<path class="svg-line-acc" d="M700,180 C700,132 560,132 556,92" marker-end="url(#st-ah-o)"/>
+<text class="svg-lbl-sm" x="608" y="136" style="fill:#e8590c;">提交 tool 消息→继续推理</text>
+<!-- 拒绝虚线 -->
+<path class="svg-line svg-dash" d="M310,180 C310,120 448,118 452,92" marker-end="url(#st-ah)"/>
+<text class="svg-lbl-sm" x="300" y="118" style="fill:#7b90a5;">拒绝+原因→调整行为</text>
+<!-- 循环回到 IDLE -->
+<path class="svg-line svg-dash" d="M865,88 L865,262 L70,262 L70,92" marker-end="url(#st-ah)"/>
+<text class="svg-lbl-sm" x="440" y="278">Token 统计完毕 → 等待新一轮对话</text>
+</svg>
