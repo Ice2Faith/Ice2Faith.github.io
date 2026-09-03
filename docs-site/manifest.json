@@ -1,0 +1,5 @@
+{
+  "title": "Docs Site",
+  "index": "./docs/readme.md",
+  "background": "../doc-libs/assets/bgimg.jpg"
+}
