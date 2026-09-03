@@ -640,6 +640,8 @@ a:hover {
 .chapter {
     padding: 58px 0 10px 0;
     border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    max-width: 100vw;
 }
 
 .chapter-header {
@@ -823,7 +825,7 @@ table.spec {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
-    min-width: 640px;
+    min-width: 240px;
 }
 
 table.spec thead th {
@@ -1240,35 +1242,47 @@ p code, li code, .card code, .callout code, h4 code, h3 code {
     border-top: 3px solid var(--ink);
     background: var(--dark);
     color: #9db8d2;
-}
-
-.footer-inner {
-    max-width: 1080px;
-    margin: 0 auto;
     padding: 34px 30px 26px 30px;
-    text-align: center;
+    font-size: 13px;
 }
 
-.footer-brand {
-    font-family: var(--font-display);
-    font-size: 18px;
-    font-weight: 800;
-    color: #ffd8a8;
-    margin-bottom: 8px;
+.footer .f-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 30px;
+    max-width: 1460px;
+    margin: 0 auto;
 }
 
-.footer-license {
+.footer h5 {
     font-family: var(--font-mono);
     font-size: 11px;
-    color: #5f7fa3;
+    letter-spacing: .2em;
+    color: #ffd8a8;
+    text-transform: uppercase;
+    margin-bottom: 10px;
 }
 
-.footer-license a {
+.footer a {
     color: #74c0fc;
 }
 
-.footer-license a:hover {
+.footer a:hover {
     color: #ffd8a8;
+}
+
+.footer .f-bottom {
+    max-width: 1460px;
+    margin: 26px auto 0 auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--dark-line);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #5f7fa3;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 /* ==================== 返回顶部 ==================== */
@@ -1375,11 +1389,13 @@ p code, li code, .card code, .callout code, h4 code, h3 code {
     border: none;
     border-radius: 0;
     padding: 8px;
+    overflow-x: auto;
+    max-width: 100vw;
 }
 
 .mermaid-code-block {
     width: 100%;
-    min-width: 480px;
+    min-width: 240px;
     min-height: 320px;
     background: white;
 }
@@ -1452,6 +1468,7 @@ p code, li code, .card code, .callout code, h4 code, h3 code {
 
     .side-nav-panel.open {
         display: flex !important;
+        flex-direction: column;
         transform: translateX(0);
     }
 
@@ -1491,6 +1508,10 @@ p code, li code, .card code, .callout code, h4 code, h3 code {
     }
 
     .two-col {
+        grid-template-columns: 1fr;
+    }
+
+    .footer .f-grid {
         grid-template-columns: 1fr;
     }
 

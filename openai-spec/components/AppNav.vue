@@ -1,6 +1,9 @@
 <template>
     <header class="boot-strip" :class="{ 'nav-visible': navOpen }">
         <div class="boot-inner">
+            <button class="nav-toggle" @click="toggleNav" :aria-label="navOpen ? '关闭导航' : '打开导航'">
+              <span></span><span></span><span></span>
+            </button>
             <div class="boot-brand">
                 <span class="boot-logo">⚙</span>
                 <span class="boot-title">i2f-springboot-ops-starter</span>
@@ -16,9 +19,6 @@
                     <span class="bn-title">{{ n.title }}</span>
                 </a>
             </nav>
-            <button class="nav-toggle" @click="toggleNav" :aria-label="navOpen ? '关闭导航' : '打开导航'">
-                <span></span><span></span><span></span>
-            </button>
         </div>
     </header>
 </template>

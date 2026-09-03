@@ -119,14 +119,20 @@ Vue2Converter.convertFile=async function(item,logger) {
     if (!item.isFile) {
         return
     }
+
     if (item.name.endsWith('.jsonp.js')) {
         return
     }
+
     if (item.name.endsWith('.iframe.txt')) {
         return
     }
 
-    if (!item.name.endsWith('.vue') && !item.name.endsWith('.js')) {
+    if (item.name.endsWith('.min.js')
+        || item.name.endsWith('.mjs')
+        || item.name.endsWith('.woff')
+        || item.name.endsWith('.woff2')
+        || item.name.endsWith('.ttf')) {
         return
     }
 
@@ -138,7 +144,12 @@ Vue2Converter.convertFile=async function(item,logger) {
     if (text) {
         let newName = item.name + '.jsonp.js'
         logger('write jsonp:' + item.path + ' ==> ' + newName)
-        let jsonp = 'jsonp_callback(' + JSON.stringify(text) + ')'
+        let jsonContent=JSON.stringify({
+            payload: text,
+            path: item.path+".jsonp.js",
+            name: item.name+".jsonp.js",
+        })
+        let jsonp = `jsonp_callback(${jsonContent})`
         let jsonpFileHandle = await item.parent.getFileHandle(newName, { create: true })
         Vue2Converter.writeTextFile(jsonpFileHandle, jsonp)
     }
@@ -176,9 +187,20 @@ Vue2Converter.readTextFile = async function (file) {
  * @param text {string}
  */
 Vue2Converter.writeTextFile = async function (fileHandle, text) {
-    let writer = await fileHandle.createWritable()
-    await writer.write(text)
-    await writer.close()
+    let writeTask=async ()=>{
+        let writer = await fileHandle.createWritable()
+        await writer.write(text)
+        await writer.close()
+    }
+    for (let i = 0; i < 10; i++) {
+        try{
+            await writeTask()
+            return;
+        }catch (e){
+
+        }
+    }
+    await writeTask()
 }
 
 
