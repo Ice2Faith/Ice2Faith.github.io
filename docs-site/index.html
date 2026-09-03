@@ -1239,7 +1239,7 @@
         let bgEl = document.querySelector('.page-background');
         if (!bgEl) {
             bgEl = document.createElement('div');
-            bgEl.id = 'page-background';
+            bgEl.className = 'page-background';
             document.body.insertBefore(bgEl, document.body.firstChild);
         }
         bgEl.style.backgroundImage = 'url(' + appConfig.background + ')';
