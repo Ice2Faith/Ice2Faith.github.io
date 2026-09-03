@@ -1,5 +1,5 @@
 {
   "title": "XProc4J Docs",
   "index": "./docs/readme.md",
-  "background": "./assets/bgimg.jpg"
+  "background": "../doc-libs/assets/bgimg.jpg"
 }
