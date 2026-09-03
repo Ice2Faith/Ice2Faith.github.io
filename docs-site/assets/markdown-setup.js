@@ -12,6 +12,8 @@ function setupMarkdown() {
 
             let innerHtml = '';
             let actionsHtml = '';
+            let lineNumbersHtml = ''; // 新增：行号 HTML
+
             if (lang == 'mermaid') {
 
                 let chartId = 'mermaid_' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
@@ -39,33 +41,55 @@ function setupMarkdown() {
                 // 检查语言是否受支持
                 try {
                     innerHtml = hljs.highlight(str, {language: lang}).value;
+                    // 新增：生成行号
+                    const lines = str.split('\n');
+                    // 如果末尾是空行（highlight.js 常见行为），去掉最后一行空行号
+                    if (lines[lines.length - 1].trim() === '') {
+                        lines.pop();
+                    }
+                    lineNumbersHtml = lines.map((_, i) => {
+                        return `<span class="line-number">${i + 1}</span>`;
+                    }).join('');
                 } catch (__) {
                 }
             } else {
                 innerHtml = md.utils.escapeHtml(str);
+                // 新增：纯文本也生成行号
+                const lines = str.split('\n');
+                if (lines[lines.length - 1].trim() === '') {
+                    lines.pop();
+                }
+                lineNumbersHtml = lines.map((_, i) => {
+                    return `<span class="line-number">${i + 1}</span>`;
+                }).join('');
             }
-            // 如果未指定语言或解析出错，返回转义后的纯文本
+
+            // 新增：mermaid 不显示行号，其他语言显示
+            const lineNumbersBlock = (lang !== 'mermaid' && lineNumbersHtml)
+                ? `<div class="markdown-code-lines">${lineNumbersHtml}</div>`
+                : '';
+
+            // 修改：在 <pre> 内部加入行号列
             /*language=html*/
             let text = `
-                <div class="markdown-code-block">
-                    <div class="markdown-code-header">
-                        <span class="markdown-header-lang">{{lang}}</span>
-                        <span class="markdown-header-actions">
-                            {{actionsHtml}}
-                            <span class="code-action-btn" onclick="onSaveMarkdownCodeBlock(event,'${lang}')" title="保存">&#x2B07;&#xFE0F;</span>
-                            <span class="code-action-btn" onclick="onCopyMarkdownCodeBlock(event,'${lang}')" title="复制">&#128203;</span>
-                        </span>
-                    </div>
-                    <pre class="hljs markdown-code-body">
-                            <code>
-                                {{innerHtml}}
-                            </code>
-                    </pre>
-                </div>`;
+            <div class="markdown-code-block">
+                <div class="markdown-code-header">
+                    <span class="markdown-header-lang">{{lang}}</span>
+                    <span class="markdown-header-actions">
+                        {{actionsHtml}}
+                        <span class="code-action-btn" onclick="onSaveMarkdownCodeBlock(event,'${lang}')" title="保存">&#x2B07;&#xFE0F;</span>
+                        <span class="code-action-btn" onclick="onCopyMarkdownCodeBlock(event,'${lang}')" title="复制">&#128203;</span>
+                    </span>
+                </div>
+                <pre class="hljs markdown-code-body">
+                    {{lineNumbersBlock}}<code>{{innerHtml}}</code>
+                </pre>
+            </div>`;
             text = text.replaceAll(/\s*\n\s*/g, '');
             text = text.replaceAll('{{lang}}', lang);
             text = text.replaceAll('{{innerHtml}}', innerHtml);
             text = text.replaceAll('{{actionsHtml}}', actionsHtml);
+            text = text.replaceAll('{{lineNumbersBlock}}', lineNumbersBlock);
             return text;
         }
     }) : null;

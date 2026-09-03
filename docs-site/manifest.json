@@ -1,5 +1,5 @@
 {
   "title": "Docs Site",
-  "index": "./docs/readme.md",
+  "index": "../xproc4j/docs/readme.md",
   "background": "../doc-libs/assets/bgimg.jpg"
 }

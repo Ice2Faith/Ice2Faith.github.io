@@ -47,6 +47,11 @@
 .markdown-code-block .markdown-code-body {
     margin-top: 0px;
     border-radius: 0px 0px 8px 8px;
+    padding: 12px 6px;
+
+
+    display: flex !important;
+    align-items: flex-start;
 }
 
 .mermaid-code-block {
@@ -54,4 +59,27 @@
     min-width: 480px;
     min-height: 320px;
     background: white;
+}
+
+
+/* 行号列样式 */
+.markdown-code-lines {
+    flex-shrink: 0;
+    text-align: right;
+    padding: 0 8px 0 3px;
+    color: #999;
+    user-select: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.markdown-code-lines .line-number {
+    display: block;
+}
+
+/* 代码区域自适应剩余宽度 */
+.markdown-code-body code {
+    flex: 1;
+    padding-left: 12px;
+    display: block;
+    overflow-x: auto;
 }
