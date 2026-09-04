@@ -234,3 +234,10 @@ npx http-server -p 8080
 ```
 
 然后访问 `http://localhost:8080/docs-site/` 即可预览。
+
+## 技术支持
+
+本页面由 [Docs Site](./) 和 [Vue2Loader](../vue2-loader/) 提供支持。
+
+- **Docs Site** — 纯前端静态文档查看器，负责 Markdown 渲染、目录导航、主题切换等核心功能
+- **Vue2Loader** — 无构建工具的 Vue 2 单文件组件运行时加载器，负责组件动态加载与资源解析
