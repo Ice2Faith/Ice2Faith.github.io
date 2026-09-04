@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<!-- 引入VUE -->
+    <script src="../vue@2_dist_vue.js"></script>
+    <title>vue2</title>
+
+    <script src="../Vue2Loader.js"></script>
+
+</head>
+<body>
+   <div id="app">
+
+   </div>
+</body>
+<script>
+    // Vue2Loader.loadObject('./mixins/mixin.js')
+    //     .then(obj=>{
+    //         console.log(obj)
+    //     })
+
+    // Vue2Loader.createVue('./components/comp/comp.vue')
+    //     .then(app=>{
+    //         console.log(app)
+    //     })
+
+    // Vue2Loader.loadObject('./mixins/mixin.js')
+    //     .then(mixinOptions=>{
+    //         Vue2Loader.loadVueOptions('./components/comp/comp.vue')
+    //             .then(compOptions=>{
+    //                 // 全局注册组件
+    //                 // Vue.component('comp',compOptions)
+    //
+    //                 Vue2Loader.loadVueOptions('./components/test.vue')
+    //                     .then(vueOptions=>{
+    //                         vueOptions.el='#app'
+    //                         // 局部注册组件
+    //                         vueOptions.components={
+    //                             comp: Vue.extend(compOptions)
+    //                         }
+    //                         // 局部混入
+    //                         vueOptions.mixins=[mixinOptions]
+    //                         let app=new Vue(vueOptions)
+    //                     })
+    //             })
+    //     })
+
+Vue2Loader.createVue('./components/app.vue')
+
+
+</script>
+<style>
+
+</style>
+</html>
