@@ -27,7 +27,7 @@
         <div class="sidebar-header">目录导航</div>
         <div class="toc-search-wrap">
           <input class="toc-search" ref="tocSearchRef" v-model="tocSearch" @change="filterToc" type="text"
-                 placeholder="&#128269; 搜索标题..." autocomplete="off"
+                 placeholder="🔍搜索标题..." autocomplete="off"
                  spellcheck="false"/>
           <button class="toc-search-clear" v-show="tocSearch" @click="resetTocSearch" title="清除">&#10005;
           </button>
