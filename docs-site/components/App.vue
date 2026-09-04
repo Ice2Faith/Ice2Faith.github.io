@@ -2,7 +2,6 @@
   <div class="app">
     <div class="page-background" v-show="showBgImg"
          :style="'background-image: url(' + appConfig.background + ')'"></div>
-    <span class="i2f-back-top-bottom" top-selector=".top-section" bottom-selector=".bottom-section"></span>
 
     <!-- 顶部导航栏 -->
     <div class="top-bar" v-show="!printMode">
@@ -50,6 +49,7 @@
       </div>
     </div>
 
+    <span class="i2f-back-top-bottom" top-selector=".top-section" bottom-selector=".bottom-section"></span>
   </div>
 </template>
 
