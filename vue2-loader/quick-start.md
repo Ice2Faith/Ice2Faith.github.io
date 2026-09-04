@@ -1249,3 +1249,58 @@ Vue2Loader 项目中常用 `window.$spec`、`window.$specState` 等全局变量�
 | 单元测试         | ❌ 难以配置     | ✅ Jest / Mocha 集成           |
 | TypeScript   | ❌ 不支持      | ✅ 完整支持                      |
 | 生态工具         | ❌ 无        | ✅ ESLint / Prettier / Husky |
+
+---
+
+## 附录、资源附件
+
+以下是 Vue2Loader 的完整资源文件，点击链接可直接查看或下载。
+
+### 目录结构
+
+```
+vue2-loader/
+├── convertor/                          # 本地 file:// 协议转换工具
+│   ├── convertor.html                  # 转换工具页面
+│   └── vue2-converter.js               # 转换逻辑实现
+├── loader/                             # 核心加载器
+│   ├── Vue2Loader.js                   # 核心库文件
+│   ├── vue@2_dist_vue.js               # Vue 2 运行时
+│   └── test/                           # 测试用例
+│       ├── vue2-loader.html            # 测试入口页面
+│       ├── components/
+│       │   ├── app.vue                 # 根组件
+│       │   ├── test.vue                # 测试组件
+│       │   └── comp/
+│       │       ├── comp.vue            # 子组件
+│       │       └── reso/
+│       │           └── reso.vue        # 孙组件
+│       └── mixins/
+│           └── mixin.js                # 测试混入
+└── readme.md                           # 简要说明
+```
+
+### 核心文件
+
+| 文件 | 说明 |
+| --- | --- |
+| [Vue2Loader.js](../docs-site/vue2-loader/loader/Vue2Loader.js) | 核心库，负责 `.vue` 文件解析、组件加载与资源降级获取 |
+| [vue@2_dist_vue.js](../docs-site/vue2-loader/loader/vue@2_dist_vue.js) | Vue 2 运行时（完整版，含编译器） |
+
+### 转换工具
+
+| 文件 | 说明 |
+| --- | --- |
+| [convertor.html](../docs-site/vue2-loader/convertor/convertor.html) | 本地转换工具页面，用于生成 JSONP/iframe 格式文件以支持 `file://` 协议 |
+| [vue2-converter.js](../docs-site/vue2-loader/convertor/vue2-converter.js) | 转换工具核心逻辑 |
+
+### 测试用例
+
+| 文件 | 说明 |
+| --- | --- |
+| [vue2-loader.html](../docs-site/vue2-loader/loader/test/vue2-loader.html) | 测试入口页面 |
+| [app.vue](../docs-site/vue2-loader/loader/test/components/app.vue) | 根组件，演示组件嵌套与混入 |
+| [test.vue](../docs-site/vue2-loader/loader/test/components/test.vue) | 测试组件 |
+| [comp.vue](../docs-site/vue2-loader/loader/test/components/comp/comp.vue) | 子组件 |
+| [reso.vue](../docs-site/vue2-loader/loader/test/components/comp/reso/reso.vue) | 孙组件，演示多层嵌套 |
+| [mixin.js](../docs-site/vue2-loader/loader/test/mixins/mixin.js) | 测试混入文件 |

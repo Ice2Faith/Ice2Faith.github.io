@@ -376,7 +376,7 @@ export default {
       return ext in this.TEXT_FILE_SUFFIX_LANGS;
     },
     getFileLang(path) {
-      const name = getFileBaseName(path).toLowerCase();
+      const name = this.getFileBaseName(path).toLowerCase();
       let lang = this.TEXT_FILE_NAME_LANGS[name];
       if (lang) {
         return lang;

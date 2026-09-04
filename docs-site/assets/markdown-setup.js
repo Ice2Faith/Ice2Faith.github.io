@@ -161,7 +161,9 @@ function setupMarkdown(resourceResolver) {
             return '';
         }
         if (!md) {
-            return content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return content.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
         try {
             return md.render(content);
@@ -194,6 +196,10 @@ function getMarkdownCodeBlockText(event) {
             return;
         }
         let text = findDom.innerText;
+        let codeDom=findDom.querySelector('code');
+        if(codeDom){
+            text=codeDom.innerText;
+        }
         let echartDom = findDom.querySelector('.rich-code-block');
         if (echartDom) {
             text = echartDom.chartCode;
@@ -240,9 +246,9 @@ function copy2clipboard(text) {
     textarea.select();
     try {
         document.execCommand("copy");
-        window.app.$message.success('复制成功')
+        //window.app.$message.success('复制成功')
     } catch (err) {
-        window.app.$message.success('复制失败')
+        //window.app.$message.success('复制失败')
     } finally {
         document.body.removeChild(textarea); // 清理临时元素
     }
