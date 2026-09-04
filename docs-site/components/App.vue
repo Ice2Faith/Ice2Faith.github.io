@@ -39,14 +39,14 @@
         </div>
       </nav>
       <div class="content-wrap">
-        <span class="top-section" style="display: none;width: 0;height: 0;opacity: 0"></span>
+        <span class="top-section" style="display: block;width: 0;height: 0;opacity: 0"></span>
         <div class="content">
           <div class="loading">
             <div class="spinner"></div>
             <span>正在加载文档...</span>
           </div>
         </div>
-        <span class="bottom-section" style="display: none;width: 0;height: 0;opacity: 0"></span>
+        <span class="bottom-section" style="display: block;width: 0;height: 0;opacity: 0"></span>
       </div>
     </div>
 
