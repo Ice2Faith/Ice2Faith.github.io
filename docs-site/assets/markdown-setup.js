@@ -1,6 +1,6 @@
 function setupMarkdown(resourceResolver) {
-    if(!resourceResolver){
-        resourceResolver=function(url){
+    if (!resourceResolver) {
+        resourceResolver = function (url) {
             return url;
         }
     }
@@ -39,11 +39,11 @@ function setupMarkdown(resourceResolver) {
                     dom.chartCode = str;
 
                     let graph = str.trim();
-                    renderMermaid(dom, graph,resourceResolver)
+                    renderMermaid(dom, graph, resourceResolver)
                 };
                 setTimeout(applyFunc, 300);
             } else if (lang == 'svg') {
-                let chartId = 'svg' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
+                let chartId = 'svg_' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
                 innerHtml = `<div id="${chartId}" class="rich-code-block svg-code-block"></div>`;
                 actionsHtml = ``;
                 let count = 10;
@@ -61,11 +61,11 @@ function setupMarkdown(resourceResolver) {
                     dom.chartCode = str;
 
                     let graph = str.trim();
-                    renderSvg(dom, graph,resourceResolver)
+                    renderSvg(dom, graph, resourceResolver)
                 };
                 setTimeout(applyFunc, 300);
             } else if (lang == 'css-embed') {
-                let chartId = 'css_embed' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
+                let chartId = 'css_embed_' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
                 innerHtml = `<style id="${chartId}"></style>`;
                 actionsHtml = ``;
                 let count = 10;
@@ -83,7 +83,7 @@ function setupMarkdown(resourceResolver) {
                     dom.chartCode = str;
 
                     let graph = str.trim();
-                    renderCssEmbed(dom, graph,resourceResolver)
+                    renderCssEmbed(dom, graph, resourceResolver)
                 };
                 setTimeout(applyFunc, 300);
                 // 只进行样式注入，不实际显示
@@ -120,6 +120,24 @@ function setupMarkdown(resourceResolver) {
                 ? `<div class="markdown-code-lines">${lineNumbersHtml}</div>`
                 : '';
 
+            // 设置原始代码
+            let codeId = 'code_' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
+            let codeTaskCount = 10;
+            let setCodeTask = () => {
+                let element = document.querySelector('#' + codeId);
+                if (!element) {
+                    codeTaskCount--;
+                    if (codeTaskCount > 0) {
+                        setTimeout(() => {
+                            setCodeTask()
+                        }, 300)
+                    }
+                    return
+                }
+                element.chartCode = str;
+            }
+            setCodeTask()
+
             // 修改：在 <pre> 内部加入行号列
             /*language=html*/
             let text = `
@@ -130,12 +148,13 @@ function setupMarkdown(resourceResolver) {
                         {{actionsHtml}}
                         <span class="code-action-btn" onclick="onSaveMarkdownCodeBlock(event,'${lang}')" title="保存">&#x2B07;&#xFE0F;</span>
                         <span class="code-action-btn" onclick="onCopyMarkdownCodeBlock(event,'${lang}')" title="复制">&#128203;</span>
+                        <span class="code-action-btn" onclick="onSwitchMarkdownCodeBlock(event,'${lang}')" title="切换">↔️</span>
                     </span>
                     </div>
-                    <pre class="hljs markdown-code-body">
+                    <pre id="${codeId}" class="hljs markdown-code-body">
                     {{lineNumbersBlock}}<code>{{innerHtml}}</code>
                 </pre>
-                </div>`;
+                </div>`
             text = text.replaceAll(/\s*\n\s*/g, '');
             text = text.replaceAll('{{lang}}', lang);
             text = text.replaceAll('{{innerHtml}}', innerHtml);
@@ -156,14 +175,14 @@ function setupMarkdown(resourceResolver) {
         });
     }
 
-    md.renderMarkdown=function(content) {
+    md.renderMarkdown = function (content) {
         if (!content) {
             return '';
         }
         if (!md) {
             return content.replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
+                .replace(/>/g, '&gt;')
         }
         try {
             return md.render(content);
@@ -195,31 +214,46 @@ function getMarkdownCodeBlockText(event) {
             reject('未找到代码块')
             return;
         }
-        let text = findDom.innerText;
-        let codeDom=findDom.querySelector('code');
-        if(codeDom){
-            text=codeDom.innerText;
+        let text = null;
+        if (!text) {
+            if (findDom.chartCode) {
+                text = findDom.chartCode;
+            }
         }
-        let echartDom = findDom.querySelector('.rich-code-block');
-        if (echartDom) {
-            text = echartDom.chartCode;
+        if (!text) {
+            let echartDom = findDom.querySelector('.rich-code-block');
+            if (echartDom) {
+                text = echartDom.chartCode;
+            }
         }
-        resolve(text);
+        if (!text) {
+            let codeDom = findDom.querySelector('code');
+            if (codeDom) {
+                text = codeDom.innerText;
+            }
+        }
+        if (!text) {
+            text = findDom.innerText
+        }
+        resolve({
+            text: text,
+            dom: findDom
+        });
     })
 }
 
 function onCopyMarkdownCodeBlock(event, lang) {
-    getMarkdownCodeBlockText(event).then(text => {
-        copy2clipboard(text);
+    getMarkdownCodeBlockText(event).then(resp => {
+        copy2clipboard(resp.text);
     }).catch(() => {
-        window.app.$message.error('未找到代码块，复制失败')
+        Vue2Loader.notify.error('未找到代码块，复制失败')
     })
 }
 
 function onSaveMarkdownCodeBlock(event, lang) {
-    getMarkdownCodeBlockText(event).then(text => {
+    getMarkdownCodeBlockText(event).then(resp => {
         // 创建 Blob 并触发下载
-        const blob = new Blob([text], {type: 'plain/text;charset=utf-8'});
+        const blob = new Blob([resp.text], {type: 'plain/text;charset=utf-8'});
         const url = URL.createObjectURL(blob);
 
         const link = document.createElement('a');
@@ -230,7 +264,37 @@ function onSaveMarkdownCodeBlock(event, lang) {
         // 清理内存
         URL.revokeObjectURL(url);
     }).catch(() => {
-        window.app.$message.error('未找到代码块，保存失败')
+        Vue2Loader.notify.error('未找到代码块，保存失败')
+    })
+}
+
+function onSwitchMarkdownCodeBlock(event, lang){
+    getMarkdownCodeBlockText(event).then(resp => {
+        let dom = resp.dom;
+        if (dom.showText) {
+            dom.innerHTML = dom.codeHtml;
+            dom.showText = false;
+        } else {
+            dom.codeHtml = dom.innerHTML;
+            dom.innerHTML = '';
+
+            const textarea = document.createElement('textarea');
+            const autoResize = () => {
+                textarea.style.width = '100%';
+                // 1. 先将高度重置为 auto，以便在内容减少时高度能随之缩小
+                textarea.style.height = 'auto';
+                // 2. 将高度设置为内容的实际滚动高度
+                textarea.style.height = textarea.scrollHeight + 'px';
+            }
+            textarea.addEventListener('input', autoResize);
+            dom.appendChild(textarea)
+            textarea.value = dom.chartCode;
+            autoResize()
+            dom.showText = true;
+        }
+
+    }).catch(() => {
+        Vue2Loader.notify.error('未找到代码块，复制失败')
     })
 }
 
@@ -246,28 +310,28 @@ function copy2clipboard(text) {
     textarea.select();
     try {
         document.execCommand("copy");
-        //window.app.$message.success('复制成功')
+        Vue2Loader.notify.success('复制成功')
     } catch (err) {
-        //window.app.$message.success('复制失败')
+        Vue2Loader.notify.success('复制失败')
     } finally {
         document.body.removeChild(textarea); // 清理临时元素
     }
 }
 
 
-function renderMermaid(dom, graph,resourceResolver) {
+function renderMermaid(dom, graph, resourceResolver) {
     let bubbleDom = dom;
     if (bubbleDom) {
         if (bubbleDom.rendering) {
             setTimeout(() => {
-                renderMermaid(dom, graph,resourceResolver);
+                renderMermaid(dom, graph, resourceResolver);
             }, 90);
             return;
         }
     }
     if (!window.mermaid) {
         setTimeout(() => {
-            renderMermaid(dom, graph,resourceResolver);
+            renderMermaid(dom, graph, resourceResolver);
         }, 90);
         return;
     }
@@ -308,12 +372,12 @@ function renderMermaid(dom, graph,resourceResolver) {
 }
 
 
-function renderSvg(dom, graph,resourceResolver) {
+function renderSvg(dom, graph, resourceResolver) {
     let bubbleDom = dom;
     if (bubbleDom) {
         if (bubbleDom.rendering) {
             setTimeout(() => {
-                renderSvg(dom, graph,resourceResolver);
+                renderSvg(dom, graph, resourceResolver);
             }, 90);
             return;
         }
@@ -323,12 +387,12 @@ function renderSvg(dom, graph,resourceResolver) {
             bubbleDom.rendering = true;
         }
         try {
-            let str=graph.trim();
-            if(str.startsWith('link:')){
-                str=str.substring('link:'.length).trim()
-                graph=await fetch(resourceResolver(str)).then(r=>r.text())
-            }else if(!str.startsWith('<')){
-                graph=await fetch(resourceResolver(str)).then(r=>r.text())
+            let str = graph.trim();
+            if (str.startsWith('link:')) {
+                str = str.substring('link:'.length).trim()
+                graph = await fetch(resourceResolver(str)).then(r => r.text())
+            } else if (!str.startsWith('<')) {
+                graph = await fetch(resourceResolver(str)).then(r => r.text())
             }
             // 将生成的 SVG 代码插入到目标容器中
             dom.innerHTML = graph;
@@ -352,12 +416,12 @@ function renderSvg(dom, graph,resourceResolver) {
     }, 0)
 }
 
-function renderCssEmbed(dom,graph,resourceResolver){
+function renderCssEmbed(dom, graph, resourceResolver) {
     let bubbleDom = dom;
     if (bubbleDom) {
         if (bubbleDom.rendering) {
             setTimeout(() => {
-                renderCssEmbed(dom, graph,resourceResolver);
+                renderCssEmbed(dom, graph, resourceResolver);
             }, 90);
             return;
         }
@@ -367,14 +431,14 @@ function renderCssEmbed(dom,graph,resourceResolver){
             bubbleDom.rendering = true;
         }
         try {
-            let str=graph.trim();
-            if(str.startsWith('link:')){
-                str=str.substring('link:'.length).trim()
-                graph=await fetch(resourceResolver(str)).then(r=>r.text())
+            let str = graph.trim();
+            if (str.startsWith('link:')) {
+                str = str.substring('link:'.length).trim()
+                graph = await fetch(resourceResolver(str)).then(r => r.text())
             }
             // 直接进行样式注入，允许引入样式
-            let cssDom=document.createElement('style')
-            cssDom.innerText=graph;
+            let cssDom = document.createElement('style')
+            cssDom.innerText = graph;
             document.body.appendChild(cssDom)
 
         } catch (error) {

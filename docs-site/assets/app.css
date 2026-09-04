@@ -660,3 +660,23 @@ body.dark .mermaid-code-block {
         display: none;
     }
 }
+
+@media print {
+    .top-bar{
+        display: none;
+    }
+    .sidebar-overlay{
+        display: none;
+    }
+    .sidebar{
+        display: none;
+    }
+    body{
+        height: auto;
+        overflow: auto;
+    }
+    .app{
+        overflow: unset;
+        height: unset;
+    }
+}

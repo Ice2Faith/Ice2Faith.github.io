@@ -2,6 +2,7 @@
   <div class="app">
     <div class="page-background" v-show="showBgImg"
          :style="'background-image: url(' + appConfig.background + ')'"></div>
+    <span class="i2f-back-top-bottom" top-selector=".top-section" bottom-selector=".bottom-section"></span>
 
     <!-- 顶部导航栏 -->
     <div class="top-bar" v-show="!printMode">
@@ -38,12 +39,14 @@
         </div>
       </nav>
       <div class="content-wrap">
+        <span class="top-section" style="display: none;width: 0;height: 0;opacity: 0"></span>
         <div class="content">
           <div class="loading">
             <div class="spinner"></div>
             <span>正在加载文档...</span>
           </div>
         </div>
+        <span class="bottom-section" style="display: none;width: 0;height: 0;opacity: 0"></span>
       </div>
     </div>
 
@@ -188,6 +191,8 @@ export default {
       this.printMode = true;
       document.body.style.height = 'auto';
       document.body.style.overflow = 'auto';
+      document.querySelector('.app').style.overflow='unset';
+      document.querySelector('.app').style.height='unset';
       this.$nextTick(() => {
         window.print();
       })

@@ -1,0 +1,71 @@
+/* ========== 悬浮工具核心样式 ========== */
+.i2f-back-top-bottom {
+    position: fixed;
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 30px;
+    box-shadow: 2px 0px 5px #777a;
+    overflow: hidden;
+    z-index: 9999;
+    transition: box-shadow 0.3s ease;
+    width: 5px;
+    opacity: 0.5;
+}
+
+.i2f-back-top-bottom:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    width: unset;
+    opacity: unset;
+}
+
+.i2f-back-top-bottom:hover .i2f-back-top-bottom-btn {
+    width: 30px;
+}
+
+/* 上下两个点击区域 */
+.i2f-back-top-bottom .i2f-back-top-bottom-btn {
+    width: 5px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+/* 中间分割线 */
+.i2f-back-top-bottom .i2f-back-top-bottom-btn + .i2f-back-top-bottom-btn {
+    border-top: 1px solid #7777;
+}
+
+/* 悬停与激活状态 */
+.i2f-back-top-bottom .i2f-back-top-bottom-btn:hover {
+    background-color: #f0f7ff;
+    color: #1890ff;
+}
+
+.i2f-back-top-bottom .i2f-back-top-bottom-btn:active {
+    background-color: #e6f4ff;
+}
+
+/* SVG 图标样式 */
+.i2f-back-top-bottom .i2f-back-top-bottom-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+@media print {
+
+    .i2f-back-top-bottom {
+        display: none;
+        opacity: 0;
+    }
+
+}

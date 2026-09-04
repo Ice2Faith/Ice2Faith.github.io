@@ -97,6 +97,36 @@
 }
 
 
+.markdown-code-body textarea {
+    width: 100%;
+    background: transparent;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: none; /* 禁用右下角拖拽手柄 */
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
 
+/* 鼠标悬停状态 */
+.markdown-code-body textarea:hover {
+    border-color: #9ca3af;
+}
+
+/* 获取焦点状态 */
+.markdown-code-body textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* 外部发光效果 */
+}
+
+@media print {
+    .markdown-header-actions{
+        display: none;
+    }
+}
 
 
