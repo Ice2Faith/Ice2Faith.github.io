@@ -48,8 +48,7 @@
     margin-top: 0px;
     border-radius: 0px 0px 8px 8px;
     padding: 12px 6px;
-
-
+    line-height: 1.5;
     display: flex !important;
     align-items: flex-start;
 }
@@ -59,6 +58,19 @@
     min-width: 480px;
     min-height: 320px;
     background: white;
+}
+
+.svg-code-block {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--panel);
+}
+
+.svg-code-block svg {
+    display: block;
+    margin: 6px auto;
+    max-width: 100%;
+    height: auto;
 }
 
 
@@ -83,3 +95,8 @@
     display: block;
     overflow-x: auto;
 }
+
+
+
+
+

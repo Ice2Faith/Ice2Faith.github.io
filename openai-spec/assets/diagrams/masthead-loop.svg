@@ -1,43 +1,46 @@
-<svg viewBox="0 0 560 430" role="img" aria-label="核心消息循环图">
-            <!-- 连接曲线 -->
-            <path class="svg-line-acc flow-anim" d="M170,72 Q230,90 262,150" marker-end="url(#ah-o)"/>
-            <path class="svg-line-teal flow-anim" d="M428,168 Q480,120 500,92" marker-end="url(#ah-t)"/>
-            <path class="svg-line svg-dash" d="M470,88 Q420,140 400,162" marker-end="url(#ah-k)"/>
-            <path class="svg-line-acc flow-anim" d="M315,232 L315,306" marker-end="url(#ah-o)"/>
-            <path class="svg-line svg-dash" d="M288,306 Q262,268 268,234" marker-end="url(#ah-k)"/>
-            <path class="svg-line-teal flow-anim" d="M238,196 Q150,160 118,96" marker-end="url(#ah-t)"/>
-            <defs>
-                <marker id="ah-o" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-                    <path d="M0,0 L9,4.5 L0,9 Z" fill="#e8590c"/>
-                </marker>
-                <marker id="ah-t" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-                    <path d="M0,0 L9,4.5 L0,9 Z" fill="#0b7285"/>
-                </marker>
-                <marker id="ah-k" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-                    <path d="M0,0 L9,4.5 L0,9 Z" fill="#46607a"/>
-                </marker>
-            </defs>
-            <!-- 节点 -->
-            <rect class="svg-node" x="20" y="26" width="152" height="62" rx="3"/>
-            <text class="svg-lbl" x="96" y="52" text-anchor="middle">用户终端</text>
-            <text class="svg-lbl-sm" x="96" y="70" text-anchor="middle">Vue2 · ElementUI · SM-Crypto</text>
-            <rect class="svg-node svg-node-dark pulse-node" x="228" y="150" width="176" height="80" rx="3"/>
-            <text class="svg-lbl-w" x="316" y="180" text-anchor="middle">OpenAiOpsController</text>
-            <text class="svg-lbl-sm" x="316" y="198" text-anchor="middle" style="fill:#8fb3d6;">消息编排 · 提示词注入</text>
-            <text class="svg-lbl-sm" x="316" y="214" text-anchor="middle" style="fill:#8fb3d6;">SSE 中继 · 工具调度</text>
-            <rect class="svg-node svg-node-acc" x="392" y="26" width="150" height="62" rx="3"/>
-            <text class="svg-lbl" x="467" y="52" text-anchor="middle">LLM 大模型</text>
-            <text class="svg-lbl-sm" x="467" y="70" text-anchor="middle">OpenAI 兼容协议</text>
-            <rect class="svg-node svg-node-teal" x="212" y="308" width="208" height="62" rx="3"/>
-            <text class="svg-lbl" x="316" y="334" text-anchor="middle">工具池 ToolManager</text>
-            <text class="svg-lbl-sm" x="316" y="352" text-anchor="middle">并行执行 · HITL 审批 · LRU</text>
-            <!-- 序号标签 -->
-            <text class="svg-lbl-acc" x="196" y="102">①</text>
-            <text class="svg-lbl-acc" x="452" y="140" style="fill:#0b7285;">②</text>
-            <text class="svg-lbl-sm" x="452" y="128" style="fill:#46607a;">③</text>
-            <text class="svg-lbl-acc" x="324" y="276">④</text>
-            <text class="svg-lbl-sm" x="248" y="276">⑤</text>
-            <text class="svg-lbl-acc" x="148" y="160" style="fill:#0b7285;">⑥</text>
-            <!-- 图例 -->
-            <text class="svg-lbl-sm" x="20" y="404">① 加密请求 ② 组装报文→推理 ③ tool_calls/chunk 返回 ④ 契约解析·并行执行 ⑤ ToolMessage 回填 ⑥ SSE 中继</text>
-        </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 430" role="img" aria-label="核心消息循环图">
+    <!-- 连接曲线 -->
+    <path class="svg-line-acc flow-anim" d="M170,72 Q230,90 262,150" marker-end="url(#ah-o)"/>
+    <path class="svg-line-teal flow-anim" d="M428,168 Q480,120 500,92" marker-end="url(#ah-t)"/>
+    <path class="svg-line svg-dash" d="M470,88 Q420,140 400,162" marker-end="url(#ah-k)"/>
+    <path class="svg-line-acc flow-anim" d="M315,232 L315,306" marker-end="url(#ah-o)"/>
+    <path class="svg-line svg-dash" d="M288,306 Q262,268 268,234" marker-end="url(#ah-k)"/>
+    <path class="svg-line-teal flow-anim" d="M238,196 Q150,160 118,96" marker-end="url(#ah-t)"/>
+    <defs>
+        <marker id="ah-o" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#e8590c"/>
+        </marker>
+        <marker id="ah-t" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#0b7285"/>
+        </marker>
+        <marker id="ah-k" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#46607a"/>
+        </marker>
+    </defs>
+    <!-- 节点 -->
+    <rect class="svg-node" x="20" y="26" width="152" height="62" rx="3"/>
+    <text class="svg-lbl" x="96" y="52" text-anchor="middle">用户终端</text>
+    <text class="svg-lbl-sm" x="96" y="70" text-anchor="middle">Vue2 · ElementUI · SM-Crypto</text>
+    <rect class="svg-node svg-node-dark pulse-node" x="228" y="150" width="176" height="80" rx="3"/>
+    <text class="svg-lbl-w" x="316" y="180" text-anchor="middle">OpenAiOpsController</text>
+    <text class="svg-lbl-sm" x="316" y="198" text-anchor="middle" style="fill:#8fb3d6;">消息编排 · 提示词注入</text>
+    <text class="svg-lbl-sm" x="316" y="214" text-anchor="middle" style="fill:#8fb3d6;">SSE 中继 · 工具调度</text>
+    <rect class="svg-node svg-node-acc" x="392" y="26" width="150" height="62" rx="3"/>
+    <text class="svg-lbl" x="467" y="52" text-anchor="middle">LLM 大模型</text>
+    <text class="svg-lbl-sm" x="467" y="70" text-anchor="middle">OpenAI 兼容协议</text>
+    <rect class="svg-node svg-node-teal" x="212" y="308" width="208" height="62" rx="3"/>
+    <text class="svg-lbl" x="316" y="334" text-anchor="middle">工具池 ToolManager</text>
+    <text class="svg-lbl-sm" x="316" y="352" text-anchor="middle">并行执行 · HITL 审批 · LRU</text>
+    <!-- 序号标签 -->
+    <text class="svg-lbl-acc" x="196" y="102">①</text>
+    <text class="svg-lbl-acc" x="452" y="140" style="fill:#0b7285;">②</text>
+    <text class="svg-lbl-sm" x="452" y="128" style="fill:#46607a;">③</text>
+    <text class="svg-lbl-acc" x="324" y="276">④</text>
+    <text class="svg-lbl-sm" x="248" y="276">⑤</text>
+    <text class="svg-lbl-acc" x="148" y="160" style="fill:#0b7285;">⑥</text>
+    <!-- 图例 -->
+    <text class="svg-lbl-sm" x="20" y="404">① 加密请求 ② 组装报文→推理 ③ tool_calls/chunk 返回 ④ 契约解析·并行执行 ⑤ ToolMessage 回填 ⑥ SSE 中继</text>
+    <style>
+
+    </style>
+</svg>

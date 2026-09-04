@@ -1,4 +1,9 @@
-function setupMarkdown() {
+function setupMarkdown(resourceResolver) {
+    if(!resourceResolver){
+        resourceResolver=function(url){
+            return url;
+        }
+    }
     // 初始化 markdown-it
     let md = (typeof markdownit === 'function') ? markdownit({
         html: false,        // 禁止原始 HTML 防止 XSS
@@ -34,9 +39,55 @@ function setupMarkdown() {
                     dom.chartCode = str;
 
                     let graph = str.trim();
-                    renderMermaid(dom, graph)
+                    renderMermaid(dom, graph,resourceResolver)
                 };
                 setTimeout(applyFunc, 300);
+            } else if (lang == 'svg') {
+                let chartId = 'svg' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
+                innerHtml = `<div id="${chartId}" class="rich-code-block svg-code-block"></div>`;
+                actionsHtml = ``;
+                let count = 10;
+                let applyFunc = () => {
+                    let dom = document.querySelector('#' + chartId);
+                    if (!dom && count > 0) {
+                        count--;
+                        setTimeout(applyFunc, 300);
+                        return;
+                    }
+
+                    if (!dom) {
+                        return;
+                    }
+                    dom.chartCode = str;
+
+                    let graph = str.trim();
+                    renderSvg(dom, graph,resourceResolver)
+                };
+                setTimeout(applyFunc, 300);
+            } else if (lang == 'css-embed') {
+                let chartId = 'css_embed' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
+                innerHtml = `<style id="${chartId}"></style>`;
+                actionsHtml = ``;
+                let count = 10;
+                let applyFunc = () => {
+                    let dom = document.querySelector('#' + chartId);
+                    if (!dom && count > 0) {
+                        count--;
+                        setTimeout(applyFunc, 300);
+                        return;
+                    }
+
+                    if (!dom) {
+                        return;
+                    }
+                    dom.chartCode = str;
+
+                    let graph = str.trim();
+                    renderCssEmbed(dom, graph,resourceResolver)
+                };
+                setTimeout(applyFunc, 300);
+                // 只进行样式注入，不实际显示
+                return innerHtml
             } else if (lang && hljs.getLanguage(lang)) {
                 // 检查语言是否受支持
                 try {
@@ -72,19 +123,19 @@ function setupMarkdown() {
             // 修改：在 <pre> 内部加入行号列
             /*language=html*/
             let text = `
-            <div class="markdown-code-block">
-                <div class="markdown-code-header">
-                    <span class="markdown-header-lang">{{lang}}</span>
-                    <span class="markdown-header-actions">
+                <div class="markdown-code-block">
+                    <div class="markdown-code-header">
+                        <span class="markdown-header-lang">{{lang}}</span>
+                        <span class="markdown-header-actions">
                         {{actionsHtml}}
                         <span class="code-action-btn" onclick="onSaveMarkdownCodeBlock(event,'${lang}')" title="保存">&#x2B07;&#xFE0F;</span>
                         <span class="code-action-btn" onclick="onCopyMarkdownCodeBlock(event,'${lang}')" title="复制">&#128203;</span>
                     </span>
-                </div>
-                <pre class="hljs markdown-code-body">
+                    </div>
+                    <pre class="hljs markdown-code-body">
                     {{lineNumbersBlock}}<code>{{innerHtml}}</code>
                 </pre>
-            </div>`;
+                </div>`;
             text = text.replaceAll(/\s*\n\s*/g, '');
             text = text.replaceAll('{{lang}}', lang);
             text = text.replaceAll('{{innerHtml}}', innerHtml);
@@ -104,25 +155,23 @@ function setupMarkdown() {
             }
         });
     }
+
+    md.renderMarkdown=function(content) {
+        if (!content) {
+            return '';
+        }
+        if (!md) {
+            return content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        try {
+            return md.render(content);
+        } catch (e) {
+            return content;
+        }
+    }
+
     return md;
 }
-
-window.$md=setupMarkdown()
-
-function renderMarkdown(content) {
-    if (!content) {
-        return '';
-    }
-    if (!window.$md) {
-        return content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-    try {
-        return window.$md.render(content);
-    } catch (e) {
-        return content;
-    }
-}
-
 
 function getMarkdownCodeBlockText(event) {
     return new Promise((resolve, reject) => {
@@ -200,19 +249,19 @@ function copy2clipboard(text) {
 }
 
 
-function renderMermaid(dom, graph) {
+function renderMermaid(dom, graph,resourceResolver) {
     let bubbleDom = dom;
     if (bubbleDom) {
         if (bubbleDom.rendering) {
             setTimeout(() => {
-                renderMermaid(dom, graph);
+                renderMermaid(dom, graph,resourceResolver);
             }, 90);
             return;
         }
     }
     if (!window.mermaid) {
         setTimeout(() => {
-            renderMermaid(dom, graph);
+            renderMermaid(dom, graph,resourceResolver);
         }, 90);
         return;
     }
@@ -245,6 +294,87 @@ function renderMermaid(dom, graph) {
             });
 
             dom.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
+        }
+        if (bubbleDom) {
+            bubbleDom.rendering = false;
+        }
+    }, 0)
+}
+
+
+function renderSvg(dom, graph,resourceResolver) {
+    let bubbleDom = dom;
+    if (bubbleDom) {
+        if (bubbleDom.rendering) {
+            setTimeout(() => {
+                renderSvg(dom, graph,resourceResolver);
+            }, 90);
+            return;
+        }
+    }
+    setTimeout(async () => {
+        if (bubbleDom) {
+            bubbleDom.rendering = true;
+        }
+        try {
+            let str=graph.trim();
+            if(str.startsWith('link:')){
+                str=str.substring('link:'.length).trim()
+                graph=await fetch(resourceResolver(str)).then(r=>r.text())
+            }else if(!str.startsWith('<')){
+                graph=await fetch(resourceResolver(str)).then(r=>r.text())
+            }
+            // 将生成的 SVG 代码插入到目标容器中
+            dom.innerHTML = graph;
+
+        } catch (error) {
+            // 处理语法错误等异常情况
+            console.error('Svg 渲染失败:', error);
+            dom.innerHTML = `<p style="color:red;">Svg语法错误，请检查代码！</p>`;
+        } finally {
+            const panzoom = Panzoom(dom, {
+                maxScale: 5,       // 最大放大倍数
+                minScale: 0.25,    // 最小缩小倍数
+                contain: 'outside' // 可选：限制拖拽边界，防止拖出视野
+            });
+
+            dom.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
+        }
+        if (bubbleDom) {
+            bubbleDom.rendering = false;
+        }
+    }, 0)
+}
+
+function renderCssEmbed(dom,graph,resourceResolver){
+    let bubbleDom = dom;
+    if (bubbleDom) {
+        if (bubbleDom.rendering) {
+            setTimeout(() => {
+                renderCssEmbed(dom, graph,resourceResolver);
+            }, 90);
+            return;
+        }
+    }
+    setTimeout(async () => {
+        if (bubbleDom) {
+            bubbleDom.rendering = true;
+        }
+        try {
+            let str=graph.trim();
+            if(str.startsWith('link:')){
+                str=str.substring('link:'.length).trim()
+                graph=await fetch(resourceResolver(str)).then(r=>r.text())
+            }
+            // 直接进行样式注入，允许引入样式
+            let cssDom=document.createElement('style')
+            cssDom.innerText=graph;
+            document.body.appendChild(cssDom)
+
+        } catch (error) {
+            // 处理语法错误等异常情况
+            console.error('Css 渲染失败:', error);
+            dom.innerHTML = `<p style="color:red;">Css语法错误，请检查代码！</p>`;
         }
         if (bubbleDom) {
             bubbleDom.rendering = false;
