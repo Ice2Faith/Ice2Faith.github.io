@@ -256,14 +256,14 @@ Vue2Loader.fetchIframe = function (url) {
                 let pre = frameDoc.querySelector('body pre')
                 let text = pre.innerText
 
-                return new Response(text, {
+                resolve(new Response(text, {
                     status: 200,
                     statusText: "OK",
                     headers: {
                         // 强烈建议加上 Content-Type，方便下游的 .json() 或 .text() 方法正确解析
                         'Content-Type': contentType
                     }
-                });
+                }));
             } catch (e) {
                 reject(e)
             }
@@ -367,7 +367,7 @@ Vue2Loader.fetchJsonp = function (url, options) {
                     },30)
                 }else{
                     let text = '404, Jsonp Not Found';
-                    reject(new Response(text, {
+                    resolve(new Response(text, {
                         status: 404,
                         statusText: "404 Jsonp Not Found",
                         headers: {
@@ -1113,12 +1113,6 @@ Vue2Loader.resourceFetch = function (url, config) {
                 return Vue2Loader.fetchIframe(href)
             }).catch(err => {
                 return Vue2Loader.fetchFile(url)
-                    .then(function (res) {
-                        if (res.status != 200) {
-                            return Promise.reject(res)
-                        }
-                        return res.text()
-                    })
             })
             .catch(err => {
                 return originFetch(url, config)

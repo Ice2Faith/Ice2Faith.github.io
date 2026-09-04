@@ -216,7 +216,6 @@ export default {
      * @returns {Promise<void>}
      */
     async loadFile(filePath) {
-      debugger
       filePath = filePath.replace(/^\.\//, '').replace(/^#/, '');
       this.currentFilePath = filePath;
       document.title = filePath + ' — ' + this.appConfig.title;
