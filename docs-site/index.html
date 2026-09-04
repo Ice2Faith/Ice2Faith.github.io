@@ -23,689 +23,11 @@
     <!-- Panzoom 用于 Mermaid 图表缩放 -->
     <script src="./lib/@panzoom/panzoom@4.4.3/dist/panzoom.min.js"></script>
 
-    <!-- GSAP 动画库 -->
-    <script src="./lib/gsap@3.12.5/dist/all.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/CSSRulePlugin.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/CustomEase.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/Draggable.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/EaselPlugin.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/EasePack.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/Flip.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/MotionPathPlugin.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/Observer.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/PixiPlugin.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="./lib/gsap@3.12.5/dist/TextPlugin.min.js"></script>
-
     <!-- 基础 Markdown 样式 -->
     <link rel="stylesheet" href="./assets/markdown-styles.css">
 
-    <style>
-        /* ===== 基础重置 ===== */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --sidebar-width: 280px;
-            --toc-width: 240px;
-            --header-height: 52px;
-            --bg: #f6f8faaa;
-            --surface: #ffffff77;
-            --border: #e1e4e8;
-            --text: #24292f;
-            --text-muted: #6e7781;
-            --accent: #0969da;
-            --accent-hover: #0550ae;
-            --code-bg: #f6f8faaa;
-            --sidebar-bg: #f0f2f5dd;
-            --toc-active: #0969da;
-            --scrollbar: #c8ccd0;
-        }
-
-        html {
-            font-size: 15px;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        *::-webkit-scrollbar {
-            height: 6px;
-            width: 6px;
-        }
-
-        *::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        *::-webkit-scrollbar-thumb {
-            background: var(--scrollbar);
-            border-radius: 3px;
-        }
-
-        *::-webkit-scrollbar-thumb:hover {
-            background: coral;
-        }
-
-
-        .app {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            min-height: 0;
-            height: 100vh;
-        }
-
-        /* ===== 顶部导航栏 ===== */
-        .top-bar {
-            height: var(--header-height);
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            gap: 12px;
-            flex-shrink: 0;
-            z-index: 100;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
-        }
-
-        .top-bar .logo {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: .3px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: .82rem;
-            color: var(--text-muted);
-            overflow: hidden;
-            flex: 1;
-        }
-
-        .breadcrumb span {
-            white-space: nowrap;
-        }
-
-        .breadcrumb .sep {
-            color: var(--border);
-        }
-
-        .breadcrumb .current {
-            color: var(--text);
-            font-weight: 500;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .top-bar .home-btn {
-            cursor: pointer;
-            color: var(--accent);
-            font-size: .82rem;
-            text-decoration: none;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            white-space: nowrap;
-            transition: background .15s;
-            flex-shrink: 0;
-        }
-
-        .top-bar .home-btn:hover {
-            background: var(--bg);
-        }
-
-        /* ===== 主布局 ===== */
-        .layout {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* ===== 左侧边栏 ===== */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            overflow: hidden;
-            transition: width 0.22s ease;
-        }
-
-        body.sidebar-collapsed .sidebar {
-            width: 0;
-            border-right-width: 0;
-        }
-
-        .sidebar-header {
-            padding: 12px 14px 8px;
-            font-size: .72rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: .6px;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .toc-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px 0;
-        }
-
-
-        .toc-item {
-            display: block;
-            padding: 5px 14px 5px calc(14px + var(--indent, 0px));
-            font-size: .83rem;
-            color: var(--text);
-            text-decoration: none;
-            border-left: 2px solid transparent;
-            line-height: 1.45;
-            cursor: pointer;
-            transition: background .1s, color .1s, border-color .1s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .toc-item:hover {
-            background: rgba(9, 105, 218, .06);
-            color: var(--accent);
-        }
-
-        .toc-item.active {
-            color: var(--toc-active);
-            border-left-color: var(--toc-active);
-            background: rgba(9, 105, 218, .07);
-            font-weight: 500;
-        }
-
-        .toc-item.h1 {
-            --indent: 0px;
-            font-weight: 600;
-        }
-
-        .toc-item.h2 {
-            --indent: 10px;
-        }
-
-        .toc-item.h3 {
-            --indent: 20px;
-            font-size: .8rem;
-            color: var(--text-muted);
-        }
-
-        .toc-item.h4 {
-            --indent: 30px;
-            font-size: .78rem;
-            color: var(--text-muted);
-        }
-
-        .toc-item.h5, .toc-item.h6 {
-            --indent: 38px;
-            font-size: .76rem;
-            color: var(--text-muted);
-        }
-
-        /* ===== 内容区域 ===== */
-        .content-wrap {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0;
-            background: var(--bg);
-        }
-
-
-        .content {
-            margin: 0 auto;
-            padding: 36px 40px 80px;
-            background: var(--surface);
-            min-height: 100%;
-            box-shadow: 0 0 0 1px var(--border);
-        }
-
-        /* ===== 加载/错误状态 ===== */
-        .loading, .error-msg {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 20px;
-            font-size: .9rem;
-            color: var(--text-muted);
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .error-msg {
-            color: #cf222e;
-        }
-
-        .spinner {
-            width: 28px;
-            height: 28px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin .7s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ===== Markdown 内容样式 ===== */
-        .content h1, .content h2, .content h3,
-        .content h4, .content h5, .content h6 {
-            margin-top: 1.6em;
-            margin-bottom: .5em;
-            font-weight: 600;
-            line-height: 1.3;
-            color: var(--text);
-            scroll-margin-top: calc(var(--header-height) + 16px);
-        }
-
-        .content h1 {
-            font-size: 1.75rem;
-            padding-bottom: .4em;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .content h2 {
-            font-size: 1.3rem;
-            padding-bottom: .3em;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .content h3 {
-            font-size: 1.1rem;
-        }
-
-        .content h4 {
-            font-size: 1rem;
-        }
-
-        .content h5 {
-            font-size: .9rem;
-        }
-
-        .content h6 {
-            font-size: .85rem;
-            color: var(--text-muted);
-        }
-
-        .content p {
-            margin: .75em 0;
-            line-height: 1.75;
-        }
-
-        .content ul, .content ol {
-            margin: .6em 0 .6em 1.6em;
-            line-height: 1.75;
-        }
-
-        .content li {
-            margin: .2em 0;
-        }
-
-        .content li > ul, .content li > ol {
-            margin-top: .1em;
-            margin-bottom: .1em;
-        }
-
-        .content blockquote {
-            margin: 1em 0;
-            padding: 10px 16px;
-            border-left: 4px solid .d0d7de;
-            background: .f6f8fa;
-            color: var(--text-muted);
-            border-radius: 0 6px 6px 0;
-        }
-
-        .content blockquote p {
-            margin: 0;
-        }
-
-        .content hr {
-            border: none;
-            border-top: 1px solid var(--border);
-            margin: 1.5em 0;
-        }
-
-        .content table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 1em 0;
-            font-size: .875rem;
-            overflow-x: auto;
-            display: block;
-        }
-
-        .content th, .content td {
-            border: 1px solid var(--border);
-            padding: 7px 13px;
-            text-align: left;
-        }
-
-        .content th {
-            background: #f6f8fa;
-            font-weight: 600;
-        }
-
-        .content tr:nth-child(even) {
-            background: #fafbfc;
-        }
-
-        .content a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .content a:hover {
-            text-decoration: underline;
-            color: var(--accent-hover);
-        }
-
-        /* 行内代码 */
-        .content code:not(pre code) {
-            background: var(--code-bg);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 1px 5px;
-            font-size: .85em;
-            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-            color: #cf222e;
-        }
-
-        /* ===== 非 md 文件提示 ===== */
-        .non-md-notice {
-            background: #fff8c5;
-            border: 1px solid #d4a72c;
-            border-radius: 8px;
-            padding: 16px 20px;
-            margin: 1em 0;
-            font-size: .88rem;
-            color: #633c01;
-        }
-
-        /* ===== 媒体文件包装器 ===== */
-        .media-wrapper {
-            margin: 1em 0;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            background: var(--surface);
-        }
-
-        .media-label {
-            padding: 8px 12px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            background: var(--code-bg);
-            border-bottom: 1px solid var(--border);
-            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .media-wrapper img, .media-wrapper video, .media-wrapper audio {
-            display: block;
-            width: 100%;
-        }
-
-        .media-wrapper img, .media-wrapper video {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .media-wrapper video {
-            max-height: calc(100vh - 160px);
-        }
-
-        .media-wrapper audio {
-            padding: 12px;
-            background: var(--surface);
-        }
-
-        /* ===== 页面背景图片 ===== */
-        .page-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* ===== 标题搜索框 ===== */
-        .toc-search-wrap {
-            padding: 7px 10px 6px;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
-            position: relative;
-        }
-
-        .toc-search {
-            display: block;
-            width: 100%;
-            padding: 5px 26px 5px 8px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 0.79rem;
-            font-family: inherit;
-            background: var(--surface);
-            color: var(--text);
-            outline: none;
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
-
-        .toc-search:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.14);
-        }
-
-        .toc-search::placeholder {
-            color: var(--text-muted);
-        }
-
-        .toc-search-clear {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 12px;
-            line-height: 1;
-            padding: 2px 4px;
-            border-radius: 3px;
-            display: none;
-        }
-
-        .toc-search-clear:hover {
-            color: var(--text);
-            background: var(--border);
-        }
-
-        .toc-search-clear.visible {
-            display: block;
-        }
-
-        .toc-no-match {
-            display: none;
-            padding: 10px 14px;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        /* ===== Logo 点击切换 ===== */
-        .app-logo {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .app-logo:hover {
-            opacity: 0.82;
-        }
-
-        /* ===== 侧边栏遮罩（移动端） ===== */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.32);
-            z-index: 55;
-        }
-
-        /* ===== 深色主题 ===== */
-        body.dark {
-            --bg: #0d1117aa;
-            --surface: #161b2277;
-            --border: #30363d;
-            --text: #e6edf3;
-            --text-muted: #7d8590;
-            --accent: #58a6ff;
-            --accent-hover: #79c0ff;
-            --code-bg: #1c2128aa;
-            --sidebar-bg: #13161ddd;
-            --toc-active: #58a6ff;
-            --scrollbar: #30363d;
-            color-scheme: dark;
-        }
-
-        body.dark .content th {
-            background: #21262d;
-        }
-
-        body.dark .content tr:nth-child(even) {
-            background: #1c2128;
-        }
-
-        body.dark .content blockquote {
-            background: #1c2128;
-            border-left-color: #30363d;
-        }
-
-        body.dark .content code:not(pre code) {
-            color: #ff7b72;
-            background: #1c2128;
-            border-color: #30363d;
-        }
-
-        body.dark .markdown-code-block .markdown-code-header {
-            background: #2d333b;
-            color: #adbac7;
-        }
-
-        body.dark .markdown-code-block .markdown-code-body {
-            background: #1c2128;
-            border-color: #30363d;
-        }
-
-
-
-        body.dark .non-md-notice {
-            background: #1b1f24;
-            border-color: #30363d;
-            color: #7d8590;
-        }
-
-        body.dark .error-msg {
-            color: #ff7b72;
-        }
-
-        body.dark .top-bar {
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
-        }
-
-        body.dark .media-wrapper {
-            background: var(--surface);
-            border-color: var(--border);
-        }
-
-        body.dark .media-label {
-            background: #1c2128;
-            border-bottom-color: var(--border);
-        }
-
-        body.dark .media-wrapper audio {
-            background: var(--surface);
-        }
-
-        body.dark .mermaid-code-block {
-            background: #1c2128;
-        }
-
-        /* ===== 响应式 ===== */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 220px;
-            }
-
-            .content {
-                padding: 20px 18px 60px;
-            }
-        }
-
-        @media (max-width: 580px) {
-            .sidebar {
-                position: fixed;
-                top: var(--header-height);
-                left: 0;
-                bottom: 0;
-                width: var(--sidebar-width) !important;
-                transform: translateX(-100%);
-                transition: transform 0.25s ease;
-                z-index: 60;
-                box-shadow: 3px 0 16px rgba(0, 0, 0, 0.18);
-            }
-
-            body.sidebar-open .sidebar {
-                transform: translateX(0);
-            }
-
-            body.sidebar-open .sidebar-overlay {
-                display: block;
-                background: rgba(0, 0, 0, 0.8);
-            }
-
-            .content {
-                padding: 16px 14px 60px;
-            }
-
-            .print-page {
-                display: none;
-            }
-        }
-    </style>
+    <!-- 引用样式 -->
+    <link rel="stylesheet" href="./assets/app.css">
 </head>
 <body>
 
@@ -736,9 +58,11 @@
         <nav class="sidebar" v-show="!printMode">
             <div class="sidebar-header">目录导航</div>
             <div class="toc-search-wrap">
-                <input class="toc-search" ref="tocSearchRef" v-model="tocSearch" @change="filterToc" type="text" placeholder="&#128269; 搜索标题..." autocomplete="off"
+                <input class="toc-search" ref="tocSearchRef" v-model="tocSearch" @change="filterToc" type="text"
+                       placeholder="&#128269; 搜索标题..." autocomplete="off"
                        spellcheck="false"/>
-                <button class="toc-search-clear" v-show="tocSearch" @click="resetTocSearch" title="清除">&#10005;</button>
+                <button class="toc-search-clear" v-show="tocSearch" @click="resetTocSearch" title="清除">&#10005;
+                </button>
             </div>
             <div class="toc-container">
                 <div style="padding:20px 14px;color:var(--text-muted);font-size:.8rem;">加载中...</div>
@@ -765,13 +89,6 @@
     window.mermaid = mermaid;
 </script>
 
-<!-- GSAP 插件注册 -->
-<script>
-    gsap.registerPlugin(CSSRulePlugin, CustomEase, Draggable, EaselPlugin,
-        EasePack, Flip, MotionPathPlugin, Observer, PixiPlugin,
-        ScrollToPlugin, ScrollTrigger, TextPlugin);
-</script>
-
 <!-- markdown-setup.js 提供 renderMarkdown() -->
 <script src="./assets/markdown-setup.js"></script>
 
@@ -779,9 +96,7 @@
 <script>
     window.app = new Vue({
         components: {},
-        mixins: [
-
-        ],
+        mixins: [],
         data() {
             return {
                 appConfig: this.defaultConfig(),
@@ -800,7 +115,7 @@
                     '.kt': 'kotlin', '.kts': 'kotlin', '.lua': 'lua', '.perl': 'perl', '.scala': 'scala',
                     '.ts': 'typescript', '.vbs': 'vbscript', '.log': 'accesslog', '.gitignore': '',
                     '.gitattributes': '', '.bnf': '', '.g4': '', '.vue': 'xml', '.csv': '', '.lock': '',
-                    '.dockerfile': 'dockerfile', '.groovy': 'groovy', '.dtd': 'xml', '.nginx': 'nginx',
+                    '.dockerfile': 'dockerfile', '.groovy': 'groovy', '.nginx': 'nginx',
                     '.makefile': 'makefile', '.rb': 'ruby', '.rs': 'rust', '.swift': 'swift', '.r': 'r',
                     '.m': 'matlab', '.pl': 'perl', '.php': 'php', '.http': 'http'
                 },
@@ -819,18 +134,18 @@
             this.watchHashChange();
         },
         watch: {
-            tocSearch:{
+            tocSearch: {
                 immediate: true,
-                handler: function(val,old){
+                handler: function (val, old) {
                     this.filterToc()
                 }
             }
         },
-        methods:{
-            defaultConfig(){
+        methods: {
+            defaultConfig() {
                 return {title: 'Docs', index: 'readme.md', background: ''}
             },
-            async init(){
+            async init() {
                 await this.loadManifest();
                 const hashFile = this.getFileFromHash();
                 const fileToLoad = (window.location.hash && window.location.hash !== '#') ? hashFile : this.appConfig.index;
@@ -839,34 +154,34 @@
             async loadManifest() {
                 try {
                     const resp = await fetch('manifest.json?t=' + Date.now());
-                    if (!resp.ok){
+                    if (!resp.ok) {
                         throw new Error('not found');
                     }
                     const data = await resp.json();
-                    if (data.title){
+                    if (data.title) {
                         this.appConfig.title = String(data.title);
                     }
-                    if (data.index){
+                    if (data.index) {
                         this.appConfig.index = String(data.index).replace(/^\.\//, '');
                     }
-                    if (data.background){
+                    if (data.background) {
                         this.appConfig.background = String(data.background);
                     }
                 } catch (e) { /* 保持默认配置 */
                 }
                 document.querySelector('head title').textContent = this.appConfig.title;
             },
-            clickHome(){
+            clickHome() {
                 this.navigateTo(this.appConfig.index)
             },
-            initTheme(){
+            initTheme() {
                 const saved = localStorage.getItem('theme');
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                this.isDark=saved ? saved === 'dark' : prefersDark;
+                this.isDark = saved ? saved === 'dark' : prefersDark;
                 this.applyTheme();
             },
-            toggleTheme(){
-                this.isDark=!document.body.classList.contains('dark');
+            toggleTheme() {
+                this.isDark = !document.body.classList.contains('dark');
                 this.applyTheme();
             },
             applyTheme() {
@@ -876,24 +191,24 @@
                 document.body.classList.toggle('dark', this.isDark);
 
                 let dom = document.querySelector('#hljs-css');
-                let href=dom.href;
-                let hljsLightHref=href;
-                let hljsDarkHref=href;
-                let path=href.match(/\/styles\/github(\-dark)?\.min\.css/)[0];
-                hljsDarkHref=href.replace(path,HLJS_DARK);
-                hljsLightHref=href.replace(path,HLJS_LIGHT);
+                let href = dom.href;
+                let hljsLightHref = href;
+                let hljsDarkHref = href;
+                let path = href.match(/\/styles\/github(\-dark)?\.min\.css/)[0];
+                hljsDarkHref = href.replace(path, HLJS_DARK);
+                hljsLightHref = href.replace(path, HLJS_LIGHT);
 
                 dom.href = this.isDark ? hljsDarkHref : hljsLightHref;
                 localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
             },
-            watchHashChange(){
-                window.addEventListener('hashchange', () =>{
+            watchHashChange() {
+                window.addEventListener('hashchange', () => {
                     let filePath = this.getFileFromHash();
                     this.loadFile(filePath);
                 });
 
                 window.addEventListener('resize', () => {
-                    if (window.innerWidth > 580){
+                    if (window.innerWidth > 580) {
                         document.body.classList.remove('sidebar-open');
                     } else {
                         document.body.classList.remove('sidebar-collapsed');
@@ -904,28 +219,28 @@
                 const clean = filePath.replace(/^\.\//, '').replace(/^#/, '');
                 const encoded = encodeURIComponent(clean);
                 const current = decodeURIComponent((location.hash || '#').slice(1));
-                if (current !== clean){
+                if (current !== clean) {
                     location.hash = '#' + encoded;
-                } else{
+                } else {
                     this.loadFile(clean);
                 }
             },
             printPage() {
-                this.showBgImg=false;
-                this.printMode=true;
+                this.showBgImg = false;
+                this.printMode = true;
                 document.body.style.height = 'auto';
                 document.body.style.overflow = 'auto';
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     window.print();
                 })
             },
-            toggleShowBgImg(){
-                this.showBgImg=!this.showBgImg;
+            toggleShowBgImg() {
+                this.showBgImg = !this.showBgImg;
             },
-            clickSidebarOverlay(){
+            clickSidebarOverlay() {
                 document.body.classList.remove('sidebar-open');
             },
-            clickAppLogo(){
+            clickAppLogo() {
                 if (window.innerWidth <= 580) {
                     document.body.classList.toggle('sidebar-open');
                 } else {
@@ -1045,9 +360,9 @@
                     return relativePath;
                 }
 
-                let baseUrl=new URL(basePath,window.location.href).href;
-                let relativeUrl=new URL(relativePath,baseUrl).href;
-                return this.getRelativePath(window.location.href,relativeUrl)
+                let baseUrl = new URL(basePath, window.location.href).href;
+                let relativeUrl = new URL(relativePath, baseUrl).href;
+                return this.getRelativePath(window.location.href, relativeUrl)
 
             },
 
@@ -1094,7 +409,7 @@
                 let val = urlParams.get('_preview');
                 return val === 'no' || val === '0' || val === 'false';
             },
-             isTextFile(path) {
+            isTextFile(path) {
                 const name = this.getFileBaseName(path).toLowerCase();
                 if (name in this.TEXT_FILE_NAME_LANGS) {
                     return true;
@@ -1102,7 +417,7 @@
                 const ext = this.getFileSuffix(path).toLowerCase();
                 return ext in this.TEXT_FILE_SUFFIX_LANGS;
             },
-             getFileLang(path) {
+            getFileLang(path) {
                 const name = getFileBaseName(path).toLowerCase();
                 let lang = this.TEXT_FILE_NAME_LANGS[name];
                 if (lang) {
@@ -1112,16 +427,16 @@
                 lang = this.TEXT_FILE_SUFFIX_LANGS[ext];
                 return lang || '';
             },
-             isVideoFile(path) {
+            isVideoFile(path) {
                 return ['.mp4', '.webm', '.mov', '.mkv', '.avi', '.flv'].includes(this.getFileSuffix(path).toLowerCase());
             },
-             isAudioFile(path) {
+            isAudioFile(path) {
                 return ['.mp3', '.wav', '.ogg', '.aac', '.flac', '.m4a', '.wma'].includes(this.getFileSuffix(path).toLowerCase());
             },
-             isPdfFile(path) {
+            isPdfFile(path) {
                 return this.getFileSuffix(path).toLowerCase() === '.pdf';
             },
-             headingId(text) {
+            headingId(text) {
                 return text.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^\w\u4e00-\u9fa5\- ]/g, '').trim().replace(/\s+/g, '-');
             },
             /**
@@ -1142,7 +457,7 @@
             postProcessLinks(container) {
                 container.querySelectorAll('a[href]').forEach(a => {
                     const href = a.getAttribute('href');
-                    if (!href){
+                    if (!href) {
                         return;
                     }
                     const text = a.textContent;
@@ -1324,7 +639,7 @@
                 });
             },
             filterToc() {
-                const query=this.tocSearch;
+                const query = this.tocSearch;
                 const q = query.trim().toLowerCase();
                 const items = document.querySelectorAll('.toc-container .toc-item');
                 let matchCount = 0;
@@ -1334,19 +649,19 @@
                     if (hit) matchCount++;
                 });
                 const noMatch = document.querySelector('.toc-no-match');
-                if (noMatch){
+                if (noMatch) {
                     noMatch.style.display = (q && matchCount === 0) ? 'block' : 'none';
                 }
             },
-            resetTocSearch(){
-                this.tocSearch='';
+            resetTocSearch() {
+                this.tocSearch = '';
                 this.filterToc();
                 this.$refs.tocSearchRef.focus();
             }
         }
     });
-    let md = setupMarkdown((url)=>{
-        return window.app.resolvePath(window.app.currentFilePath,url)
+    let md = setupMarkdown((url) => {
+        return window.app.resolvePath(window.app.currentFilePath, url)
     });
     window.app.$md = md;
     window.app.$mount('#app');
