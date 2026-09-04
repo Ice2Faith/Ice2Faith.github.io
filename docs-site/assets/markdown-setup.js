@@ -284,7 +284,7 @@ function onSwitchMarkdownCodeBlock(event, lang){
                 // 1. 先将高度重置为 auto，以便在内容减少时高度能随之缩小
                 textarea.style.height = 'auto';
                 // 2. 将高度设置为内容的实际滚动高度
-                textarea.style.height = textarea.scrollHeight + 'px';
+                textarea.style.height = (textarea.scrollHeight+2) + 'px';
             }
             textarea.addEventListener('input', autoResize);
             dom.appendChild(textarea)
