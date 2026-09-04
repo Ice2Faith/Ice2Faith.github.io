@@ -102,7 +102,11 @@
 </main>
 
 <!-- Footer 固定底部 -->
-<footer class="site-footer">ICE2FAITH &copy; 2026</footer>
+<footer class="site-footer">
+    <span>ICE2FAITH &copy; 2026</span>
+    <span class="footer-sep">|</span>
+    <span>Powered by <a href="./docs-site/" class="footer-link">Docs Site</a> & <a href="./vue2-loader/" class="footer-link">Vue2Loader</a></span>
+</footer>
 
 <!-- 回到顶部按钮 -->
 <button class="back-to-top" id="backToTop" title="回到顶部">
@@ -441,6 +445,21 @@
         color: rgba(255, 255, 255, 0.25);
         font-size: 0.8rem;
         letter-spacing: 2px;
+    }
+
+    .footer-sep {
+        margin: 0 10px;
+        opacity: 0.4;
+    }
+
+    .footer-link {
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .footer-link:hover {
+        color: rgba(255, 255, 255, 0.8);
     }
 
     /* 回到顶部按钮 */
