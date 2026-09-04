@@ -1006,6 +1006,7 @@ Vue2Loader.fetchFile = function (url) {
 
             let htmlPath = new URL(window.location.href).pathname;
             let resPath = new URL(url, window.location.href).pathname;
+            let candidatePath=resPath;
 
             let rootPath = htmlPath;
             let idx = htmlPath.lastIndexOf('/');
@@ -1016,6 +1017,22 @@ Vue2Loader.fetchFile = function (url) {
             resPath = resPath.substring(rootPath.length);
 
             let fileItems = arr.filter(e => e.path == resPath);
+
+            if(!fileItems || fileItems.length==0){
+                // 可能是相对路径，进行最大路径匹配
+                idx=candidatePath.lastIndexOf('/');
+                if(idx>=0){
+                    let fileName=candidatePath.substring(idx+1);
+                    let candidateItems=arr.filter(e=>e.path.endsWith(fileName));
+                    if(candidateItems && candidateItems.length>0) {
+                        candidateItems.sort((a, b) =>  a.path.length > b.path.length ? -1 : 1);
+                        fileItems = candidateItems.filter(e => candidatePath.endsWith(e.path))
+                        if(fileItems && fileItems.length>0) {
+                            resPath = fileItems[0].path;
+                        }
+                    }
+                }
+            }
 
             let contentType = 'text/html';
 
