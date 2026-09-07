@@ -4,8 +4,8 @@
 > **依赖：** Vue 2.x（全局引入）  
 > **定位：** 无需构建工具（webpack / vite），直接在多页应用 HTML 中使用 `.vue` 单文件组件进行开发
 
-- github仓库：[github](https://github.com/Ice2Faith/i2f-turbo-web/vue2-loader)
-- gitee仓库：[gitee](https://gitee.com/Ice2Faith/i2f-turbo-web/vue2-loader)
+- github仓库：[github](https://github.com/Ice2Faith/i2f-turbo-web/tree/main/vue2-loader)
+- gitee仓库：[gitee](https://gitee.com/Ice2Faith/i2f-turbo-web/tree/main/vue2-loader)
 
 ---
 

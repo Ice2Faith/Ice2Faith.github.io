@@ -1,7 +1,7 @@
 # Docs Site 快速上手
 
-- github仓库：[github](https://github.com/Ice2Faith/i2f-turbo-web/docs-site)
-- gitee仓库：[gitee](https://gitee.com/Ice2Faith/i2f-turbo-web/docs-site)
+- github仓库：[github](https://github.com/Ice2Faith/i2f-turbo-web/tree/main/docs-site)
+- gitee仓库：[gitee](https://gitee.com/Ice2Faith/i2f-turbo-web/tree/main/docs-site)
 
 ## 简介
 
