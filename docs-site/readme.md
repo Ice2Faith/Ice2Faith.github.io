@@ -188,6 +188,70 @@ Vue2Loader 加载根组件的路径也需修改：
 - 代码块语法高亮（支持 Java、Python、JavaScript、SQL、XML、YAML 等数十种语言）
 - 数学公式（KaTeX，行内 `$...$` 和块级 `$$...$$`）
 - Mermaid 图表（使用 ` ```mermaid ` 代码块）
+- SVG 图表（使用 ` ```svg ` 代码块，支持 `link:` 前缀加载外部文件）
+- CSS 样式注入（使用 ` ```css-embed ` 代码块，将 CSS 直接注入页面，支持 `link:` 前缀加载外部文件）
+- JavaScript 脚本注入（使用 ` ```js-embed ` 代码块，将 JS 直接注入页面，支持 `link:` 前缀加载外部文件）
+
+### CSS / JS 嵌入
+
+Docs Site 支持在 Markdown 中通过特殊代码块直接注入 CSS 样式或 JavaScript 脚本到页面中，代码块本身不会在页面上显示。
+
+#### CSS 嵌入（`css-embed`）
+
+使用 ` ```css-embed ` 代码块编写的 CSS 会被直接注入到页面中，可用于自定义文档的局部样式。
+
+**直接编写样式：**
+
+````markdown
+```css-embed
+.my-custom-box {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+```
+````
+
+**引用外部样式文件：**
+
+使用 `link:` 前缀可以加载外部 CSS 文件：
+
+````markdown
+```css-embed
+link:./assets/custom-styles.css
+```
+````
+
+#### JavaScript 嵌入（`js-embed`）
+
+使用 ` ```js-embed ` 代码块编写的 JavaScript 会被直接注入到页面中执行，可用于添加交互逻辑或动态功能。
+
+**直接编写脚本：**
+
+````markdown
+```js-embed
+(function() {
+    var btn = document.createElement('button');
+    btn.textContent = '点击我';
+    btn.onclick = function() { alert('Hello from js-embed!'); };
+    document.querySelector('.markdown-body').appendChild(btn);
+})();
+```
+````
+
+**引用外部脚本文件：**
+
+使用 `link:` 前缀可以加载外部 JS 文件：
+
+````markdown
+```js-embed
+link:./assets/custom-script.js
+```
+````
+
+> **注意：** `css-embed` 和 `js-embed` 代码块不会在页面上显示代码内容，仅执行注入操作。`link:` 前缀后的路径为相对于当前文档文件的资源路径。
 
 ### 文档内导航
 
