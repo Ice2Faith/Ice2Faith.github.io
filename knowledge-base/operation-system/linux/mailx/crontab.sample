@@ -1,0 +1,10 @@
+*/10 * * * * /home/env/mailx/ps-chk-mail.sh nginx nginx
+*/10 * * * * /home/env/mailx/mem-chk-mail.sh
+*/10 * * * * /home/env/mailx/disk-chk-mail.sh
+*/10 * * * * /home/env/mailx/net-chk-mail.sh
+*/10 * * * * /home/env/mailx/net-chk-mail.sh 192.168.1.110
+*/10 * * * * /home/env/mailx/user-chk-mail.sh
+*/10 * * * * /home/env/mailx/sock-chk-mail.sh 192.168.1.120 3306
+*/10 * * * * /home/env/mailx/jdump-chk-mail.sh
+*/10 * * * * /home/env/mailx/load-chk-mail.sh
+*/3 * * * * /home/apps/web/keepalived.sh

@@ -1,5 +1,8 @@
 # Docs Site 快速上手
 
+- github仓库：[github](https://github.com/Ice2Faith/i2f-turbo-web/docs-site)
+- gitee仓库：[gitee](https://gitee.com/Ice2Faith/i2f-turbo-web/docs-site)
+
 ## 简介
 
 Docs Site 是一个纯前端的静态文档查看器，无需构建工具或后端服务，只需将 Markdown 文件放置在任意静态文件服务器上即可在线浏览。

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="Cache-Control" content="max-age=3600, public">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>文档查看器</title>
+
+    <script src="../docs-site/lib/vue/vue-2.js"></script>
+    <script src="../docs-site/vue2-loader/loader/Vue2Loader.js"></script>
+
+    <!-- markdown-it 解析 -->
+    <script src="../docs-site/lib/markdown-it@14.1.1/dist/markdown-it.min.js"></script>
+
+    <!-- highlight.js 核心高亮库 -->
+    <script src="../docs-site/lib/highlight.js/11.11.1/highlight.min.js"></script>
+    <link id="hljs-css" rel="stylesheet" href="../docs-site/lib/highlight.js/11.11.1/styles/github.min.css"/>
+
+    <!-- KaTeX 数学公式 -->
+    <link rel="stylesheet" href="../docs-site/lib/katex@0.16.9/dist/katex.min.css">
+    <script src="../docs-site/lib/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="../docs-site/lib/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+
+    <!-- Panzoom 用于 Mermaid 图表缩放 -->
+    <script src="../docs-site/lib/@panzoom/panzoom@4.4.3/dist/panzoom.min.js"></script>
+
+    <link rel="stylesheet" href="../docs-site/back-top-bottom/i2f-back-top-bottom.css">
+    <script src="../docs-site/back-top-bottom/i2f-back-top-bottom.js"></script>
+
+
+    <!-- 基础 Markdown 样式 -->
+    <link rel="stylesheet" href="../docs-site/assets/markdown-styles.css">
+
+    <!-- 引用样式 -->
+    <link rel="stylesheet" href="../docs-site/assets/app.css">
+</head>
+<body>
+
+<div  id="app">
+
+</div>
+
+<!-- Mermaid ESM 初始化 -->
+<script type="module">
+    import mermaid from '../docs-site/lib/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({startOnLoad: false});
+    window.mermaid = mermaid;
+</script>
+
+<!-- markdown-setup.js 提供 renderMarkdown() -->
+<script src="../docs-site/assets/markdown-setup.js"></script>
+
+</body>
+<script>
+    /* 由 Vue2Loader 加载根组件 app.vue 并挂载到 #app */
+    Vue2Loader.createVue('../docs-site/components/App.vue', 'app').then(function (app) {
+        window.app = app;
+        let md = setupMarkdown((url) => {
+            return window.app.resolvePath(window.app.currentFilePath, url)
+        });
+        window.app.$md = md;
+    });
+</script>
+</html>

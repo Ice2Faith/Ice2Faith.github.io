@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- maven 版本 -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- maven 的三元坐标 -->
+    <groupId>i2f.turbo</groupId>
+    <artifactId>app-pom</artifactId>
+    <version>1.0</version>
+
+    <!--
+    打包的类型
+    一般情况下
+    没有子模块的项目，默认打包类型都是jar
+    如果有子模块，那本模块大部分都是用作管理，类型一般都是pom
+    当然，也可以指定为war类型
+     -->
+    <packaging>pom</packaging>
+
+    <!-- 项目名称和描述 -->
+    <name>i2f-turbo</name>
+    <description>冰念加速包</description>
+
+    <!--
+    如果你的项目是开源项目
+    也可以在这里配置使用的开源协议
+    比如这里使用的是 GNU GPL 3.0 的开源协议
+    -->
+    <licenses>
+        <license>
+            <name>GNU General Public License version 3</name>
+            <url>https://opensource.org/licenses/GPL-3.0</url>
+        </license>
+    </licenses>
+
+    <!--
+    同时，也可以添加上项目的管理信息
+    -->
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/Ice2Faith/i2f-turbo-knowledge.git</url>
+        <connection>scm:git:https://github.com/Ice2Faith/i2f-turbo-knowledge.git</connection>
+        <developerConnection>scm:git:git@github.com:Ice2Faith/i2f-turbo-knowledge.git</developerConnection>
+    </scm>
+
+    <!--
+    也可以添加开发者清单
+    -->
+    <developers>
+        <developer>
+            <id>IceFaith</id>
+            <name>IceFaith</name>
+            <email>ugex_savelar@163.com</email>
+            <url>https://github.com/Ice2Faith</url>
+        </developer>
+    </developers>
+
+    <properties>
+        <!-- 定义使用的jdk版本 -->
+        <java.version>17</java.version>
+        <!-- 定义源代码的Java版本和生产目标代码的Java版本 -->
+        <java.source.version>1.8</java.source.version>
+        <java.target.version>1.8</java.target.version>
+        <!-- 定义编译器时源代码的Java版本和生产目标代码的Java版本 -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- 定义源代码的编码类型 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+
+        <app.version>1.0</app.version>
+
+        <lombok.version>1.18.32</lombok.version>
+
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
+    </properties>
+
+    <!--
+     记录了本模块有哪些子模块
+     只记录子一级，不会记录子的子这种情况
+     也就是各级维护自己的下一级即可
+     一般情况下，一个模块就对应同目录下有一个同名的文件夹的子模块
+     -->
+    <modules>
+        <module>app-auth</module>
+    </modules>
+
+    <!--
+    依赖管理
+    主要是维护项目中使用到的依赖的版本
+    这样，在使用的地方就可以不用指定依赖的版本
+     -->
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--
+            也可以把子孙模块声明到依赖管理中来，
+            这样其他子模块就可以直接使用这个依赖
+            -->
+            <dependency>
+                <groupId>i2f.turbo</groupId>
+                <artifactId>app-auth</artifactId>
+                <version>${app.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!--
+    如果不是pom类型的时候，一般都会添加自己模块的依赖
+    但是在pom管理模块中，也可以添加一些公共的一定会用到的依赖
+    比如下面的lombok这种
+    -->
+    <dependencies>
+        <!--
+        因为在依赖管理中，已经定义了完整的信息
+        因此这里可以不用指定version版本
+        也就是一个覆盖原则，如果明确指定了值
+        就是用指定的值，如果没有指定，就使用依赖管理的值
+        -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+    <!--
+    maven 也有多环境这种说法
+    可以通过勾选多个环境
+    使得在特定的环境中使用特定的plugin，properties,dependency等
+    实际上，profile就是一种混入策略
+    将勾选的profile环境配置混入到主配置中
+    因此，如果profile中和主配置中都定义了相同的配置
+    则profile的会覆盖主配置，也就是说，profile里面的生效
+    -->
+    <profiles>
+        <!--
+        可以定义多个配置环境
+        -->
+        <profile>
+            <!--
+            id 是必须的，一个项目里面唯一就行
+            -->
+            <id>default</id>
+            <!--
+            定义激活策略
+            可以定义默认激活
+            还可以根据jdk版本
+            cpu架构等决定是否激活
+            这些都可以在maven官网查到
+            -->
+            <activation>
+                <!--
+                这里配置默认激活
+                -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <!--
+            可以配置环境独有的属性变量
+            -->
+            <properties>
+                <spring.env>dev</spring.env>
+                <logback.env>test</logback.env>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <spring.env>test</spring.env>
+                <logback.env>test</logback.env>
+            </properties>
+            <!--
+            总的来说，在基础配置中可以进行配置的
+            在环境中都可以进行配置
+            比如下面这些常用的配置，也都可以分环境配置
+            -->
+            <dependencyManagement>
+
+            </dependencyManagement>
+            <dependencies>
+
+            </dependencies>
+            <build>
+                <pluginManagement>
+
+                </pluginManagement>
+                <plugins>
+
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <!--
+    定义构建期间的行为
+    -->
+    <build>
+        <!--
+        可以添加自己的构建期间使用的插件
+        -->
+        <plugins>
+            <!--
+            指定编译器的版本和编码类型
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <skip>true</skip>
+                    <source>${java.source.version}</source>
+                    <target>${java.target.version}</target>
+                    <compilerVersion>${java.version}</compilerVersion>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgument>-parameters</compilerArgument>
+                    <!-- java9 之后，在处理lombok时，需要添加此编译参数 begin -->
+                    <!--                        <compilerArgument>&#45;&#45;add-exports</compilerArgument>-->
+                    <!--                        <compilerArgument>jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</compilerArgument>-->
+                    <!-- java9 之后，在处理lombok时，需要添加此编译参数 begin -->
+
+                    <!-- 上面无效时，使用此部分 begin -->
+                    <compilerArgs>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                        <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <!-- 上面无效时，使用此部分 end -->
+                </configuration>
+            </plugin>
+        </plugins>
+        <!--
+        也可以管理一些插件，预先定义好插件的一些初始配置或者版本
+        -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <!--
+    也可以定义使用的maven仓库
+    -->
+    <repositories>
+        <repository>
+            <id>aliyun-maven</id>
+            <name>aliyun maven repository</name>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url><!-- 部门仓库 -->
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-maven</id>
+            <name>aliyun maven repository</name>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url><!-- 部门仓库 -->
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>i2f.turbo</groupId>
+    <artifactId>i2f-maven-docker</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    </properties>
+
+    <packaging>jar</packaging>
+
+    <dependencies>
+
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <properties>
+                <spring.env>dev</spring.env>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>docker</id>
+            <properties>
+                <spring.env>dev</spring.env>
+                <logback.env>test</logback.env>
+
+                <docker.remote.host>192.168.x.x:2375</docker.remote.host>
+
+                <docker.registry.host>192.168.x.x:5000</docker.registry.host>
+                <docker.registry.prefix>/i2f</docker.registry.prefix>
+                <docker.registry.username>admin</docker.registry.username>
+                <docker.registry.password>harbor123456</docker.registry.password>
+
+                <docker.run.port>8080:8080</docker.run.port>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>io.fabric8</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
+                            <version>0.46.0</version>
+                            <configuration>
+                                <!-- Docker 远程管理地址-->
+                                <dockerHost>http://${docker.remote.host}</dockerHost>
+                                <!-- Docker 推送镜像仓库地址-->
+                                <pushRegistry>http://${docker.registry.host}</pushRegistry>
+                                <authConfig>
+                                    <push>
+                                        <username>${docker.registry.username}</username>
+                                        <password>${docker.registry.password}</password>
+                                    </push>
+                                </authConfig>
+                                <images>
+                                    <image>
+                                        <!--由于推送到私有镜像仓库，镜像名需要添加仓库地址-->
+                                        <name>
+                                            ${docker.registry.host}${docker.registry.prefix}/${pom.artifactId}:${pom.version}
+                                        </name>
+                                        <!--定义镜像构建行为-->
+                                        <build>
+                                            <dockerFile>${pom.basedir}/Dockerfile</dockerFile>
+                                            <!--定义维护者-->
+                                            <maintainer>app</maintainer>
+                                            <filter>@</filter>
+                                            <assemblies>
+                                                <assembly>
+                                                    <name>/</name>
+                                                    <inline>
+                                                        <fileSets>
+                                                            <fileSet>
+                                                                <directory>${project.build.directory}</directory>
+                                                                <outputDirectory>target</outputDirectory>
+                                                                <filtered>false</filtered>
+                                                                <includes>
+                                                                    <include>*.jar</include>
+                                                                    <include>*.tar</include>
+                                                                    <include>*.war</include>
+                                                                    <include>*.tar.gz</include>
+                                                                    <include>*.tgz</include>
+                                                                    <include>*.zip</include>
+                                                                </includes>
+                                                            </fileSet>
+                                                            <fileSet>
+                                                                <directory>${project.basedir}/assets</directory>
+                                                                <outputDirectory>assets</outputDirectory>
+                                                            </fileSet>
+                                                            <fileSet>
+                                                                <directory>${project.basedir}/src/main/resources
+                                                                </directory>
+                                                                <outputDirectory>resources</outputDirectory>
+                                                            </fileSet>
+                                                        </fileSets>
+                                                    </inline>
+                                                </assembly>
+                                            </assemblies>
+                                        </build>
+
+                                        <!--定义容器启动行为-->
+                                        <run>
+                                            <!--设置容器名，可采用通配符-->
+                                            <containerNamePattern>${pom.artifactId}</containerNamePattern>
+                                            <!--设置端口映射-->
+                                            <ports>
+                                                <port>${docker.run.port}</port>
+                                            </ports>
+
+                                        </run>
+                                    </image>
+                                </images>
+                            </configuration>
+                            <executions>
+                                <!--如果想在项目打包时构建镜像添加-->
+                                <execution>
+                                    <id>build-image</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>build</goal>
+                                        <goal>push</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <!-- 前面使用了插件管理，后续的子模块就可以直接这样使用了 -->
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>建表工具</title>
+
+    <!-- vue2 -->
+    <script src="https://unpkg.zhimg.com/vue@2.7.14/dist/vue.js"></script>
+
+    <!-- element-ui -->
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
+
+
+</head>
+<body>
+<div id="app">
+    <el-card header="操作" shadow="never">
+        <el-row :gutter="20" type="flex" justify="center">
+            <el-button type="success" @click="defaultJson">样例JSON</el-button>
+            <el-button type="warning" @click="formatJson">格式化JSON</el-button>
+            <el-button type="primary" @click="convertAsDdl">转换</el-button>
+        </el-row>
+        <el-row :gutter="20" type="flex" justify="center" style="padding: 5px 3px">
+            <el-popover
+                    placement="top-start"
+                    title="类型转换介绍"
+                    width="400"
+                    trigger="hover">
+                <el-checkbox slot="reference" type="primary" v-model="form.typeMapping">类型转换</el-checkbox>
+                <el-row style="border: solid 1px #aaa">
+                    <el-row type="flex" style="border-bottom: solid 2px #aaa">
+                        <el-col :span="12">
+                            标准类型
+                        </el-col>
+                        <el-col :span="12" style="border-left: solid 1px #aaa">
+                            目标类型
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex"
+                            v-for="item in metas.colTypes.standard"
+                            style="border-bottom: solid 1px #aaa">
+                        <el-col :span="12">
+                            {{item}}
+                        </el-col>
+                        <el-col :span="12" style="border-left: solid 1px #aaa">
+                            {{metas.colTypes[form.type][(item == 'now()' ? 'now' : item)]}}
+                        </el-col>
+                    </el-row>
+                </el-row>
+            </el-popover>
+
+            <el-divider direction="vertical"></el-divider>
+            <el-radio-group v-model="form.type">
+                <el-radio v-for="item in metas.typeList"
+                          :label="item.value">{{item.label}}
+                </el-radio>
+            </el-radio-group>
+        </el-row>
+    </el-card>
+    <el-row :gutter="20" type="flex">
+        <el-col :span="12">
+            <el-card header="表JSON" shadow="never">
+                <el-input
+                        type="textarea"
+                        :rows="metas.panel.rows"
+                        placeholder="请输入JSON"
+                        v-model="form.jsonText">
+                </el-input>
+            </el-card>
+        </el-col>
+        <el-col :span="12">
+            <el-card header="表DDL" shadow="never">
+                <el-input
+                        type="textarea"
+                        :rows="metas.panel.rows"
+                        placeholder="在此处获取结果"
+                        v-model="form.ddlText">
+                </el-input>
+            </el-card>
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script>
+
+    const $strs = {
+        isVoid(str) {
+            return str == null || str == undefined
+        },
+        null2empty(str) {
+            return this.isVoid(str) ? '' : str
+        },
+        lower(str) {
+            return this.null2empty(str).toLowerCase()
+        },
+        upper(str) {
+            return this.null2empty(str).toUpperCase()
+        },
+        hashCode(value) {
+            let h = 0;
+            if (value && value.length > 0) {
+                for (let i = 0; i < value.length; i++) {
+                    h = 31 * h + value.charCodeAt(i)
+                    h = h & 0x7fffffff
+                }
+            }
+            return h;
+        }
+    }
+    window.$strs = $strs
+
+    window.app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                form: {
+                    jsonText: '',
+                    ddlText: '',
+                    type: 'mysql',
+                    typeMapping: false,
+                },
+                metas: {
+                    colTypes: {
+                        standard: [
+                            'datetime',
+                            'date',
+                            'time',
+                            'timestamp',
+                            'varchar',
+                            'text',
+                            'char',
+                            'bigint',
+                            'int',
+                            'tinyint',
+                            'smallint',
+                            'mediumint',
+                            'decimal',
+                            'float',
+                            'double',
+                            'now()'
+                        ],
+                        mysql: {
+                            datetime: 'datetime',
+                            date: 'date',
+                            time: 'time',
+                            timestamp: 'timestamp',
+                            varchar: 'varchar',
+                            text: 'text',
+                            char: 'char',
+                            bigint: 'bigint',
+                            int: 'int',
+                            tinyint: 'tinyint',
+                            smallint: 'smallint',
+                            mediumint: 'mediumint',
+                            decimal: 'decimal',
+                            float: 'float',
+                            double: 'double',
+                            now: 'now()'
+                        },
+                        oracle: {
+                            datetime: 'date',
+                            date: 'date',
+                            time: 'date',
+                            timestamp: 'timestamp',
+                            varchar: 'varchar2',
+                            text: 'clob',
+                            char: 'char',
+                            bigint: 'number(20,0)',
+                            int: 'number(10,0)',
+                            tinyint: 'number(3,0)',
+                            smallint: 'number(5,0)',
+                            mediumint: 'number(7,0)',
+                            decimal: 'number(20,10)',
+                            float: 'number(10,5)',
+                            double: 'number(20,10)',
+                            now: 'sysdate'
+                        },
+                        postgre: {
+                            datetime: 'timestamp',
+                            date: 'date',
+                            time: 'time',
+                            timestamp: 'timestamp',
+                            varchar: 'varchar',
+                            text: 'text',
+                            char: 'char',
+                            bigint: 'bigint',
+                            int: 'integer',
+                            tinyint: 'smallint',
+                            smallint: 'smallint',
+                            mediumint: 'integer',
+                            decimal: 'decimal',
+                            float: 'double',
+                            double: 'double',
+                            now: 'now()'
+                        },
+                        gbase: {
+                            datetime: 'timestamp',
+                            date: 'date',
+                            time: 'time',
+                            timestamp: 'timestamp',
+                            varchar: 'varchar',
+                            text: 'text',
+                            char: 'char',
+                            bigint: 'bigint',
+                            int: 'int',
+                            tinyint: 'tinyint',
+                            smallint: 'smallint',
+                            mediumint: 'mediumint',
+                            decimal: 'decimal',
+                            float: 'float',
+                            double: 'double',
+                            now: 'current_timestamp'
+                        },
+                    },
+                    defaultJson: [
+                        {
+                            "table": {
+                                "name": "biz_sample",
+                                "comment": "样例表",
+                                "drop": false,
+                            },
+                            "columns": [
+                                {
+                                    "name": "id",
+                                    "type": "bigint",
+                                    "check": "",
+                                    "increment": true,
+                                    "comment": "ID"
+                                },
+                                {
+                                    "name": "name",
+                                    "type": "varchar(20)",
+                                    "comment": "名称"
+                                },
+                                {
+                                    "name": "status",
+                                    "type": "char(1)",
+                                    "check": "default '1'",
+                                    "comment": "状态：0 禁用，1 启用"
+                                },
+                                {
+                                    "name": "create_time",
+                                    "type": "datetime",
+                                    "check": "default now() not null",
+                                    "comment": "创建时间"
+                                }
+                            ],
+                            "primary": [
+                                "id",
+                                "name"
+                            ],
+                            "indexes": [
+                                {
+                                    "name": "idx_ctime_status",
+                                    "unique": true,
+                                    "columns": [
+                                        "create_time",
+                                        "status"
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    panel: {
+                        rows: 30,
+                    },
+                    typeList: [
+                        {
+                            value: 'mysql',
+                            label: 'MySQL'
+                        },
+                        {
+                            value: 'oracle',
+                            label: 'Oracle'
+                        },
+                        {
+                            value: 'postgre',
+                            label: 'PostgreSQL'
+                        },
+                        {
+                            value: 'gbase',
+                            label: 'GBase'
+                        }
+                    ],
+                    typeHandlers: {
+                        mysql: {
+                            json2ddl(json) {
+
+                                let headerLine = `create table ${$strs.lower(json.table.name)}(`
+                                let bodyLines = ''
+                                let primaryLine = ''
+                                let footerLine = `) comment '${$strs.null2empty(json.table.comment)}';`
+
+                                for (let i = 0; i < json.columns.length; i++) {
+                                    let col = json.columns[i]
+                                    let colLine = `\t ${$strs.lower(col.name)} \t ${$strs.lower(col.type)} \t ${col.increment ? 'auto_increment' : ''} \t ${$strs.lower($strs.null2empty(col.check))} \t comment '${$strs.null2empty(col.comment)}'`
+                                    if (i != json.columns.length - 1) {
+                                        colLine += ','
+                                    }
+                                    bodyLines = bodyLines + colLine + '\n'
+                                }
+
+                                if (json.primary && json.primary.length > 0) {
+                                    let cols = ''
+                                    for (let j = 0; j < json.primary.length; j++) {
+                                        let col = json.primary[j]
+                                        if (j > 0) {
+                                            cols += ','
+                                        }
+                                        cols += col
+                                    }
+                                    primaryLine = `\t ,primary key(${$strs.lower(cols)})`
+                                }
+
+                                let tableBody = `${headerLine}\n${bodyLines}\n${primaryLine}\n${footerLine}`
+
+                                if (json.table.drop) {
+                                    let dropLine = `drop table if exists ${$strs.lower(json.table.name)};`
+                                    tableBody = dropLine + '\n\n' + tableBody
+                                }
+
+                                let indexLines = ''
+                                if (json.indexes && json.indexes.length > 0) {
+                                    for (let i = 0; i < json.indexes.length; i++) {
+                                        let idx = json.indexes[i]
+                                        let cols = ''
+                                        for (let j = 0; j < idx.columns.length; j++) {
+                                            let col = idx.columns[j]
+                                            if (j > 0) {
+                                                cols += ','
+                                            }
+                                            cols += col
+                                        }
+                                        let idxLine = `create ${idx.unique ? 'unique' : ''} index ${$strs.lower(idx.name)}\non ${$strs.lower(json.table.name)}(${$strs.lower(cols)});`
+                                        indexLines = indexLines + idxLine + '\n'
+                                    }
+                                }
+
+                                let splitLine = `\n-- table ${$strs.lower(json.table.name)} ${$strs.null2empty(json.table.comment)}\n`
+                                let ret = `${splitLine}\n\n${tableBody}\n\n${indexLines}`
+
+                                return ret
+                            }
+                        },
+                        oracle: {
+                            json2ddl(json) {
+                                let headerLine = `CREATE TABLE "${$strs.upper(json.table.name)}"(`
+                                let bodyLines = ''
+                                let primaryLine = ''
+                                let footerLine = `);`
+
+                                for (let i = 0; i < json.columns.length; i++) {
+                                    let col = json.columns[i]
+                                    let colLine = `\t "${$strs.upper(col.name)}" \t ${$strs.upper(col.type)} \t ${$strs.upper($strs.null2empty(col.check))}`
+                                    if (i != json.columns.length - 1) {
+                                        colLine += ','
+                                    }
+                                    bodyLines = bodyLines + colLine + '\n'
+                                }
+
+                                if (json.primary && json.primary.length > 0) {
+                                    let cols = ''
+                                    for (let j = 0; j < json.primary.length; j++) {
+                                        let col = `"${json.primary[j]}"`
+                                        if (j > 0) {
+                                            cols += ','
+                                        }
+                                        cols += col
+                                    }
+                                    primaryLine = `\t ,PRIMARY KEY(${$strs.upper(cols)})`
+                                }
+
+                                let tableBody = `${headerLine}\n${bodyLines}\n${primaryLine}\n${footerLine}`
+
+                                if (json.table.drop) {
+                                    let dropLine = `BEGIN\n` +
+                                        `EXECUTE IMMEDIATE 'DROP TABLE "${$strs.upper(json.table.name)}"';\n` +
+                                        `EXCEPTION\n` +
+                                        `  WHEN OTHERS THEN\n` +
+                                        `    NULL;\n` +
+                                        `END;`
+                                    tableBody = dropLine + '\n\n' + tableBody
+                                }
+
+                                let tableNameHashStr = $strs.hashCode($strs.upper(json.table.name)).toString(16).toUpperCase()
+                                let indexLines = ''
+                                if (json.indexes && json.indexes.length > 0) {
+                                    for (let i = 0; i < json.indexes.length; i++) {
+                                        let idx = json.indexes[i]
+                                        let cols = ''
+                                        for (let j = 0; j < idx.columns.length; j++) {
+                                            let col = `"${idx.columns[j]}"`
+                                            if (j > 0) {
+                                                cols += ','
+                                            }
+                                            cols += col
+                                        }
+
+                                        let idxName = $strs.upper(idx.name) + `_${tableNameHashStr}`
+                                        let idxLine = `CREATE ${idx.unique ? 'UNIQUE' : ''} INDEX "${idxName}"\nON "${$strs.upper(json.table.name)}"(${$strs.upper(cols)});`
+                                        indexLines = indexLines + idxLine + '\n'
+                                    }
+                                }
+
+                                let commentLines = ''
+                                commentLines += `COMMENT ON TABLE "${$strs.upper(json.table.name)}" IS '${$strs.null2empty(json.table.comment)}';\n`
+                                for (let i = 0; i < json.columns.length; i++) {
+                                    let col = json.columns[i]
+                                    let addComment = ''
+                                    if (col.increment) {
+                                        addComment = `, ref SEQ_${$strs.upper(json.table.name)}_${$strs.upper(col.name)}`
+                                    }
+                                    let colLine = `COMMENT ON COLUMN "${$strs.upper(json.table.name)}"."${$strs.upper(col.name)}" IS '${$strs.null2empty(col.comment)}${addComment}';`
+                                    commentLines = commentLines + colLine + '\n'
+                                }
+
+                                let seqLines = ''
+                                for (let i = 0; i < json.columns.length; i++) {
+                                    let col = json.columns[i]
+                                    if (col.increment) {
+                                        let colLine = `CREATE SEQUENCE SEQ_${$strs.upper(json.table.name)}_${$strs.upper(col.name)}\n` +
+                                            `INCREMENT BY 1\n` +
+                                            `MINVALUE 1 MAXVALUE 9999999999999999999999999999\n` +
+                                            `START WITH 100\n` +
+                                            `NOCYCLE\n` +
+                                            `CACHE 20\n` +
+                                            `NOORDER;`
+                                        seqLines = seqLines + colLine + '\n'
+                                    }
+
+                                }
+
+                                let splitLine = `\n-- table ${$strs.upper(json.table.name)} ${$strs.null2empty(json.table.comment)}\n`
+                                let ret = `${splitLine}\n\n${tableBody}\n\n${indexLines}\n\n${commentLines}\n\n${seqLines}`
+
+                                return ret
+                            }
+                        },
+                        postgre: {
+                            json2ddl(json) {
+                                let headerLine = `create table ${$strs.lower(json.table.name)}(`
+                                let bodyLines = ''
+                                let primaryLine = ''
+                                let footerLine = `);`
+
+                                for (let i = 0; i < json.columns.length; i++) {
+                                    let col = json.columns[i]
+                                    if(col.increment){
+                                        let serialMap={
+                                            bigint: 'bigserial',
+                                            int: 'serial',
+                                            smallint: 'smallserial'
+                                        }
+                                        if(serialMap[col.type]){
+                                            col.type=serialMap[col.type]
+                                        }
+                                    }
+                                    let colLine = `\t ${$strs.lower(col.name)} \t ${$strs.lower(col.type)} \t ${$strs.null2empty(col.check)}`
+                                    if (i != json.columns.length - 1) {
+                                        colLine += ','
+                                    }
+                                    bodyLines = bodyLines + colLine + '\n'
+                                }
+
+                                if (json.primary && json.primary.length > 0) {
+                                    let cols = ''
+                                    for (let j = 0; j < json.primary.length; j++) {
+                                        let col = `${$strs.lower(json.primary[j])}`
+                                        if (j > 0) {
+                                            cols += ','
+                                        }
+                                        cols += col
+                                    }
+                                    primaryLine = `\t ,primary key(${$strs.lower(cols)})`
+                                }
+
+                                let tableBody = `${headerLine}\n${bodyLines}\n${primaryLine}\n${footerLine}`
+
+                                if (json.table.drop) {
+                                    let dropLine = `drop table if exists ${$strs.lower(json.table.name)};`
+                                    tableBody = dropLine + '\n\n' + tableBody
+                                }
+
+                                let indexLines = ''
+                                if (json.indexes && json.indexes.length > 0) {
+                                    for (let i = 0; i < json.indexes.length; i++) {
+                                        let idx = json.indexes[i]
+                                        let cols = ''
+                                        for (let j = 0; j < idx.columns.length; j++) {
+                                            let col = idx.columns[j]
+                                            if (j > 0) {
+                                                cols += ','
+                                            }
+                                            cols += col
+                                        }
+                                        let idxLine = `create ${idx.unique ? 'unique' : ''} index ${$strs.lower(idx.name)}\non ${$strs.lower(json.table.name)}(${$strs.lower(cols)});`
+                                        indexLines = indexLines + idxLine + '\n'
+                                    }
+                                }
+
+                                let commentLines = ''
+                                commentLines += `comment on table ${$strs.lower(json.table.name)} is '${$strs.null2empty(json.table.comment)}';\n`
+                                for (let i = 0; i < json.columns.length; i++) {
+                                    let col = json.columns[i]
+                                    let addComment = ''
+                                    let colLine = `comment on column ${$strs.lower(json.table.name)}.${$strs.lower(col.name)} is '${$strs.null2empty(col.comment)}${addComment}';`
+                                    commentLines = commentLines + colLine + '\n'
+                                }
+
+
+                                let splitLine = `\n-- table ${$strs.lower(json.table.name)} ${$strs.null2empty(json.table.comment)}\n`
+                                let ret = `${splitLine}\n\n${tableBody}\n\n${indexLines}\n\n${commentLines}`
+
+                                return ret
+                            }
+                        },
+                        gbase: {
+                            json2ddl(json) {
+
+                                let headerLine = `create table ${$strs.lower(json.table.name)}(`
+                                let bodyLines = ''
+                                let primaryLine = ''
+                                let footerLine = `) comment '${$strs.null2empty(json.table.comment)}';`
+
+                                for (let i = 0; i < json.columns.length; i++) {
+                                    let col = json.columns[i]
+                                    let colLine = `\t ${$strs.lower(col.name)} \t ${$strs.lower(col.type)} \t ${col.increment ? 'auto_increment' : ''} \t ${$strs.lower($strs.null2empty(col.check))} \t comment '${$strs.null2empty(col.comment)}'`
+                                    if (i != json.columns.length - 1) {
+                                        colLine += ','
+                                    }
+                                    bodyLines = bodyLines + colLine + '\n'
+                                }
+
+                                if (json.primary && json.primary.length > 0) {
+                                    let cols = ''
+                                    for (let j = 0; j < json.primary.length; j++) {
+                                        let col = json.primary[j]
+                                        if (j > 0) {
+                                            cols += ','
+                                        }
+                                        cols += col
+                                    }
+                                    primaryLine = `\t ,primary key(${$strs.lower(cols)})`
+                                }
+
+                                let tableBody = `${headerLine}\n${bodyLines}\n${primaryLine}\n${footerLine}`
+
+                                if (json.table.drop) {
+                                    let dropLine = `drop table if exists ${$strs.lower(json.table.name)};`
+                                    tableBody = dropLine + '\n\n' + tableBody
+                                }
+
+                                let indexLines = ''
+                                if (json.indexes && json.indexes.length > 0) {
+                                    for (let i = 0; i < json.indexes.length; i++) {
+                                        let idx = json.indexes[i]
+                                        let cols = ''
+                                        for (let j = 0; j < idx.columns.length; j++) {
+                                            let col = idx.columns[j]
+                                            if (j > 0) {
+                                                cols += ','
+                                            }
+                                            cols += col
+                                        }
+                                        let idxLine = `create ${idx.unique ? 'unique' : ''} index ${$strs.lower(idx.name)}\non ${$strs.lower(json.table.name)}(${$strs.lower(cols)});`
+                                        indexLines = indexLines + idxLine + '\n'
+                                    }
+                                }
+
+                                let splitLine = `\n-- table ${$strs.lower(json.table.name)} ${$strs.null2empty(json.table.comment)}\n`
+                                let ret = `${splitLine}\n\n${tableBody}\n\n${indexLines}`
+
+                                return ret
+                            }
+                        },
+                    },
+
+                }
+            }
+        },
+        created() {
+            this.defaultJson()
+        },
+        methods: {
+            wrapTypeMapping(json) {
+                if (this.form.typeMapping !== true) {
+                    return json
+                }
+                let mapping = this.metas.colTypes[this.form.type]
+                for (let i = 0; i < json.columns.length; i++) {
+                    let col = json.columns[i]
+                    if (col.type) {
+                        let type = col.type
+                        let idx = type.indexOf('(')
+                        if (idx >= 0) {
+                            type = type.substring(0, idx)
+                        }
+                        type = type.toLowerCase()
+                        if (mapping[type]) {
+                            let newType = mapping[type]
+                            let newIdx = newType.indexOf('(')
+                            if (newIdx >= 0) {
+                                col.type = newType
+                            } else {
+                                if (idx >= 0) {
+                                    col.type = newType + col.type.substring(idx)
+                                } else {
+                                    col.type = newType
+                                }
+                            }
+                        }
+                    }
+                    if (col.check) {
+                        if (col.check.indexOf('now()') >= 0) {
+                            if (mapping['now']) {
+                                col.check = col.check.replace('now()', mapping['now'])
+                            }
+                        }
+                    }
+                }
+                return json
+            },
+            convertAsDdl() {
+                let handler = this.metas.typeHandlers[this.form.type]
+                let json = JSON.parse(this.form.jsonText)
+                let ddlText = ''
+                if (json.length && json.length > 0) {
+                    for (let i = 0; i < json.length; i++) {
+                        let table = this.wrapTypeMapping(json[i])
+                        let item = handler.json2ddl(table)
+                        ddlText = ddlText + '\n\n' + item
+                    }
+                } else {
+                    let table = this.wrapTypeMapping(json)
+                    let item = handler.json2ddl(table)
+                    ddlText = ddlText + '\n\n' + item
+                }
+
+                this.form.ddlText = ddlText
+            },
+            defaultJson() {
+                this.form.jsonText = JSON.stringify(this.metas.defaultJson, null, '    ')
+            },
+            formatJson() {
+                let json = JSON.parse(this.form.jsonText)
+                this.form.jsonText = JSON.stringify(json, null, '    ')
+            }
+        }
+    })
+</script>
+</html>

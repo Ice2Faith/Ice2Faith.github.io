@@ -1,0 +1,43 @@
+# IDE files
+.idea/**
+*.iml
+
+.vscode/**
+
+# Version Control Tool Files
+.git/**
+.gitee/**
+.github/**
+.svn/**
+.DS_Store/**
+CVS/**
+
+# Frontend Dependency Files
+node_modules/**
+cache/**
+
+# Frontend Output Files
+dist/**
+
+# Backend Output Files
+target/**
+output/**
+out/**
+
+# Log Files
+logs/**
+log/**
+
+# Document Files
+docs/**
+doc/**
+
+
+# Temp Files
+~*
+
+# Any Files
+*
+*.*
+*/**
+

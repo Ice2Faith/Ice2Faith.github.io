@@ -1,0 +1,58 @@
+{
+  "name": "i2f-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite",
+    "serve": "pnpm dev",
+    "build:dev": "rimraf dist && vite build --mode vhostdev",
+    "build:test": "rimraf dist && vite build --mode test",
+    "build:release": "rimraf dist && vite build --mode release",
+    "build:prod": "rimraf dist && vite build --mode staging"
+  },
+  "browserslist": [
+    "> 1%",
+    "not ie 11",
+    "not op_mini all"
+  ],
+  "dependencies": {
+    "@types/vue-router": "^2.0.0",
+    "@vueuse/core": "^10.2.0",
+    "axios": "^1.4.0",
+    "dayjs": "^1.11.13",
+    "element-plus": "^2.7.2",
+    "js-base64": "3.7.2",
+    "js-cookie": "^3.0.5",
+    "jsrsasign": "^11.1.0",
+    "lodash-es": "^4.17.21",
+    "nprogress": "^0.2.0",
+    "path": "^0.12.7",
+    "pinia": "^2.3.1",
+    "qs": "^6.11.2",
+    "uuid": "7.0.3",
+    "vue": "^3.5.13",
+    "vue-qr": "^4.0.9",
+    "vue-request": "^2.0.4",
+    "vue-router": "^4.5.0",
+    "vue-types": "^5.1.0"
+  },
+  "devDependencies": {
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "rollup",
+        "webpack",
+        "core-js"
+      ]
+    },
+    "allowedDeprecatedVersions": {
+      "sourcemap-codec": "*",
+      "w3c-hr-time": "*",
+      "stable": "*"
+    }
+  },
+  "config": {
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>i2f.turbo</groupId>
+    <artifactId>i2f-maven-docker</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <npm.env>dev</npm.env>
+    </properties>
+
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <properties>
+                <npm.env>dev</npm.env>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>docker</id>
+            <properties>
+                <build.env>dev</build.env>
+
+                <docker.remote.host>192.168.x.x:2375</docker.remote.host>
+
+                <docker.registry.host>192.168.x.x:5000</docker.registry.host>
+                <docker.registry.prefix>/i2f</docker.registry.prefix>
+                <docker.registry.username>admin</docker.registry.username>
+                <docker.registry.password>harbor123456</docker.registry.password>
+
+                <docker.run.port>8080:8080</docker.run.port>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>dist</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>target</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                        <fileset>
+                            <directory>output</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.12.1</version>
+                <configuration>
+                    <workingDirectory>${project.basedir}</workingDirectory>
+                    <npmRegistryURL>https://registry.npmmirror.com</npmRegistryURL>
+                    <!--
+                    如果内网，没有公网访问，可以先下载到本地的方式进行使用
+                    这里定义一个属性，用于表示根路径
+                    <frontend.directory>/opt/frontend-maven</frontend.directory>
+                    直接执行maven package
+                    就会报错，首先是无法下载node，那我们找有网络的机器下载
+                    https://nodejs.org/dist/v18.17.1/node-v18.17.1-linux-x64.tar.gz
+                    然后放到下面的download路径下面
+                    ${frontend.directory}/download/v18.17.1/node-v18.17.1-linux-x64.tar.gz
+                    这样，再次进行package，就能够找到并自动安装node到下面的${frontend.directory}/install路径下面
+                    接下来就是报错无法下载pnpm，同样找有网络的机器下载
+                    https://registry.npmjs.org/pnpm/-/pnpm-10.12.4.tgz
+                    直接下载下来
+                    进入 ${frontend.directory}/install 路径
+                    应该目录目录结构是这样的
+                    node
+                    ++ node
+                    然后，我们创建路径，最终如下
+                    install
+                    ++ node
+                    +++++ node
+                    +++++ node_modules
+                    ++++++++ pnpm
+                    解包 pnpm-10.12.4.tgz 得到如下目录
+                    package
+                    ++ bin
+                    ++ dist
+                    接下来，把package目录中的所有东西移动到 install/node/node_modules/pnpm 目录下
+                    最终，形成这样的目录结构
+                    install
+                    ++ node
+                    +++++ node
+                    +++++ node_modules
+                    ++++++++ pnpm
+                    +++++++++++ bin
+                    +++++++++++ dist
+                    这样，就完成了安装基础环境
+                    之后正常进行package即可
+                    -->
+                    <!-- 定义了安装的路径 -->
+                    <installDirectory>${frontend.directory}/install</installDirectory>
+                    <!-- 定义了下载的路径，这里可以写为file://协议的本机路径 -->
+                    <nodeDownloadRoot>file://${frontend.directory}/download/</nodeDownloadRoot>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install node and pnpm</id>
+                        <goals>
+                            <goal>install-node-and-pnpm</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <nodeVersion>v18.17.1</nodeVersion>
+                            <pnpmVersion>10.12.4</pnpmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install</id>
+                        <goals>
+                            <goal>pnpm</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <arguments>install --ignore-scripts</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build</id>
+                        <goals>
+                            <goal>pnpm</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <arguments>run build:${build.env}</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>0.46.0</version>
+                    <configuration>
+                        <!-- Docker 远程管理地址-->
+                        <dockerHost>http://${docker.remote.host}</dockerHost>
+                        <!-- Docker 推送镜像仓库地址-->
+                        <pushRegistry>http://${docker.registry.host}</pushRegistry>
+                        <authConfig>
+                            <push>
+                                <username>${docker.registry.username}</username>
+                                <password>${docker.registry.password}</password>
+                            </push>
+                        </authConfig>
+                        <images>
+                            <image>
+                                <!--由于推送到私有镜像仓库，镜像名需要添加仓库地址-->
+                                <name>
+                                    ${docker.registry.host}${docker.registry.prefix}/${project.artifactId}:${project.version}
+                                </name>
+                                <!--定义镜像构建行为-->
+                                <build>
+                                    <dockerFile>${project.basedir}/Dockerfile</dockerFile>
+                                    <!--定义维护者-->
+                                    <maintainer>app</maintainer>
+                                    <filter>@</filter>
+                                    <assemblies>
+                                        <assembly>
+                                            <name>/</name>
+                                            <inline>
+
+                                                <fileSets>
+                                                    <fileSet>
+                                                        <directory>${project.basedir}/dist</directory>
+                                                        <outputDirectory>dist</outputDirectory>
+                                                        <filtered>false</filtered>
+                                                    </fileSet>
+                                                    <fileSet>
+                                                        <directory>${project.basedir}</directory>
+                                                        <outputDirectory>.</outputDirectory>
+                                                        <includes>
+                                                            <include>*.conf</include>
+                                                        </includes>
+                                                        <filtered>false</filtered>
+                                                    </fileSet>
+
+                                                </fileSets>
+
+                                            </inline>
+                                        </assembly>
+                                    </assemblies>
+                                </build>
+
+                                <!--定义容器启动行为-->
+                                <run>
+                                    <!--设置容器名，可采用通配符-->
+                                    <containerNamePattern>${project.artifactId}</containerNamePattern>
+                                    <!--设置端口映射-->
+                                    <ports>
+                                        <port>${docker.run.port}</port>
+                                    </ports>
+
+                                </run>
+                            </image>
+                        </images>
+                    </configuration>
+                    <executions>
+                        <!--如果想在项目打包时构建镜像添加-->
+                        <execution>
+                            <id>build-image</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>build</goal>
+                                <goal>push</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

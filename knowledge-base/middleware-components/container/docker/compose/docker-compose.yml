@@ -1,0 +1,45 @@
+version: "3.9" # 定义版本
+
+# 定义所有的服务
+services:
+  nginx: # 单个服务的名称
+    container_name: nginx # 生成的容器名称
+    image: nginx:alpine # 直接使用已有的镜像
+    build: # 可以选择使用构建镜像，而不是使用现有的镜像
+      context: ./nginx # docker build 运行的工作目录
+      dockerfile: Dockerfile # docker file的路径
+    ports: # 开放的端口映射
+      - "80:80"
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes: # 挂载的数据卷
+      - redis_data:/data
+    command: redis-server --appendonly yes # 镜像启动命令
+  gateway:
+    container_name: gateway
+    image: test/app-gateway:1.0
+    build:
+      context: ./app-gateway
+      dockerfile: Dockerfile
+    environment: # 设置容器的环境变量
+      - SPRING_ENV=dev # 键值对设置
+      - SPRING_PORT=8080
+    ports:
+      - "8080:8080"
+    privileged: true
+    networks: # 指定使用的网络，同一个网络下面，就可以使用容器名访问到对应的容器
+      - app=network
+    depends_on: # 容器启动的依赖项
+      - redis # 这里定义依赖redis，也就是redis先启动，再启动本服务
+
+# 预先定义数据源，其他地方可以使用这里定义的名称进行复用
+volumes:
+  redis_data:
+
+# 定义网络，后面可以相同的网络进行通信
+networks:
+  app-network:
+    driver: bridge

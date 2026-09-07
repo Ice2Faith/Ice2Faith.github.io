@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!--
+    子模块，一般都要指向父模块
+    也就是指定父模块的坐标即可
+    -->
+    <parent>
+        <groupId>i2f.turbo</groupId>
+        <artifactId>app-pom</artifactId>
+        <version>1.0</version>
+        <!--
+        默认情况下，就是自动查找父模块的位置
+        如果依赖的父模块是一个公开的maven依赖
+        则会自动管理
+        如果是项目自身的父模块
+        默认就会查找上级目录，也就是下面的配置
+        所以，一般不需要这个配置
+        除非，父模块不是上层路径，那就要指定
+        -->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <!--
+    子模块，一般只写 artifactId 即可，groupId 和 version 会默认继承父模块的
+    因此，一般不写，除非子模块的这些信息需要改变
+    但是，通常情况下不建议改变
+    -->
+    <artifactId>app-auth</artifactId>
+
+    <!--
+    子模块定义自身的依赖
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+    </dependencies>
+
+
+</project>

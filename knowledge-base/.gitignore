@@ -1,0 +1,43 @@
+## vcs
+**/.github
+**/.gitee
+**/.git
+**/.DS_Store
+**/CVS
+
+## ide
+**/.idea
+**/.mvn
+**/*.log
+**/*.iml
+**/.eclipse
+**/.vscode
+
+# webpack
+**/node_modules
+**/.pnpm
+**/*.lock
+**/package-lock.json
+**/yarn.lock
+
+## output
+**/target
+**/output
+**/dist
+
+## packge
+**/*.jar
+**/*.exe
+**/*.elf
+**/*.msi
+**/*.tgz
+**/*.zip
+**/*.tar.gz
+**/*.xz
+**/*.gz
+**/*.tar
+
+## temp file
+**/~$*
+**/*.bak
+**/*.tmp
