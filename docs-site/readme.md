@@ -191,10 +191,11 @@ Vue2Loader 加载根组件的路径也需修改：
 - SVG 图表（使用 ` ```svg ` 代码块，支持 `link:` 前缀加载外部文件）
 - CSS 样式注入（使用 ` ```css-embed ` 代码块，将 CSS 直接注入页面，支持 `link:` 前缀加载外部文件）
 - JavaScript 脚本注入（使用 ` ```js-embed ` 代码块，将 JS 直接注入页面，支持 `link:` 前缀加载外部文件）
+- HTML 内容嵌入（使用 ` ```html-embed ` 代码块，将 HTML 直接渲染到页面中，支持 `link:` 前缀加载外部文件）
 
-### CSS / JS 嵌入
+### CSS / JS / HTML 嵌入
 
-Docs Site 支持在 Markdown 中通过特殊代码块直接注入 CSS 样式或 JavaScript 脚本到页面中，代码块本身不会在页面上显示。
+Docs Site 支持在 Markdown 中通过特殊代码块直接注入 CSS 样式、JavaScript 脚本或 HTML 内容到页面中。其中 `css-embed` 和 `js-embed` 代码块本身不会在页面上显示，`html-embed` 代码块的内容会直接渲染在文档中。
 
 #### CSS 嵌入（`css-embed`）
 
@@ -251,7 +252,31 @@ link:./assets/custom-script.js
 ```
 ````
 
-> **注意：** `css-embed` 和 `js-embed` 代码块不会在页面上显示代码内容，仅执行注入操作。`link:` 前缀后的路径为相对于当前文档文件的资源路径。
+#### HTML 嵌入（`html-embed`）
+
+使用 ` ```html-embed ` 代码块编写的 HTML 会被直接渲染到文档中，可用于在 Markdown 中嵌入任意 HTML 内容。
+
+**直接编写 HTML：**
+
+````markdown
+```html-embed
+<div style="background: #f0f4ff; padding: 16px; border-radius: 8px; border-left: 4px solid #3498db;">
+    <strong>提示：</strong>这是一段通过 html-embed 嵌入的自定义 HTML 内容。
+</div>
+```
+````
+
+**引用外部 HTML 文件：**
+
+使用 `link:` 前缀可以加载外部 HTML 文件：
+
+````markdown
+```html-embed
+link:./assets/snippet.html
+```
+````
+
+> **注意：** `css-embed` 和 `js-embed` 代码块不会在页面上显示代码内容，仅执行注入操作。`html-embed` 代码块的内容会直接渲染在文档中。`link:` 前缀后的路径为相对于当前文档文件的资源路径。
 
 ### 文档内导航
 

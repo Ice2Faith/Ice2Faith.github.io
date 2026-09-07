@@ -112,6 +112,28 @@ function setupMarkdown(resourceResolver) {
                 setTimeout(applyFunc, 300);
                 // 只进行样式注入，不实际显示
                 return innerHtml
+            }else if (lang == 'html-embed') {
+                let chartId = 'html_embed_' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
+                innerHtml = `<style id="${chartId}"></style>`;
+                actionsHtml = ``;
+                let count = 10;
+                let applyFunc = () => {
+                    let dom = document.querySelector('#' + chartId);
+                    if (!dom && count > 0) {
+                        count--;
+                        setTimeout(applyFunc, 300);
+                        return;
+                    }
+
+                    if (!dom) {
+                        return;
+                    }
+                    dom.chartCode = str;
+
+                    let graph = str.trim();
+                    renderHtmlEmbed(dom, graph, resourceResolver)
+                };
+                setTimeout(applyFunc, 300);
             } else if (lang && hljs.getLanguage(lang)) {
                 // 检查语言是否受支持
                 try {
@@ -511,3 +533,39 @@ function renderJsEmbed(dom, graph, resourceResolver) {
         }
     }, 0)
 }
+
+
+function renderHtmlEmbed(dom, graph, resourceResolver) {
+    let bubbleDom = dom;
+    if (bubbleDom) {
+        if (bubbleDom.rendering) {
+            setTimeout(() => {
+                renderHtmlEmbed(dom, graph, resourceResolver);
+            }, 90);
+            return;
+        }
+    }
+    setTimeout(async () => {
+        if (bubbleDom) {
+            bubbleDom.rendering = true;
+        }
+        try {
+            let str = graph.trim();
+            if (str.startsWith('link:')) {
+                str = str.substring('link:'.length).trim()
+                graph = await fetch(resourceResolver(str)).then(r => r.text())
+            }
+            // 直接进行html注入，允许引入html内容
+            dom.innerHTML=graph;
+
+        } catch (error) {
+            // 处理语法错误等异常情况
+            console.error('Html 渲染失败:', error);
+            dom.innerHTML = `<p style="color:red;">Html 语法错误，请检查代码！</p>`;
+        }
+        if (bubbleDom) {
+            bubbleDom.rendering = false;
+        }
+    }, 0)
+}
+
