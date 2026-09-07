@@ -20,6 +20,10 @@
         </div>
         <div class="f-bottom">
             <span>i2f-turbo-java · i2f.turbo:1.0-jdk8 · Spring Boot 2.7.18</span>
+            <span>
+              <a href="https://github.com/ice2faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-ops-starter" target="_blank">Github</a>
+              <a href="https://gitee.com/ice2faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-ops-starter" target="_blank">Gitee</a>
+            </span>
             <span>SPEC v1.0 · GPL-3.0 · © Ice2Faith</span>
         </div>
     </footer>
