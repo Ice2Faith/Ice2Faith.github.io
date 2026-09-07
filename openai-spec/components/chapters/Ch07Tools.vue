@@ -35,13 +35,13 @@
             </tr>
         </SpecTable>
 
-        <PanelTitle title="内置工具清单 — ops 层 18 类 + 条件装配 5 类" />
+        <PanelTitle title="内置工具清单 — ops 层 16 类 + 条件装配 6 类" />
         <SpecTable :headers="['工具类', '代表工具', '能力', '关键标签']">
             <tr v-for="row in toolRows" :key="row[0]">
                 <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td><td v-html="row[3]"></td>
             </tr>
         </SpecTable>
-        <BodyText size="12.5px">※ 条件装配：随 <code>ai.skills.enable</code> / <code>ai.rags.enable</code> / <code>ai.rags.memory.enable</code> / <code>ai.tools.session-record.enable</code> / <code>ai.tools.groovy.enable</code> 开关注入，详见第 13 章。</BodyText>
+        <BodyText size="12.5px">※ 条件装配：随 <code>ai.skills.enable</code> / <code>ai.rags.enable</code> / <code>ai.rags.memory.enable</code> / <code>ai.tools.session-record.enable</code> / <code>ai.tools.loop-engineering.enable</code> / <code>ai.tools.groovy.enable</code> 开关注入，详见第 13 章。</BodyText>
 
         <PanelTitle title="AiTags — 工具的「危险品标签」体系" />
         <BodyText size="13.5px">每个工具可携带多维标签，供前端审批策略与后端过滤决策使用：</BodyText>
@@ -152,6 +152,7 @@
                     ['<code>RagTools</code> ※', '<code>rag_search</code>', '知识库相似度检索', '<span class="tag t-t">RAG</span>'],
                     ['<code>MemoryTools</code> ※', '<code>memory_search / save / delete</code>', '用户级记忆检索 / 保存 / 删除', '<span class="tag t-t">RAG</span>'],
                     ['<code>SessionRecordTools</code> ※', '<code>session_record_read / session_record_update</code>', '循环工程会话记录读写（request / plan / checklist / agent）', '<span class="tag t-g">AUTO</span>'],
+                    ['<code>LoopEngineeringTools</code> ※', '循环工程提示词', '注入五步工程化工作流提示词（进度恢复 → 需求 → 方案 → 待办 → 实施）', '<span class="tag t-g">AUTO</span>'],
                     ['<code>GroovyTools</code> ※', '<code>groovy_run_script</code>', 'Groovy 脚本动态执行（GroovyShell）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span><span class="tag t-t">SCRIPT</span>']
                 ],
                 ctxRows: [

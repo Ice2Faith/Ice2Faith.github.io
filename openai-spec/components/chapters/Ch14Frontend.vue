@@ -34,7 +34,7 @@
         <TwoCol>
             <template slot="left">
                 <PanelTitle title="角色预设体系（role-config.json）" />
-                <BodyText size="13.5px">10 个分类、20 个角色预设，每个角色即一份 <code>roles/**/*.md</code> 系统提示词，菜单点选即切换人格：</BodyText>
+                <BodyText size="13.5px">10 个分类、22 个角色预设，每个角色即一份 <code>roles/**/*.md</code> 系统提示词，菜单点选即切换人格：</BodyText>
                 <SpecTable :headers="['分类', '角色']" marginTop="0">
                     <tr v-for="row in roleRows" :key="row[0]">
                         <td v-html="row[0]"></td><td v-html="row[1]"></td>
@@ -81,7 +81,7 @@
         </SpecTable>
         <BodyText size="12.5px">通用特性：代码块头部带语言标签与<b>下载 / 查看 / 复制</b>按钮；流式输出完成后才触发渲染（<code>$responsing</code> 守卫）避免半途渲染；气泡渲染锁防并发冲突；highlight.js 语法高亮兜底 + KaTeX 数学公式；mermaid / svg 支持 Panzoom 缩放平移。</BodyText>
 
-        <PanelTitle title="16 大可配置开关 — 细粒度控制 Agent 行为边界" />
+        <PanelTitle title="17 大可配置开关 — 细粒度控制 Agent 行为边界" />
         <SpecTable :headers="['开关', '关键配置项', '功能说明']">
             <tr v-for="row in switchRows" :key="row[0]">
                 <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td>
@@ -89,7 +89,7 @@
         </SpecTable>
         <BodyText size="12.5px">所有选项均带 Popover 悬浮说明，零学习成本；状态持久化到 <code>localStorage</code>，按需组合启用。</BodyText>
 
-        <PanelTitle title="会话管理 — 3440 行单文件 SPA 的状态底座" />
+        <PanelTitle title="会话管理 — 3642 行单文件 SPA 的状态底座" />
         <StepList>
             <Step title="多会话与自动标题">
                 <p>左侧边栏会话列表，支持新建 / 删除 / 批量删除；会话标题取首条用户消息自动生成。</p>
@@ -143,6 +143,7 @@
                 roleRows: [
                     ['独立角色', '默认角色 · 中外语翻译官 · Emoji 表情大师'],
                     ['开发 / 技术', '资深开发工程师 · 实施规划师 · 智能开发工程师'],
+                    ['工程管理', '循环工程 · 意图识别'],
                     ['绘图 / 可视化', 'Echarts 图表 · Mermaid 图形 · JsCanvas 图像 · HtmlSvg 矢量 · ThreeJs 3D 场景 · Draw.io 流程图'],
                     ['音视频 / 多媒体', 'FFMPEG 多媒体处理'],
                     ['文化 / 文学', '易学命理大师 · 文学泰斗'],
@@ -159,7 +160,7 @@
                     ['<code>```threejs</code>', 'Three.js 3D 场景（renderThreeJs 函数体）', 'SES 沙箱 + THREE 全局注入', 'PNG 截图']
                 ],
                 switchRows: [
-                    ['<b>定制显示</b>', '<code>hiddenMessageTypes</code>', '按使用习惯控制各类消息（尤其 14 种回显消息）的显示 / 隐藏'],
+                    ['<b>定制显示</b>', '<code>hiddenMessageTypes</code>', '按使用习惯控制各类消息（尤其 16 种回显消息）的显示 / 隐藏'],
                     ['<b>动态工具</b>', '<code>enableLruTools</code> · <code>lruToolMaxSize</code>', '不全量加载工具，LRU 策略按需披露与淘汰（需后端 MCP 网关支持）'],
                     ['<b>工具调用</b>', '<code>enableTools</code> · <code>autoApprovalToolTags</code>', 'Function Calling 总开关 + 标签自动审批'],
                     ['<b>知识库</b>', '<code>enableRags</code>', '连接 RAG 知识库，模型按需检索知识内容（依赖工具开启）'],
@@ -174,6 +175,7 @@
                     ['<b>记忆系统</b>', '<code>enableMemories</code> · <code>memoryBucket</code>', '用户级跨会话记忆：模型主动存储 / 检索 / 删除记忆，Bucket 桶隔离（依赖工具开启）'],
                     ['<b>循环工程</b>', '<code>enableLoopEngineering</code>', '注入五步工作流提示词，SessionRecordTools 读写 request / plan / checklist / agent 会话记录，跨轮断点续作'],
                     ['<b>保留首条用户</b>', '<code>enableKeepFirstUserMessage</code>', '截断上下文时保留首条用户消息，锚定对话主题'],
+                    ['<b>截断会话</b>', '<code>enableTruncOverflowHistory</code>', '开启后超出最大会话次数的历史消息将被截断丢弃，前端显示截断分割线'],
                     ['<b>自动总结</b>', '<code>enableAutoSummary</code>', '消息数逼近 <code>maxHistoryCount</code> 时自动发起会话总结（需与截断开关协同），保留人设与主题后重建上下文']
                 ]
             };

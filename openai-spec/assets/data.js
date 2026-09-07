@@ -22,11 +22,11 @@ function getSpecData() {
             { id: 'ch15', no: '15', title: '扩展指南' }
         ],
         stats: [
-            { count: 45, label: 'Java 源文件', color: '#e8590c' },
-            { count: 18, label: '内置工具类', color: '#0b7285' },
-            { count: 14, label: '回显消息类型', color: '#2b8a3e' },
-            { count: 7, label: 'REST 端点', color: '#1971c2' },
-            { count: 20, label: '角色预设 (Role)', color: '#e67700' },
+            { count: 49, label: 'Java 源文件', color: '#e8590c' },
+            { count: 22, label: '内置工具类', color: '#0b7285' },
+            { count: 16, label: '回显消息类型', color: '#2b8a3e' },
+            { count: 8, label: 'REST 端点', color: '#1971c2' },
+            { count: 22, label: '角色预设 (Role)', color: '#e67700' },
             { count: 4, label: 'AiModel 实现', color: '#c92a2a' }
         ],
         chapters: [

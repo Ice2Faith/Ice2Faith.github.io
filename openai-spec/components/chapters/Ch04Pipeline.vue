@@ -1,7 +1,7 @@
 <template>
   <div>
     <LeadText><code>POST /ops/open-ai/stream</code> 是整个子系统最核心端点（<code>OpenAiOpsController#stream</code>，约
-      600 行编排逻辑）。它返回一个 5 分钟超时的 <code>SseEmitter</code>，真正的编排跑在 work-stealing 线程池中。
+      920 行编排逻辑）。它返回一个 5 分钟超时的 <code>SseEmitter</code>，真正的编排跑在 work-stealing 线程池中。
     </LeadText>
 
     <DiagramPanel src="assets/diagrams/ch04-sequence.svg"
@@ -86,6 +86,14 @@
         </td>
         <td>附件下载（支持下载解析后的纯文本）</td>
         <td>文件附件流</td>
+      </tr>
+      <tr>
+        <td><code>/ops/open-ai/tmp-file/inline</code></td>
+        <td>
+          <TagBadge type="o">GET</TagBadge>
+        </td>
+        <td>附件内联预览（支持 Office 格式转换）</td>
+        <td>文件流 · 内联显示</td>
       </tr>
       <tr>
         <td><code>/ops/open-ai/tts/qwen/generate</code></td>

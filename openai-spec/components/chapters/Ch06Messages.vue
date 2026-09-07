@@ -1,6 +1,6 @@
 <template>
     <div>
-        <LeadText>消息是框架的第一公民。标准层定义 4 种角色消息，Ops 层通过 <code>OpenAiMessageVo</code> 多态载体与 <code>OpsOpenAiConsts</code> 扩展出 14 种<b>回显消息</b>——每个类型独占一个字段，让前端不仅能看到对话，还能看到"系统为模型做了什么"（提示词注入 / 工具调用 / 事实变迁）。</LeadText>
+        <LeadText>消息是框架的第一公民。标准层定义 4 种角色消息，Ops 层通过 <code>OpenAiMessageVo</code> 多态载体与 <code>OpsOpenAiConsts</code> 扩展出 16 种<b>回显消息</b>——每个类型独占一个字段，让前端不仅能看到对话，还能看到"系统为模型做了什么"（提示词注入 / 工具调用 / 事实变迁）。</LeadText>
 
         <TwoCol>
             <template slot="left">
@@ -70,7 +70,9 @@
                     ['<code>echo_tool_intent_recommend</code>', '意图识别推理结果', '回显工具意图识别的完整推理过程（prompt / rawResult / finalResult），前端可见、可追溯'],
                     ['<code>echo_request_payload</code>', '完整补全报文', '回显实际发给 LLM 的请求报文（学习/调试）'],
                     ['<code>echo_session_records_map</code>', '循环工程会话记录 Map', '流结束前回显 request / plan / checklist / agent 四类记录，前端持久化接力'],
-                    ['<code>echo_async_tasks</code>', '异步任务列表', '回显工具产生的异步任务（如文生图），前端渲染状态标签并提供刷新查询']
+                    ['<code>echo_async_tasks</code>', '异步任务列表', '回显工具产生的异步任务（如文生图），前端渲染状态标签并提供刷新查询'],
+                    ['<code>echo_attach_files</code>', '附件文件列表', '回显工具执行产生的附件文件（供用户查看/下载）'],
+                    ['<code>echo_progress</code>', '进度提示文本', '回显处理进度提示（如"请求处理中..."、"工具调用中..."等）']
                 ]
             };
         },
