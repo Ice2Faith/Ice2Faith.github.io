@@ -6,7 +6,11 @@
             </button>
             <div class="boot-brand">
                 <span class="boot-logo">⚙</span>
-                <span class="boot-title">i2f-springboot-ops-starter</span>
+                <span class="boot-title">
+                  <a href="https://gitee.com/ice2faith/i2f-turbo-java/tree/main/i2f-springboot/i2f-springboot-ops-starter" target="_blank">
+                     i2f-springboot-ops-starter
+                  </a>
+                </span>
                 <span class="boot-pipe">|</span>
                 <span class="boot-sub">OpenAI 子系统 · 技术全景</span>
             </div>
