@@ -61,6 +61,12 @@ i2f-springboot (SpringBoot自动装配层)
 i2f-springcloud (微服务层)
 ```
 
+## 模块文档目录
+
+> 详细介绍每个模块的内容
+
+- 详细目录：[menus.md](modules/menus.md)
+
 ## 核心模块详情
 
 ### 1. i2f-jdk — Java 基础工具库
