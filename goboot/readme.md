@@ -163,6 +163,15 @@ goboot:
         - name: github.com
           path: /github/
           redirect: http://github.com/
+          upstream:
+            enable: false
+            algo: round
+            headers: []
+            backends:
+              - backend: http://127.0.0.1:9090/
+                weight: 1
+              - backend: http://127.0.0.1:9091/
+                weight: 2
     mapping:
       enable: false
       items:
@@ -354,8 +363,22 @@ goboot:
         - name: github.com
           # 代理的路径
           path: /github/
-          # 目标跳转路径
+          # 目标跳转路径（未启用upstream时生效）
           redirect: http://github.com/
+          # upstream负载均衡配置（启用后redirect将被忽略）
+          upstream:
+            # 是否启用负载均衡
+            enable: false
+            # 负载均衡算法：round(轮询)/random(随机，默认)/ip_hash(IP哈希)/weight(加权随机)/header_hash(请求头哈希)/path_hash(路径哈希)
+            algo: round
+            # 参与哈希计算的请求头列表（仅header_hash算法时使用）
+            headers: []
+            # 后端服务列表
+            backends:
+              - backend: http://127.0.0.1:9090/
+                weight: 1
+              - backend: http://127.0.0.1:9091/
+                weight: 2
     # 自动路径映射配置
     mapping:
       enable: true
@@ -726,6 +749,20 @@ func (api *Api) Login(resp *goboot.CtxResp,user * User) *goboot.CtxResp {
 - 函数：HandleMappingMethodArg 负责实现参数类型的实际参数的自动绑定
     - 是为 MappingHandler 实现自动注入函数调用入参的核心函数调用
 - 函数：ProxyHandler 负责进行实现proxy配置进行自动代理的处理函数
+    - 代理转发时，会自动从请求中提取客户端真实IP（按Forwarded/X-Forwarded-For/X-Real-IP/X-Client-IP/True-Client-IP/RemoteAddr降级链）
+    - 自动设置 X-Forwarded-For 头（已有则追加，否则新建）和 X-Real-IP 头，将客户端IP传递给后端
+- 结构：ProxyUpstreamItem 定义了负载均衡中单个后端服务的配置
+    - Backend：后端服务地址
+    - Weight：后端服务权重（用于weight算法，启动时会进行归一化处理）
+- 结构：ProxyUpstream 定义了代理的负载均衡配置
+    - Enable：是否启用负载均衡
+    - Algo：负载均衡算法，支持 ip_hash/round/random/weight/header_hash/path_hash
+    - Headers：参与哈希计算的请求头列表（用于header_hash算法）
+    - Current：当前轮询或选中的后端索引（运行时状态）
+    - Backends：后端服务列表（[]ProxyUpstreamItem）
+- 函数：GetClientIP 从请求上下文中按降级链提取客户端真实IP
+    - 依次检查 Forwarded、X-Forwarded-For、X-Real-IP、X-Client-IP、True-Client-IP 头和 RemoteAddr
+- 函数：GetHash 使用FNV-1a算法计算字符串的哈希值（用于ip_hash负载均衡）
 - 结构：FileServer 定义了文件服务器的配置结构
     - 包含了文件根目录、URL路径、嵌入静态文件系统等信息
     - 以及多个禁用开关：禁用上传、禁用下载、禁用列出、禁用浏览、禁用Office转换等
@@ -1056,6 +1093,15 @@ goboot:
         - name: github.com
           path: /github/
           redirect: http://github.com/
+          upstream:
+            enable: false
+            algo: round
+            headers: []
+            backends:
+              - backend: http://127.0.0.1:9090/
+                weight: 1
+              - backend: http://127.0.0.1:9091/
+                weight: 2
     mapping:
       enable: true
       items:
@@ -1197,6 +1243,15 @@ goboot:
         - name: github.com
           path: /github/
           redirect: http://github.com/
+          upstream:
+            enable: false
+            algo: round
+            headers: []
+            backends:
+              - backend: http://127.0.0.1:9090/
+                weight: 1
+              - backend: http://127.0.0.1:9091/
+                weight: 2
     mapping:
       enable: false
       items:
@@ -1437,6 +1492,15 @@ goboot:
         - name: backend
           path: /api/
           redirect: http://127.0.0.1:9090/
+          upstream:
+            enable: false
+            algo: round
+            headers: []
+            backends:
+              - backend: http://127.0.0.1:9090/
+                weight: 1
+              - backend: http://127.0.0.1:9091/
+                weight: 2
     gzip:
       enable: true
       level: DefaultCompression
