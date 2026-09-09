@@ -21,6 +21,7 @@ Goboot 是一个基于 Golang 的轻量级 Web 服务工具，采用类似 Sprin
 - **HTTPS**：配置 SSL 证书启用加密访问
 - **GZIP 压缩**：启用响应压缩提升传输效率
 - **CORS 跨域**：配置跨域策略满足前后端分离需求
+- **全局限流**：基于令牌桶算法的请求速率限制，防止服务过载
 
 ---
 
@@ -143,6 +144,10 @@ goboot:
                 weight: 1
               - backend: http://127.0.0.1:9091/
                 weight: 2
+    rateLimit:
+      enable: false
+      countPerSecond: 30
+      bucketSize: 100
     cors:
       enable: true
       allowAllOrigins: true
@@ -864,11 +869,65 @@ goboot:
 
 ---
 
-## 十二、Banner 自定义
+## 十二、全局限流
+
+goboot 内置了基于令牌桶算法（Token Bucket）的全局限流功能，可以对所有请求进行统一的速率限制，防止服务被过量请求压垮。
+
+### 12.1 配置方式
+
+```yaml
+goboot:
+  server:
+    rateLimit:
+      enable: true
+      countPerSecond: 30
+      bucketSize: 100
+```
+
+### 12.2 配置说明
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `enable` | bool | `false` | 是否启用全局限流 |
+| `countPerSecond` | float64 | `0` | 每秒生产的令牌数，支持小数（如 `0.5` 表示每 2 秒生产 1 个令牌） |
+| `bucketSize` | int | `0` | 令牌桶最大容量，允许的最大突发请求数 |
+
+### 12.3 工作原理
+
+- 系统以 `countPerSecond` 的速率向令牌桶中生产令牌
+- 令牌桶最多容纳 `bucketSize` 个令牌
+- 每个请求到达时，需要从桶中取出一个令牌
+- 如果桶中有令牌，请求正常处理
+- 如果桶中没有令牌，请求将被拒绝，返回 HTTP 429 Too Many Requests
+
+**响应示例：**
+
+```json
+{
+  "status": 429,
+  "message": "Too many requests, please retry later!"
+}
+```
+
+### 12.4 参数建议
+
+| 场景 | `countPerSecond` | `bucketSize` | 说明 |
+|------|------------------|--------------|------|
+| 小型应用 | 50 | 50 | 适合低流量场景 |
+| 中型应用 | 200 | 200 | 适合一般业务系统 |
+| 大型应用 | 1000 | 500 | 适合高并发场景，`bucketSize` 可适当小于 QPS |
+| 允许突发流量 | 100 | 300 | `bucketSize` 大于 `countPerSecond`，允许短时间内的突发请求 |
+| 极低速率 | 0.5 | 10 | 每 2 秒生产 1 个令牌，适合限制特定低频接口 |
+
+> **提示**：`countPerSecond` 控制的是稳态速率，`bucketSize` 控制的是突发容量。如果希望严格限制速率，可以将两者设置为相同值；如果希望允许一定的突发流量，可以将 `bucketSize` 设置得比 `countPerSecond` 更大。
+
+---
+
+## 十三、Banner 自定义
 
 goboot 启动时会输出一个 ASCII Art Banner，你可以自定义。
 
-### 12.1 使用自定义 Banner 文件
+### 13.1 使用自定义 Banner 文件
 
 ```yaml
 goboot:
@@ -878,16 +937,16 @@ goboot:
 
 在 `banner.txt` 中写入自定义的 ASCII 文本内容即可。
 
-### 12.2 在线生成 Banner
+### 13.2 在线生成 Banner
 
 可使用在线工具生成 ASCII Art：
 - https://www.bootschool.net/ascii
 
 ---
 
-## 十三、常见部署场景
+## 十四、常见部署场景
 
-### 13.1 纯前端 SPA 站点
+### 14.1 纯前端 SPA 站点
 
 ```yaml
 goboot:
@@ -909,7 +968,7 @@ goboot:
       allowAllOrigins: true
 ```
 
-### 13.2 前端 + 后端 API 代理
+### 14.2 前端 + 后端 API 代理
 
 ```yaml
 goboot:
@@ -937,7 +996,7 @@ goboot:
       allowAllOrigins: true
 ```
 
-### 13.3 文件共享服务器
+### 14.3 文件共享服务器
 
 ```yaml
 goboot:
@@ -957,7 +1016,7 @@ goboot:
       level: DefaultCompression
 ```
 
-### 13.4 HTTPS + 多路径静态站点
+### 14.4 HTTPS + 多路径静态站点
 
 ```yaml
 goboot:
@@ -986,7 +1045,7 @@ goboot:
       allowAllOrigins: true
 ```
 
-### 13.5 多环境部署
+### 14.5 多环境部署
 
 主配置 `goboot.yml`：
 ```yaml
@@ -1048,7 +1107,7 @@ goboot:
 
 ---
 
-## 十四、配置项速查表
+## 十五、配置项速查表
 
 | 配置路径 | 类型 | 默认值 | 说明 |
 |----------|------|--------|------|
@@ -1105,10 +1164,13 @@ goboot:
 | `goboot.server.redis.port` | int | `6379` | Redis 端口 |
 | `goboot.server.redis.password` | string | - | Redis 密码 |
 | `goboot.server.redis.database` | int | `0` | Redis 数据库编号 |
+| `goboot.server.rateLimit.enable` | bool | `false` | 启用全局限流 |
+| `goboot.server.rateLimit.countPerSecond` | float64 | `0` | 每秒生产令牌数（支持小数） |
+| `goboot.server.rateLimit.bucketSize` | int | `0` | 令牌桶最大容量 |
 
 ---
 
-## 十五、常见问题
+## 十六、常见问题
 
 ### Q: 配置了根路径 `/` 的静态资源后，其他功能不生效？
 

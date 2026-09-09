@@ -176,6 +176,10 @@ goboot:
       enable: false
       items:
         - /api/
+    rateLimit:
+      enable: false
+      countPerSecond: 30
+      bucketSize: 100
     fileServer:
       enable: false
       rootPath: ./file-server
@@ -385,6 +389,14 @@ goboot:
       # 可以配置多个进行按照匹配规则自动路由  
       items:
         - /api/
+    # 全局限流配置（令牌桶算法）
+    rateLimit:
+      # 是否启用全局限流
+      enable: false
+      # 每秒生产的令牌数（float64类型，可以是小数，如0.5表示每2秒1个令牌）
+      countPerSecond: 30
+      # 令牌桶最大容量
+      bucketSize: 100
     # 文件服务器配置
     fileServer:
       # 是否启用文件服务器
@@ -763,6 +775,13 @@ func (api *Api) Login(resp *goboot.CtxResp,user * User) *goboot.CtxResp {
 - 函数：GetClientIP 从请求上下文中按降级链提取客户端真实IP
     - 依次检查 Forwarded、X-Forwarded-For、X-Real-IP、X-Client-IP、True-Client-IP 头和 RemoteAddr
 - 函数：GetHash 使用FNV-1a算法计算字符串的哈希值（用于ip_hash负载均衡）
+- 结构：RateLimit 定义了全局限流的配置结构（令牌桶算法）
+    - Enable：是否启用全局限流
+    - CountPerSecond：每秒生产的令牌数，类型为float64，可以是小数
+    - BucketSize：令牌桶最大容量
+- 函数：RateLimitMiddleware 负责生成全局限流中间件
+    - 基于令牌桶算法（token bucket）实现全局限流
+    - 当令牌桶中没有令牌时，返回 HTTP 429 Too Many Requests，响应体为 `{"status": 429, "message": "Too many requests, please retry later!"}`
 - 结构：FileServer 定义了文件服务器的配置结构
     - 包含了文件根目录、URL路径、嵌入静态文件系统等信息
     - 以及多个禁用开关：禁用上传、禁用下载、禁用列出、禁用浏览、禁用Office转换等
@@ -1106,6 +1125,10 @@ goboot:
       enable: true
       items:
         - /api/
+    rateLimit:
+      enable: false
+      countPerSecond: 30
+      bucketSize: 100
     cors:
       enable: true
       allowAllOrigins: true
@@ -1256,6 +1279,10 @@ goboot:
       enable: false
       items:
         - /api/
+    rateLimit:
+      enable: false
+      countPerSecond: 30
+      bucketSize: 100
     cors:
       enable: true
       allowAllOrigins: true
