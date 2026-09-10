@@ -14,6 +14,7 @@ function setupMarkdown(resourceResolver) {
             if (!lang || lang == '' || lang.trim() == '') {
                 lang = 'text';
             }
+            let title=lang;
 
             let innerHtml = '';
             let actionsHtml = '';
@@ -39,9 +40,16 @@ function setupMarkdown(resourceResolver) {
                     dom.chartCode = str;
 
                     let graph = str.trim();
+
                     renderMermaid(dom, graph, resourceResolver)
                 };
                 setTimeout(applyFunc, 300);
+
+                // 解析mermaid实际的图表类型
+                let graphType=detectRealMermaidType(str)
+                if(graphType){
+                    title=`${lang}/${graphType}`
+                }
             } else if (lang == 'svg') {
                 let chartId = 'svg_' + new Date().getTime() + '_' + Math.random().toString(16).substring(2);
                 innerHtml = `<div id="${chartId}" class="rich-code-block svg-code-block"></div>`;
@@ -189,7 +197,7 @@ function setupMarkdown(resourceResolver) {
             let text = `
                 <div class="markdown-code-block">
                     <div class="markdown-code-header">
-                        <span class="markdown-header-lang">{{lang}}</span>
+                        <span class="markdown-header-lang">{{title}}</span>
                         <span class="markdown-header-actions">
                         {{actionsHtml}}
                         <span class="code-action-btn" onclick="onSaveMarkdownCodeBlock(event,'${lang}')" title="保存">&#x2B07;&#xFE0F;</span>
@@ -202,6 +210,7 @@ function setupMarkdown(resourceResolver) {
                 </pre>
                 </div>`
             text = text.replaceAll(/\s*\n\s*/g, '');
+            text = text.replaceAll('{{title}}', title);
             text = text.replaceAll('{{lang}}', lang);
             text = text.replaceAll('{{innerHtml}}', innerHtml);
             text = text.replaceAll('{{actionsHtml}}', actionsHtml);
@@ -364,6 +373,66 @@ function copy2clipboard(text) {
     }
 }
 
+/**
+ *
+ * @param graph {string}
+ * @param locale {'zh'|'en'|null}
+ * @return {string|null}
+ */
+function detectRealMermaidType(graph,locale='zh'){
+    if(!graph){
+        return null
+    }
+    const MERMAID_TYPE_MAP = {
+        // 稳定版图表
+        'flowchart': { zh: '流程图', en: 'Flowchart' },
+        'graph': { zh: '流程图', en: 'Flowchart' },
+        'sequenceDiagram': { zh: '时序图', en: 'Sequence Diagram' },
+        'classDiagram': { zh: '类图', en: 'Class Diagram' },
+        'stateDiagram': { zh: '状态图', en: 'State Diagram' },
+        'stateDiagram-v2': { zh: '状态图', en: 'State Diagram' },
+        'gantt': { zh: '甘特图', en: 'Gantt Chart' },
+        'pie': { zh: '饼图', en: 'Pie Chart' },
+        'erDiagram': { zh: '实体关系图', en: 'ER Diagram' },
+        'journey': { zh: '用户旅程图', en: 'User Journey' },
+        'gitGraph': { zh: 'Git图', en: 'Git Graph' },
+        'mindmap': { zh: '思维导图', en: 'Mindmap' },
+        'timeline': { zh: '时间线图', en: 'Timeline' },
+        'requirementDiagram': { zh: '需求图', en: 'Requirement Diagram' },
+
+        // Beta / 实验版图表
+        'quadrantChart': { zh: '象限图', en: 'Quadrant Chart' },
+        'xychart-beta': { zh: 'XY图表', en: 'XY Chart' },
+        'sankey-beta': { zh: '桑基图', en: 'Sankey Diagram' },
+        'block-beta': { zh: '区块图', en: 'Block Diagram' },
+        'radar-beta': { zh: '雷达图', en: 'Radar Chart' },
+        'treemap-beta': { zh: '树状图', en: 'Treemap' },
+        'architecture-beta': { zh: '架构图', en: 'Architecture Diagram' },
+        'kanban': { zh: '看板图', en: 'Kanban' },
+        'packet': { zh: '报文结构图', en: 'Packet Diagram' },
+    };
+    graph=graph.trim()
+    if(graph.startsWith('---')){
+        let arr=graph.split('---',3)
+        if(arr.length==3){
+            graph=arr[2]
+        }
+    }
+    if(!graph){
+        return null
+    }
+    graph=graph.trim()
+    if(!locale){
+        locale='zh'
+    }
+    let ret=null
+    Object.keys(MERMAID_TYPE_MAP).forEach(k=>{
+        if(graph.startsWith(k)){
+            ret=MERMAID_TYPE_MAP[k][locale]
+        }
+    })
+    return ret
+}
 
 function renderMermaid(dom, graph, resourceResolver) {
     let bubbleDom = dom;

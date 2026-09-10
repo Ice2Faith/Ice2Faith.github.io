@@ -19,9 +19,10 @@ Goboot 是一个基于 Golang 的轻量级 Web 服务工具，采用类似 Sprin
 - **文件服务器**：提供文件上传、下载、在线浏览（支持 Office、PDF、视频、3D 模型等）
 - **反向代理**：将请求转发到后端服务，支持多后端负载均衡（轮询、随机、IP 哈希、加权）
 - **HTTPS**：配置 SSL 证书启用加密访问
-- **GZIP 压缩**：启用响应压缩提升传输效率
+- **GZIP 压缩**：启用响应压缩提升传输效率，静态资源支持预压缩 `.gz` 文件直接响应
 - **CORS 跨域**：配置跨域策略满足前后端分离需求
 - **全局限流**：基于令牌桶算法的请求速率限制，防止服务过载
+- **配置占位符**：配置文件支持 `${key:default}` 占位符，可通过环境变量或 `-D` 参数注入配置，适配容器化部署
 
 ---
 
@@ -99,6 +100,7 @@ goboot:
     bannerPath: ./banner.txt
     staticResources:
       enable: true
+      disablePreCompressGzip: false
       items:
         - urlPath: /
           filePath: ./dist
@@ -190,6 +192,48 @@ goboot:
 2. 如果配置了 `profiles.active`，则查找 `goboot-{active}.yml`
 3. 如果找到环境配置文件，则使用环境配置覆盖主配置
 4. 如果找不到，则回退使用主配置
+
+### 配置占位符
+
+配置文件支持 `${key:default}` 形式的占位符，在配置解析前自动替换，便于在容器化等场景下通过外部参数注入配置。
+
+**占位符形式：**
+
+- `${key}`：仅指定配置键
+- `${key:default}`：指定配置键和默认值，默认值中可以包含冒号
+
+**替换优先级（从高到低）：**
+
+1. 命令行 `-D` 参数：`-Dkey=value`（与 Java 的用法一致）
+2. 环境变量：名称为 `key` 的环境变量
+3. 占位符中的默认值（未提供默认值时替换为空串）
+
+**使用示例：**
+
+```yaml
+goboot:
+  server:
+    port: ${goboot.server.port:8080}
+    session:
+      secretKey: ${goboot.session.secret-key:123456}
+    redis:
+      password: ${goboot.redis.password:123456}
+```
+
+**通过命令行覆盖：**
+
+```shell
+./goboot.elf -Dgoboot.server.port=9090
+```
+
+**通过环境变量覆盖：**
+
+```shell
+# Linux/macOS
+env 'goboot.server.port=9090' ./goboot.elf
+```
+
+> **提示**：占位符替换发生在 YAML 解析之前，可以出现在配置文件的任意位置；不使用占位符的配置文件不受影响。
 
 ---
 
@@ -296,6 +340,55 @@ goboot:
       enable: true
       allowAllOrigins: true
 ```
+
+### 4.5 预压缩 GZIP（.gz 文件）
+
+对静态资源，可以在构建阶段预先压缩生成 `.gz` 文件，goboot 会优先使用预压缩文件直接响应，避免运行时动态压缩的 CPU 开销。
+
+**工作原理：**
+
+- 请求的文件存在同名 `.gz` 文件时（如 `app.js` 对应 `app.js.gz`）
+- 且客户端支持 gzip（`Accept-Encoding` 包含 gzip）
+- 则直接返回 `.gz` 文件，并自动设置 `Content-Type`（按原文件扩展名）和 `Content-Encoding: gzip`
+- 未找到 `.gz` 文件时，自动降级为普通静态资源响应
+
+**默认开启**，可通过以下配置关闭：
+
+```yaml
+goboot:
+  server:
+    staticResources:
+      enable: true
+      # 默认false，即默认启用预压缩
+      disablePreCompressGzip: false
+      items:
+        - urlPath: /
+          filePath: ./dist
+          tryFiles: index.html
+```
+
+**生成 .gz 文件：**
+
+```shell
+# Linux/macOS：-k 保留原文件
+gzip -k -9 app.js
+
+# 批量压缩 dist 目录下的所有文件
+find ./dist -type f ! -name "*.gz" -exec gzip -k -9 {} \;
+```
+
+也可以使用构建工具插件在打包时自动生成：
+
+| 构建工具 | 插件 |
+|----------|------|
+| Vite | `vite-plugin-compression` |
+| Webpack | `compression-webpack-plugin` |
+
+**注意事项：**
+
+- 仅处理 GET/HEAD 请求，带 `Range` 请求头的请求（如视频拖动）会走普通静态资源处理
+- 预压缩命中时不会再进行通用 GZIP 动态压缩
+- 源文件更新后，需要重新生成对应的 `.gz` 文件
 
 ---
 
@@ -748,6 +841,10 @@ goboot:
 
 > **建议**：将已经压缩过的文件格式（如 `.mp4`、`.mp3`、`.xlsx` 等）加入 `excludeExtensions`，避免重复压缩浪费 CPU。
 
+### 8.3 预压缩 GZIP
+
+静态资源还支持预压缩 `.gz` 文件优先响应：当存在同名 `.gz` 文件且客户端支持 gzip 时，直接返回预压缩文件，不再进行动态压缩，详见「4.5 预压缩 GZIP（.gz 文件）」。
+
 ---
 
 ## 九、CORS 跨域配置
@@ -1116,6 +1213,7 @@ goboot:
 | `goboot.server.port` | int | `8080` | 服务监听端口 |
 | `goboot.server.bannerPath` | string | - | 自定义 Banner 文件路径 |
 | `goboot.server.staticResources.enable` | bool | `false` | 启用静态资源 |
+| `goboot.server.staticResources.disablePreCompressGzip` | bool | `false` | 禁用预压缩 GZIP（.gz）支持 |
 | `goboot.server.staticResources.items[].urlPath` | string | - | URL 路径前缀 |
 | `goboot.server.staticResources.items[].filePath` | string | - | 本地文件路径 |
 | `goboot.server.staticResources.items[].tryFiles` | string | - | 尝试文件列表（空格分隔） |
@@ -1195,3 +1293,14 @@ goboot:
 ### Q: 启动后如何查看访问地址？
 
 启动日志会输出本机所有可用网卡的 IP 地址及对应的访问 URL，可以直接复制使用。
+
+### Q: 如何减小静态资源的传输体积？
+
+有两种方式：
+
+- 预压缩方式（推荐）：在构建阶段生成 `.gz` 文件，goboot 默认优先返回预压缩文件，无运行时压缩开销，详见「4.5 预压缩 GZIP（.gz 文件）」
+- 动态压缩方式：配置 `gzip.enable: true`，由服务端在响应时动态压缩
+
+### Q: 如何通过环境变量或命令行参数注入配置？
+
+在配置文件中使用 `${key:default}` 占位符即可，详见「配置占位符」小节。例如 `port: ${goboot.server.port:8080}`，启动时通过环境变量 `goboot.server.port` 或命令行 `-Dgoboot.server.port=9090` 覆盖默认值。

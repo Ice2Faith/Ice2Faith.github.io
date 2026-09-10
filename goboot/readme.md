@@ -108,6 +108,7 @@ goboot:
     bannerPath: ./banner.txt
     staticResources:
       enable: true
+      disablePreCompressGzip: false
       items:
         - urlPath: /dist
           filePath: ./dist
@@ -278,6 +279,8 @@ goboot:
     staticResources:
       # 是否启用
       enable: true
+      # 是否禁用预压缩gzip(.gz)文件的支持，默认false即启用，需要自行提供同名.gz文件
+      disablePreCompressGzip: false
       # url中的路径
       urlPath: /static
       # 解析为静态资源的路径
@@ -441,6 +444,36 @@ goboot:
       allowCredentials: true
       maxAgeMinutes: 0
 ```
+
+### 配置占位符
+- 配置文件支持 `${key:default}` 形式的占位符
+- 在解析YAML之前，会先对配置文件内容进行占位符替换
+- 因此占位符可以出现在配置文件的任意位置
+- 替换取值的优先级，从高到低
+    - 命令行 `-D` 参数：`-Dkey=value`
+    - 环境变量：名称为 key 的环境变量
+    - 默认值：`default`，未提供默认值时，替换为空串
+- 按第一个冒号切分 key 和默认值，因此默认值中允许包含冒号
+- 使用示例
+```yaml
+goboot:
+  server:
+    port: ${goboot.server.port:8080}
+    session:
+      secretKey: ${goboot.session.secret-key:123456}
+    redis:
+      password: ${goboot.redis.password:123456}
+```
+- 通过命令行 `-D` 参数覆盖，形式与java保持一致
+```shell script
+./goboot.elf -Dgoboot.server.port=9090
+```
+- 通过环境变量覆盖
+```shell script
+# Linux
+env 'goboot.server.port=9090' ./goboot.elf
+```
+- 该特性主要用于适配容器化环境下的配置注入
 
 ## 接口开发
 - 接口开发，可以使用gin框架自己的方式
@@ -753,8 +786,12 @@ func (api *Api) Login(resp *goboot.CtxResp,user * User) *goboot.CtxResp {
 - 函数：GetApplication 支持监听器的根据指定配置文件获取应用实例
     - 实际上是使用 ResolveGobootConfig 来获取配置结构，调用 GetConfigApplication 来获取应用实例
 - 函数：GetConfigApplication 直接根据配置结构获取应用实例
-- 函数：ReadGobootConfig 将指定的配置文件，解析为配置结构
+- 函数：ReadGobootConfig 将指定的配置文件，解析为配置结构，解析前会进行 ${key:default} 占位符替换
 - 函数：ResolveGobootConfig 读取指定的配置文件，并根据Profiles重定向读取配置
+- 函数：ResolvePlaceholders 处理配置内容中的 ${key:default} 占位符
+    - 替换取值的优先级：-D命令行参数 > 环境变量 > 占位符默认值
+- 函数：GetCommandDashDefArgsMap 获取命令行 -D 参数映射（带全局缓存）
+- 函数：ParseCommandDashDefArgsMap 从命令行参数中解析 -D 形式的参数
 - 函数：MappingHandler 负责进行结构的路径自动映射，实现函数调用的处理方法
     - 这个方法服务于自动映射mapping和GobootController
     - 实现将请求按照规则，调用目标函数的过程
@@ -782,6 +819,14 @@ func (api *Api) Login(resp *goboot.CtxResp,user * User) *goboot.CtxResp {
 - 函数：RateLimitMiddleware 负责生成全局限流中间件
     - 基于令牌桶算法（token bucket）实现全局限流
     - 当令牌桶中没有令牌时，返回 HTTP 429 Too Many Requests，响应体为 `{"status": 429, "message": "Too many requests, please retry later!"}`
+- 结构：StaticResources 定义了静态资源的配置结构
+    - Enable：是否启用静态资源
+    - DisablePreCompressGzip：是否禁用预压缩gzip(.gz)文件支持（默认false即启用）
+    - Items：静态资源映射列表（[]StaticResourcesItem）
+- 函数：PreCompressGzipFileResponseMiddleware 负责生成预压缩gzip(.gz)文件的响应中间件
+    - 客户端支持gzip且存在对应的.gz文件时，直接返回.gz文件，并设置 Content-Encoding: gzip
+    - 仅处理 GET/HEAD 请求，跳过 Range 请求，未命中.gz文件时交由后续静态资源处理
+    - 该中间件注册在通用gzip动态压缩之前，由 StaticResources.DisablePreCompressGzip 控制是否启用
 - 结构：FileServer 定义了文件服务器的配置结构
     - 包含了文件根目录、URL路径、嵌入静态文件系统等信息
     - 以及多个禁用开关：禁用上传、禁用下载、禁用列出、禁用浏览、禁用Office转换等
@@ -1063,6 +1108,7 @@ goboot:
     bannerPath: ./banner.txt
     staticResources:
       enable: true
+      disablePreCompressGzip: false
       urlPath: /static
       filePath: ./static
     templateResources:
@@ -1183,6 +1229,7 @@ goboot:
     staticResources:
       # 开启静态资源
       enable: true
+      disablePreCompressGzip: false
       items:
         # 添加一个以根目录解析dist的静态资源
         - urlPath: /
@@ -1196,6 +1243,7 @@ goboot:
 ```yaml
 staticResources:
   enable: true
+  disablePreCompressGzip: false
   items:
     - urlPath: /app
       filePath: ../dist
@@ -1214,6 +1262,7 @@ goboot:
     bannerPath: ./banner.txt
     staticResources:
       enable: true
+      disablePreCompressGzip: false
       items:
         - urlPath: /
           filePath: ../dist
@@ -1305,6 +1354,46 @@ goboot:
       allowCredentials: true
       maxAgeMinutes: 0
 ```
+
+### 预压缩gzip支持
+- 在前端项目构建时，可以对静态资源进行预压缩生成 `.gz` 文件
+- 例如 `app.js` 对应生成 `app.js.gz`，两者放在同一目录
+- 请求静态资源时，如果客户端支持gzip并且存在对应的 `.gz` 文件
+- 则直接返回 `.gz` 文件，并自动设置 `Content-Encoding: gzip`
+- 并且 `Content-Type` 仍然按照原文件的扩展名进行设置
+- 这样可以避免运行时的动态压缩开销，提升响应速度
+- 此功能默认开启，可通过静态资源配置中的 `disablePreCompressGzip: true` 关闭
+- 生成 `.gz` 文件示例
+```shell script
+# Linux/macOS：-k 保留原文件
+gzip -k -9 app.js
+
+# 压缩dist目录下的所有文件
+find ./dist -type f ! -name "*.gz" -exec gzip -k -9 {} \;
+```
+- 也可以使用构建工具的插件自动生成
+    - vite项目：vite-plugin-compression
+    - webpack项目：compression-webpack-plugin
+- 配置示例
+```yaml
+goboot:
+  server:
+    staticResources:
+      enable: true
+      # 默认false，即默认启用预压缩
+      disablePreCompressGzip: false
+      items:
+        - urlPath: /
+          filePath: ./dist
+          tryFiles: index.htm index.html
+```
+- 工作原理说明
+    - 仅处理 GET/HEAD 请求
+    - 带有 `Range` 请求头的请求（如视频拖动）不会使用预压缩文件
+    - 客户端 `Accept-Encoding` 不包含 gzip 时不会使用预压缩文件
+    - 预压缩未命中时，自动降级为普通静态资源响应
+    - 预压缩命中时，不会再经过通用的 gzip 动态压缩中间件
+- 注意：源文件更新后，需要重新生成对应的 `.gz` 文件
 
 ## 文件服务器
 - 在goboot中，除了静态资源托管之外
@@ -1505,6 +1594,7 @@ goboot:
     port: 8080
     staticResources:
       enable: true
+      disablePreCompressGzip: false
       items:
         - urlPath: /
           filePath: ./dist
