@@ -62,7 +62,7 @@ flowchart TD
 
 ```mermaid
 sequenceDiagram
-    participant U as 调用方
+    participant U as "调用方"
     participant T as "new TypeToken<Map<String,Integer>>(){}"
     participant R as "java.lang.reflect"
     U->>T: "fullType()"
