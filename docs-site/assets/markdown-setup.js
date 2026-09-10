@@ -383,9 +383,8 @@ function detectRealMermaidType(graph,locale='zh'){
     if(!graph){
         return null
     }
-    debugger
     const MERMAID_TYPE_MAP = {
-        // 🟢 稳定版图表
+        // 稳定版图表
         'flowchart': { zh: '流程图', en: 'Flowchart' },
         'graph': { zh: '流程图', en: 'Flowchart' },
         'sequenceDiagram': { zh: '时序图', en: 'Sequence Diagram' },
@@ -401,7 +400,7 @@ function detectRealMermaidType(graph,locale='zh'){
         'timeline': { zh: '时间线图', en: 'Timeline' },
         'requirementDiagram': { zh: '需求图', en: 'Requirement Diagram' },
 
-        // 🔵 Beta / 实验版图表
+        // Beta / 实验版图表
         'quadrantChart': { zh: '象限图', en: 'Quadrant Chart' },
         'xychart-beta': { zh: 'XY图表', en: 'XY Chart' },
         'sankey-beta': { zh: '桑基图', en: 'Sankey Diagram' },

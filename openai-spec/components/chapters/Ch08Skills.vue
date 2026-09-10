@@ -64,7 +64,7 @@
             this.loaderResource('../../content-data/ch08-dir-structure.txt')
                 .then(r => r.text())
                 .then(t => { this.dirStructure = t; });
-            this.loaderResource('../../content-data/ch08-skill-md-format.yml')
+            this.loaderResource('../../content-data/ch08-skill-md-format.md')
                 .then(r => r.text())
                 .then(t => { this.skillMdFormat = t; });
         }
