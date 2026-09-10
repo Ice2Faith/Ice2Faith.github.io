@@ -42,7 +42,7 @@ flowchart TD
     RU --> RP
     RU --> D1 & D2
     RU -.PATTERN_MAP.-> LM["i2f-lru-map"]
-    FACADE -.Iterators.of.-> IT["i2f-iterator"]
+    FACADE -."Iterators.of".-> IT["i2f-iterator"]
 ```
 
 ### 1. 三算法共享契约打分，只是「如何 matchRate」不同（核心）

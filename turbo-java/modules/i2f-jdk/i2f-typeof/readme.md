@@ -62,15 +62,15 @@ flowchart TD
 
 ```mermaid
 sequenceDiagram
-    participant U as 调用方
-    participant T as new TypeToken<Map<String,Integer>>(){}
-    participant R as java.lang.reflect
-    U->>T: fullType()
-    T->>R: getClass().getGenericSuperclass()
-    Note over R: 得到 TypeToken&lt;Map&lt;String,Integer&gt;&gt;<br/>（参数化了的具体父类）
-    R-->>T: ParameterizedType
-    T->>T: getFullGenericType(...) 递归下钻
-    T-->>U: TypeNode(Map){ args=[Node(String), Node(Integer)] }
+    participant U as "调用方"
+    participant T as "new TypeToken<Map<String,Integer>>(){}"
+    participant R as "java.lang.reflect"
+    U->>T: "fullType()"
+    T->>R: "getClass().getGenericSuperclass()"
+    Note over R: "得到 TypeToken<Map<String,Integer>><br/>（参数化了的具体父类）"
+    R-->>T: "ParameterizedType"
+    T->>T: "getFullGenericType(...) 递归下钻"
+    T-->>U: "TypeNode(Map){ args=[Node(String), Node(Integer)] }"
 ```
 
 - **反擦除原理**：编译器会把匿名子类的父类实参写进字节码，`getGenericSuperclass()` 因而返回 `ParameterizedType`，其 `getActualTypeArguments()` 就是 `String`、`Integer`——这是 Java 绕过泛型擦除、在运行期拿到 `Map<String,Integer>` 完整形状的经典技巧。
