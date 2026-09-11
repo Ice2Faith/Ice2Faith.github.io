@@ -857,9 +857,9 @@ func (api *Api) Login(resp *goboot.CtxResp,user * User) *goboot.CtxResp {
     - 仅处理 GET/HEAD 请求，跳过 Range 请求，未命中.gz文件时交由后续静态资源处理
     - 该中间件注册在通用gzip动态压缩之前，由 StaticResources.DisablePreCompressGzipHandler 控制是否启用
 - 结构：FileServer 定义了文件服务器的配置结构
-    - 包含了文件根目录、URL路径、嵌入静态文件系统等信息
+    - 包含了文件根目录、URL路径等信息
     - 以及多个禁用开关：禁用上传、禁用下载、禁用列出、禁用浏览、禁用Office转换等
-    - 其中 EmbedStaticFs 字段用于设置Go embed嵌入的静态文件系统
+    - 其中 public 静态资源已内嵌在 goboot 包中（通过 `//go:embed public/*`），启动时自动解压释放到 `./.goboot/tmp/public` 目录并生成预压缩 `.gz` 文件
 - 结构：FileInfoItem 定义了文件服务器返回的文件信息结构
     - 包含了文件名、相对路径、大小、大小描述、是否目录、修改时间
 - 函数：FileServerMiddleware 负责生成文件服务器的中间件
@@ -945,32 +945,25 @@ app.AddHandlers(&Api{})
 app.Run()
 ```
 
-### 方式三：手动解析配置+自定义配置（支持embed嵌入文件）
-- 这种方式适用于需要将前端资源打包到可执行文件中的场景
+### 方式三：手动解析配置+自定义配置
+- 这种方式适用于需要手动解析并修改配置的场景
 - 通过 `ResolveGobootConfig` 解析配置
-- 然后修改配置结构，设置嵌入的静态文件系统
+- 然后修改配置结构
 - 最后通过 `GetConfigApplication` 创建应用
 ```go
 package main
 
 import (
-	"embed"
 	"goboot/goboot"
-	"io/fs"
 )
-
-// 使用go:embed将public目录嵌入到可执行文件中
-//go:embed public/*
-var staticFiles embed.FS
 
 func main() {
 	// 1. 解析配置文件
 	cfgFile := goboot.DefaultConfigFile
 	config := goboot.ResolveGobootConfig(cfgFile)
 
-	// 2. 设置嵌入的静态文件系统
-	distFS, _ := fs.Sub(staticFiles, "public")
-	config.Goboot.Server.FileServer.EmbedStaticFs = distFS
+	// 2. 修改配置（可选）
+	config.Goboot.Server.Port = 9090
 
 	// 3. 创建应用实例
 	app := goboot.GetConfigApplication(config, nil)
@@ -979,7 +972,9 @@ func main() {
 	app.Run()
 }
 ```
-- 其中，嵌入的静态资源可通过 `/file-server/public/` 路径访问
+- goboot 的 public 静态资源已内嵌在 goboot 包中，启动时自动解压释放到 `./.goboot/tmp/public` 目录
+- 解压的同时会自动对资源文件生成预压缩 `.gz` 文件
+- 静态资源可通过 `/file-server/public/` 路径访问
 - 例如：`public/lib/vue.js` 可通过 `/file-server/public/lib/vue.js` 访问
 - `/lib/` 或 `/libs/` 路径下的资源自动设置7天缓存，其他资源设置1天缓存
 
@@ -1625,16 +1620,16 @@ GET /file-server/download/{子路径}/{文件名}
 - 也可以通过环境变量 `LIBREOFFICE_PATH` 指定LibreOffice的安装路径
 
 ### 内嵌静态资源
-- 文件服务器还提供了内嵌静态资源服务
+- goboot 内置了文件服务器所需的静态资源（Vue、Element UI、CodeMirror、预览页面等）
+- 资源通过 `//go:embed public/*` 内嵌在 goboot 包中
+- 启动时自动解压释放到 `./.goboot/tmp/public` 目录，并生成预压缩 `.gz` 文件
 - 访问路径
 ```
 GET /file-server/public/{文件路径}
 ```
-- 此功能需要通过代码设置 `FileServer.EmbedStaticFs` 字段
-- 用于将前端资源通过Go的embed打包到可执行文件中
 - 其中 `/lib/` 或 `/libs/` 路径下的资源自动设置7天缓存
 - 其他资源设置1天缓存
-- 具体使用方式参见「高级启动方式」章节
+- 开发者无需额外配置即可直接使用
 
 ### 配置示例
 - 下面给出几个典型场景的配置

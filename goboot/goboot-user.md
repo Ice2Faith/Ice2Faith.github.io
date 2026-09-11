@@ -583,13 +583,13 @@ GET /file-server/download/{子路径}/{文件名}
 
 ### 5.4 内嵌静态资源
 
-文件服务器还支持通过 `EmbedStaticFs` 提供内嵌静态资源服务，访问路径为：
+goboot 内置了文件服务器所需的静态资源（Vue、Element UI、CodeMirror、预览页面等），资源通过 `//go:embed public/*` 内嵌在 goboot 包中。启动时自动解压释放到 `./.goboot/tmp/public` 目录，并生成预压缩 `.gz` 文件，访问路径为：
 
 ```
 GET /file-server/public/{文件路径}
 ```
 
-此功能主要面向开发者使用，用于将前端资源打包到可执行文件中。其中 `/lib/` 或 `/libs/` 路径下的资源会自动设置 7 天缓存，其他资源设置 1 天缓存。
+其中 `/lib/` 或 `/libs/` 路径下的资源会自动设置 7 天缓存，其他资源设置 1 天缓存。开发者无需额外配置即可直接使用。
 
 ---
 
