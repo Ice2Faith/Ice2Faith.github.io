@@ -19,19 +19,30 @@ https://go.dev/dl/
 ```
 - 目前版本的go下载直连
 ```shell script
-https://go.dev/dl/go1.19.5.windows-amd64.msi
+https://go.dev/dl/go1.26.0.windows-amd64.msi
 ```
 - 直接安装即可
 - 为了不出现其它问题，选择安装路径如下
 ```shell script
 C:\Go
 ```
+- 新建如下文件夹，用于存放golang的三方依赖
+- 后面配置环境变量要使用
+```shell script
+mkdir C:\go-path
+```
 - 安装完毕之后，配置环境变量
 ```shell script
 GOPATH
+C:\go-path\go
+
+GOROOT
 C:\Go
 ```
 ```shell script
+Path
+%GOROOT%\bin
+
 Path
 %GOPATH%\bin
 ```
