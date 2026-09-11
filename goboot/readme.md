@@ -108,7 +108,7 @@ goboot:
     bannerPath: ./banner.txt
     staticResources:
       enable: true
-      disablePreCompressGzip: false
+      disablePreCompressGzipHandler: false
       items:
         - urlPath: /dist
           filePath: ./dist
@@ -279,12 +279,28 @@ goboot:
     staticResources:
       # 是否启用
       enable: true
-      # 是否禁用预压缩gzip(.gz)文件的支持，默认false即启用，需要自行提供同名.gz文件
-      disablePreCompressGzip: false
-      # url中的路径
-      urlPath: /static
-      # 解析为静态资源的路径
-      filePath: ./static
+      # 是否禁用预压缩gzip(.gz)文件响应，默认false即启用，需要自行提供同名.gz文件
+      disablePreCompressGzipHandler: false
+      # 启动时自动预压缩，对静态资源目录生成同名.gz文件
+      preCompressGzip:
+        # 是否启用
+        enable: false
+        # 预压缩选项
+        options:
+          # 最小源文件大小阈值（字节），小于该值不压缩；<0使用默认值256，0表示不限制
+          minByteSize: 256
+          # 压缩文件比源文件大时，是否删除压缩文件
+          removeIfLarger: true
+          # 是否强制覆盖已存在的.gz文件；false时.gz比源文件新则跳过（增量压缩）
+          forceCover: true
+          # 需要压缩的文件后缀列表，空时使用默认后缀列表
+          suffixes: []
+      # 静态资源映射列表
+      items:
+        # url中的路径
+        - urlPath: /static
+          # 解析为静态资源的路径
+          filePath: ./static
     # 模板文件配置
     templateResources:
       # 是否启用    
@@ -821,12 +837,25 @@ func (api *Api) Login(resp *goboot.CtxResp,user * User) *goboot.CtxResp {
     - 当令牌桶中没有令牌时，返回 HTTP 429 Too Many Requests，响应体为 `{"status": 429, "message": "Too many requests, please retry later!"}`
 - 结构：StaticResources 定义了静态资源的配置结构
     - Enable：是否启用静态资源
-    - DisablePreCompressGzip：是否禁用预压缩gzip(.gz)文件支持（默认false即启用）
+    - DisablePreCompressGzipHandler：是否禁用预压缩gzip(.gz)文件响应中间件（默认false即启用）
+    - PreCompressGzip：启动时自动预压缩配置（PreCompressGzipConfig），对静态资源目录生成同名.gz文件
     - Items：静态资源映射列表（[]StaticResourcesItem）
+- 结构：PreCompressGzipConfig 定义了启动时自动预压缩的配置结构
+    - Enable：是否启用启动时自动预压缩（默认false，需要自行提供同名.gz文件）
+    - Options：预压缩选项（GzipOptions）
+- 结构：GzipOptions 定义了预压缩的选项结构
+    - MinByteSize：最小源文件大小阈值（字节），小于该值不压缩；<0使用默认值256，0表示不限制
+    - RemoveIfLarger：压缩文件比源文件大时，是否删除压缩文件
+    - ForceCover：是否强制覆盖已存在的.gz文件；false时按源/目标文件修改时间判断（增量压缩）
+    - Suffixes：需要压缩的文件后缀列表；nil/空时使用默认后缀列表
+- 函数：GzipCompressWebResourcesDefault 使用默认选项对指定目录进行预压缩
+- 函数：GzipCompressWebResources 遍历processPath目录，对满足条件的文件生成同名.gz预压缩文件
+    - 使用BestCompression级别压缩，支持阈值过滤、覆盖策略和增量压缩
+- 函数：GzipCompressFile 将src压缩为dst；若dst已存在且比src新，则跳过（增量压缩）
 - 函数：PreCompressGzipFileResponseMiddleware 负责生成预压缩gzip(.gz)文件的响应中间件
     - 客户端支持gzip且存在对应的.gz文件时，直接返回.gz文件，并设置 Content-Encoding: gzip
     - 仅处理 GET/HEAD 请求，跳过 Range 请求，未命中.gz文件时交由后续静态资源处理
-    - 该中间件注册在通用gzip动态压缩之前，由 StaticResources.DisablePreCompressGzip 控制是否启用
+    - 该中间件注册在通用gzip动态压缩之前，由 StaticResources.DisablePreCompressGzipHandler 控制是否启用
 - 结构：FileServer 定义了文件服务器的配置结构
     - 包含了文件根目录、URL路径、嵌入静态文件系统等信息
     - 以及多个禁用开关：禁用上传、禁用下载、禁用列出、禁用浏览、禁用Office转换等
@@ -1108,7 +1137,7 @@ goboot:
     bannerPath: ./banner.txt
     staticResources:
       enable: true
-      disablePreCompressGzip: false
+      disablePreCompressGzipHandler: false
       urlPath: /static
       filePath: ./static
     templateResources:
@@ -1229,7 +1258,7 @@ goboot:
     staticResources:
       # 开启静态资源
       enable: true
-      disablePreCompressGzip: false
+      disablePreCompressGzipHandler: false
       items:
         # 添加一个以根目录解析dist的静态资源
         - urlPath: /
@@ -1243,7 +1272,7 @@ goboot:
 ```yaml
 staticResources:
   enable: true
-  disablePreCompressGzip: false
+  disablePreCompressGzipHandler: false
   items:
     - urlPath: /app
       filePath: ../dist
@@ -1262,7 +1291,7 @@ goboot:
     bannerPath: ./banner.txt
     staticResources:
       enable: true
-      disablePreCompressGzip: false
+      disablePreCompressGzipHandler: false
       items:
         - urlPath: /
           filePath: ../dist
@@ -1362,8 +1391,16 @@ goboot:
 - 则直接返回 `.gz` 文件，并自动设置 `Content-Encoding: gzip`
 - 并且 `Content-Type` 仍然按照原文件的扩展名进行设置
 - 这样可以避免运行时的动态压缩开销，提升响应速度
-- 此功能默认开启，可通过静态资源配置中的 `disablePreCompressGzip: true` 关闭
-- 生成 `.gz` 文件示例
+- 预压缩文件响应默认开启，可通过静态资源配置中的 `disablePreCompressGzipHandler: true` 关闭
+- 生成 `.gz` 文件有以下三种方式
+    - 方式一：启动时由goboot自动预压缩（推荐，无需额外工具）
+        - 开启 `staticResources.preCompressGzip.enable: true` 即可
+        - goboot启动时会自动遍历每个静态资源目录，对满足条件的文件生成同名 `.gz` 文件
+        - 预压缩任务通过 OnBeforeRun 监听器注册执行，在应用启动完毕（banner、访问地址/IP 等启动信息打印完成）后延迟 5 秒，再启动协程异步压缩
+        - 这样可以保证预压缩日志在启动信息之后输出，不会与启动日志穿插，同时不会阻塞服务启动
+        - 已是最新的 `.gz` 文件会自动跳过，适合增量部署
+    - 方式二：手动执行gzip命令生成
+        - 示例如下
 ```shell script
 # Linux/macOS：-k 保留原文件
 gzip -k -9 app.js
@@ -1371,22 +1408,51 @@ gzip -k -9 app.js
 # 压缩dist目录下的所有文件
 find ./dist -type f ! -name "*.gz" -exec gzip -k -9 {} \;
 ```
-- 也可以使用构建工具的插件自动生成
-    - vite项目：vite-plugin-compression
-    - webpack项目：compression-webpack-plugin
-- 配置示例
+    - 方式三：使用构建工具的插件自动生成
+        - vite项目：vite-plugin-compression
+        - webpack项目：compression-webpack-plugin
+- 启动时自动预压缩配置示例
 ```yaml
 goboot:
   server:
     staticResources:
       enable: true
-      # 默认false，即默认启用预压缩
-      disablePreCompressGzip: false
+      # 默认false，即默认启用预压缩文件响应
+      disablePreCompressGzipHandler: false
+      # 启动时自动预压缩
+      preCompressGzip:
+        # 是否启用，默认false
+        enable: true
+        # 预压缩选项
+        options:
+          # 最小源文件大小阈值（字节），小于该值不压缩；<0使用默认值256，0表示不限制
+          minByteSize: 256
+          # 压缩文件比源文件大时，是否删除压缩文件
+          removeIfLarger: true
+          # 是否强制覆盖已存在的.gz文件；false时.gz比源文件新则跳过（增量压缩）
+          forceCover: true
+          # 需要压缩的文件后缀列表，空时使用默认后缀列表
+          suffixes: []
       items:
         - urlPath: /
           filePath: ./dist
           tryFiles: index.htm index.html
 ```
+- 预压缩选项说明
+    - `enable`：是否启用启动时自动预压缩，默认false
+    - `minByteSize`：最小源文件大小阈值（字节），小于该值的文件不压缩；<0时使用默认值256，0表示不限制
+    - `removeIfLarger`：压缩文件比源文件大时，删除生成的压缩文件，避免负优化
+    - `forceCover`：是否强制覆盖已存在的.gz文件；false时按源/目标文件修改时间判断，.gz比源文件新则跳过（增量压缩）
+    - `suffixes`：需要压缩的文件后缀列表；为空时使用内置默认后缀列表
+- 默认后缀列表包含以下类别
+    - 前端资源类：`.html .htm .xhtml .js .mjs .cjs .css .sass .less .json .jsonc .jsonl .xml .svg .txt .ico .map .ttf .otf .eot .wasm` 等
+    - 文档资源类：`.rss .atom .xsl .xslt .vtt .srt .m3u8 .m3u .csv .tsv .md .markdown` 等
+    - 编程类：`.vue .java .py .php .go .sql .h .hpp .c .cpp .yml .yaml .toml .properties .ini` 等
+    - 不包含 `.woff/.woff2` 字体、图片、音视频、办公文档等已压缩格式（压缩收益低）
+- 也可以在代码中直接调用以下函数进行预压缩
+    - `GzipCompressWebResourcesDefault(processPath)`：使用默认选项预压缩目录
+    - `GzipCompressWebResources(processPath, opts)`：使用指定选项预压缩目录
+    - `GzipCompressFile(src, dst, srcInfo)`：压缩单个文件，.gz比源文件新则跳过
 - 工作原理说明
     - 仅处理 GET/HEAD 请求
     - 带有 `Range` 请求头的请求（如视频拖动）不会使用预压缩文件
@@ -1394,6 +1460,8 @@ goboot:
     - 预压缩未命中时，自动降级为普通静态资源响应
     - 预压缩命中时，不会再经过通用的 gzip 动态压缩中间件
 - 注意：源文件更新后，需要重新生成对应的 `.gz` 文件
+    - 开启启动时自动预压缩后，重启服务即可自动为更新的源文件重新生成 `.gz`
+    - 预压缩在应用启动完毕（banner、访问地址等信息打印完成）后延迟 5 秒异步执行，首次启动或文件较多时，压缩完成前的请求按未命中预压缩文件处理
 
 ## 文件服务器
 - 在goboot中，除了静态资源托管之外
@@ -1594,7 +1662,7 @@ goboot:
     port: 8080
     staticResources:
       enable: true
-      disablePreCompressGzip: false
+      disablePreCompressGzipHandler: false
       items:
         - urlPath: /
           filePath: ./dist

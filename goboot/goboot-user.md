@@ -19,7 +19,7 @@ Goboot 是一个基于 Golang 的轻量级 Web 服务工具，采用类似 Sprin
 - **文件服务器**：提供文件上传、下载、在线浏览（支持 Office、PDF、视频、3D 模型等）
 - **反向代理**：将请求转发到后端服务，支持多后端负载均衡（轮询、随机、IP 哈希、加权）
 - **HTTPS**：配置 SSL 证书启用加密访问
-- **GZIP 压缩**：启用响应压缩提升传输效率，静态资源支持预压缩 `.gz` 文件直接响应
+- **GZIP 压缩**：启用响应压缩提升传输效率，静态资源支持预压缩 `.gz` 文件直接响应；支持启动时自动生成 `.gz` 预压缩文件
 - **CORS 跨域**：配置跨域策略满足前后端分离需求
 - **全局限流**：基于令牌桶算法的请求速率限制，防止服务过载
 - **配置占位符**：配置文件支持 `${key:default}` 占位符，可通过环境变量或 `-D` 参数注入配置，适配容器化部署
@@ -100,7 +100,14 @@ goboot:
     bannerPath: ./banner.txt
     staticResources:
       enable: true
-      disablePreCompressGzip: false
+      disablePreCompressGzipHandler: false
+      preCompressGzip:
+        enable: false
+        options:
+          minByteSize: 256
+          removeIfLarger: true
+          forceCover: true
+          suffixes: []
       items:
         - urlPath: /
           filePath: ./dist
@@ -343,24 +350,24 @@ goboot:
 
 ### 4.5 预压缩 GZIP（.gz 文件）
 
-对静态资源，可以在构建阶段预先压缩生成 `.gz` 文件，goboot 会优先使用预压缩文件直接响应，避免运行时动态压缩的 CPU 开销。
+对静态资源，可以预先压缩生成 `.gz` 文件，goboot 会优先使用预压缩文件直接响应，避免运行时动态压缩的 CPU 开销。
 
-**工作原理：**
+**响应原理（默认开启）：**
 
 - 请求的文件存在同名 `.gz` 文件时（如 `app.js` 对应 `app.js.gz`）
 - 且客户端支持 gzip（`Accept-Encoding` 包含 gzip）
 - 则直接返回 `.gz` 文件，并自动设置 `Content-Type`（按原文件扩展名）和 `Content-Encoding: gzip`
 - 未找到 `.gz` 文件时，自动降级为普通静态资源响应
 
-**默认开启**，可通过以下配置关闭：
+预压缩文件的响应默认开启，将 `disablePreCompressGzipHandler` 设置为 `true` 即可关闭：
 
 ```yaml
 goboot:
   server:
     staticResources:
       enable: true
-      # 默认false，即默认启用预压缩
-      disablePreCompressGzip: false
+      # 默认false，即默认启用预压缩文件响应；设置为true则关闭
+      disablePreCompressGzipHandler: false
       items:
         - urlPath: /
           filePath: ./dist
@@ -368,6 +375,50 @@ goboot:
 ```
 
 **生成 .gz 文件：**
+
+方式一：启动时由 goboot 自动生成（推荐，无需额外工具）
+
+- 开启 `preCompressGzip.enable: true` 后，goboot 启动时会自动遍历静态资源目录
+- 预压缩任务通过 `OnBeforeRun` 监听器注册执行：在应用启动完毕（banner、访问地址等启动信息打印完成）后，延迟 5 秒再以协程异步压缩
+- 这样可以保证预压缩日志在启动信息之后输出，不会与启动日志穿插，同时不阻塞服务启动
+- 已是最新的 `.gz` 文件会自动跳过，适合增量部署
+
+```yaml
+goboot:
+  server:
+    staticResources:
+      enable: true
+      preCompressGzip:
+        # 是否启用启动时自动预压缩，默认false
+        enable: true
+        options:
+          # 最小源文件大小阈值（字节），小于该值不压缩；<0使用默认值256，0表示不限制
+          minByteSize: 256
+          # 压缩文件比源文件大时，是否删除压缩文件
+          removeIfLarger: true
+          # 是否强制覆盖已存在的.gz文件；false时.gz比源文件新则跳过（增量压缩）
+          forceCover: true
+          # 需要压缩的文件后缀列表，空时使用默认后缀列表
+          suffixes: []
+      items:
+        - urlPath: /
+          filePath: ./dist
+          tryFiles: index.html
+```
+
+**预压缩选项说明：**
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `preCompressGzip.enable` | bool | `false` | 是否启用启动时自动预压缩 |
+| `preCompressGzip.options.minByteSize` | int | `0` | 最小源文件大小阈值（字节），小于该值不压缩；<0 使用默认值 256，0 表示不限制 |
+| `preCompressGzip.options.removeIfLarger` | bool | `false` | 压缩文件比源文件大时，是否删除压缩文件 |
+| `preCompressGzip.options.forceCover` | bool | `false` | 是否强制覆盖已存在的 .gz 文件；false 时 .gz 比源文件新则跳过（增量压缩） |
+| `preCompressGzip.options.suffixes` | []string | - | 需要压缩的文件后缀列表，空时使用内置默认后缀列表 |
+
+默认后缀列表包含常见的前端资源（`.html`、`.js`、`.css`、`.json`、`.svg`、`.map` 等）、文档资源（`.md`、`.csv` 等）和编程类文件（`.vue`、`.java`、`.py`、`.go`、`.sql`、`.yml` 等）；不包含 `.woff/.woff2` 字体、图片、音视频、办公文档等已压缩格式。
+
+方式二：手动执行 gzip 命令生成
 
 ```shell
 # Linux/macOS：-k 保留原文件
@@ -377,7 +428,7 @@ gzip -k -9 app.js
 find ./dist -type f ! -name "*.gz" -exec gzip -k -9 {} \;
 ```
 
-也可以使用构建工具插件在打包时自动生成：
+方式三：使用构建工具插件在打包时自动生成：
 
 | 构建工具 | 插件 |
 |----------|------|
@@ -386,9 +437,11 @@ find ./dist -type f ! -name "*.gz" -exec gzip -k -9 {} \;
 
 **注意事项：**
 
+- `preCompressGzip` 仅在 `staticResources.enable: true` 时生效
 - 仅处理 GET/HEAD 请求，带 `Range` 请求头的请求（如视频拖动）会走普通静态资源处理
 - 预压缩命中时不会再进行通用 GZIP 动态压缩
-- 源文件更新后，需要重新生成对应的 `.gz` 文件
+- 源文件更新后，需要重新生成对应的 `.gz` 文件；开启启动时自动预压缩后，重启服务即可自动重新生成
+- 预压缩在应用启动完毕（banner、访问地址等信息打印完成）后延迟 5 秒异步执行，首次启动或文件较多时，压缩完成前的请求按未命中预压缩文件处理
 
 ---
 
@@ -843,7 +896,9 @@ goboot:
 
 ### 8.3 预压缩 GZIP
 
-静态资源还支持预压缩 `.gz` 文件优先响应：当存在同名 `.gz` 文件且客户端支持 gzip 时，直接返回预压缩文件，不再进行动态压缩，详见「4.5 预压缩 GZIP（.gz 文件）」。
+静态资源还支持预压缩 `.gz` 文件优先响应：当存在同名 `.gz` 文件且客户端支持 gzip 时，直接返回预压缩文件，不再进行动态压缩。
+
+同时支持启动时自动预压缩生成 `.gz` 文件：开启 `preCompressGzip.enable: true` 后，goboot 会在应用启动完毕（banner、访问地址等启动信息打印完成后）延迟 5 秒，自动为静态资源目录生成 `.gz` 文件，无需构建插件或手动压缩。详见「4.5 预压缩 GZIP（.gz 文件）」。
 
 ---
 
@@ -1213,7 +1268,12 @@ goboot:
 | `goboot.server.port` | int | `8080` | 服务监听端口 |
 | `goboot.server.bannerPath` | string | - | 自定义 Banner 文件路径 |
 | `goboot.server.staticResources.enable` | bool | `false` | 启用静态资源 |
-| `goboot.server.staticResources.disablePreCompressGzip` | bool | `false` | 禁用预压缩 GZIP（.gz）支持 |
+| `goboot.server.staticResources.disablePreCompressGzipHandler` | bool | `false` | 禁用预压缩 GZIP（.gz）文件响应 |
+| `goboot.server.staticResources.preCompressGzip.enable` | bool | `false` | 启动时自动预压缩生成 .gz 文件 |
+| `goboot.server.staticResources.preCompressGzip.options.minByteSize` | int | `0` | 最小压缩文件大小阈值（<0 使用默认值 256，0 不限制） |
+| `goboot.server.staticResources.preCompressGzip.options.removeIfLarger` | bool | `false` | 压缩文件比源文件大时删除 |
+| `goboot.server.staticResources.preCompressGzip.options.forceCover` | bool | `false` | 强制覆盖已存在的 .gz 文件 |
+| `goboot.server.staticResources.preCompressGzip.options.suffixes` | []string | - | 需要压缩的文件后缀列表（空为默认列表） |
 | `goboot.server.staticResources.items[].urlPath` | string | - | URL 路径前缀 |
 | `goboot.server.staticResources.items[].filePath` | string | - | 本地文件路径 |
 | `goboot.server.staticResources.items[].tryFiles` | string | - | 尝试文件列表（空格分隔） |
@@ -1296,10 +1356,15 @@ goboot:
 
 ### Q: 如何减小静态资源的传输体积？
 
-有两种方式：
+有三种方式：
 
-- 预压缩方式（推荐）：在构建阶段生成 `.gz` 文件，goboot 默认优先返回预压缩文件，无运行时压缩开销，详见「4.5 预压缩 GZIP（.gz 文件）」
+- 预压缩方式（推荐）：提供 `.gz` 文件，goboot 默认优先返回预压缩文件，无运行时压缩开销，详见「4.5 预压缩 GZIP（.gz 文件）」
+- 启动时自动预压缩：配置 `preCompressGzip.enable: true`，goboot 启动时自动为静态资源生成 `.gz` 文件，无需构建插件或手动压缩，详见「4.5 预压缩 GZIP（.gz 文件）」
 - 动态压缩方式：配置 `gzip.enable: true`，由服务端在响应时动态压缩
+
+### Q: 更新前端文件后需要重新生成 .gz 文件吗？
+
+需要。如果开启了启动时自动预压缩（`preCompressGzip.enable: true`），重启 goboot 即可自动为更新过的源文件重新生成 `.gz` 文件（已是最新的文件会自动跳过）；如果使用构建插件或手动方式生成，则需要重新执行压缩。
 
 ### Q: 如何通过环境变量或命令行参数注入配置？
 
