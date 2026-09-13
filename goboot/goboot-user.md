@@ -101,6 +101,7 @@ goboot:
     staticResources:
       enable: true
       disablePreCompressGzipHandler: false
+      disableIndexHtmlRedirect: false
       preCompressGzip:
         enable: false
         options:
@@ -442,6 +443,34 @@ find ./dist -type f ! -name "*.gz" -exec gzip -k -9 {} \;
 - 预压缩命中时不会再进行通用 GZIP 动态压缩
 - 源文件更新后，需要重新生成对应的 `.gz` 文件；开启启动时自动预压缩后，重启服务即可自动重新生成
 - 预压缩在应用启动完毕（banner、访问地址等信息打印完成）后延迟 5 秒异步执行，首次启动或文件较多时，压缩完成前的请求按未命中预压缩文件处理
+
+### 4.6 index.html 301 跳转控制
+
+默认情况下，访问以 `/index.html` 结尾的 URL 时，goboot 会返回 301 跳转到所在目录（这是 Go 标准库静态文件服务的 URL 规范化行为）：
+
+- `http://localhost:8080/spec/index.html` → 301 → `http://localhost:8080/spec/`
+- 页面内容可以正常显示，只是地址栏中的 `index.html` 被去掉
+
+如果你的网站依赖判断 `index.html`，可以通过 `disableIndexHtmlRedirect` 配置关闭这个自动重定向行为：
+
+```yaml
+goboot:
+  server:
+    staticResources:
+      enable: true
+      # 默认false：访问 xxx/index.html 时301跳转到 xxx/；true：直接返回内容，URL保持不变
+      disableIndexHtmlRedirect: true
+      items:
+        - urlPath: /
+          filePath: ./dist
+          tryFiles: index.html
+```
+
+**注意事项：**
+
+- 该开关仅作用于 `staticResources` 配置的静态资源路径（含 `tryFiles` 兜底），不影响文件服务器等其他功能的默认行为
+- 以目录形式访问（如 `/spec/`）不受影响，始终正常返回目录下的 `index.html`
+- 若浏览器缓存过之前的 301 跳转，修改配置后可能需要清理缓存（或使用无痕窗口）才能看到效果
 
 ---
 
@@ -1269,6 +1298,7 @@ goboot:
 | `goboot.server.bannerPath` | string | - | 自定义 Banner 文件路径 |
 | `goboot.server.staticResources.enable` | bool | `false` | 启用静态资源 |
 | `goboot.server.staticResources.disablePreCompressGzipHandler` | bool | `false` | 禁用预压缩 GZIP（.gz）文件响应 |
+| `goboot.server.staticResources.disableIndexHtmlRedirect` | bool | `false` | 禁用 index.html 结尾请求的 301 跳转 |
 | `goboot.server.staticResources.preCompressGzip.enable` | bool | `false` | 启动时自动预压缩生成 .gz 文件 |
 | `goboot.server.staticResources.preCompressGzip.options.minByteSize` | int | `0` | 最小压缩文件大小阈值（<0 使用默认值 256，0 不限制） |
 | `goboot.server.staticResources.preCompressGzip.options.removeIfLarger` | bool | `false` | 压缩文件比源文件大时删除 |
@@ -1337,6 +1367,10 @@ goboot:
 ### Q: Vue/React 项目刷新页面 404？
 
 需要在静态资源配置中添加 `tryFiles: index.html`，这是 SPA 单页应用所必需的。
+
+### Q: 访问 xxx/index.html 被自动跳转为 xxx/ 了？
+
+这是 Go 标准库静态文件服务默认的 301 规范化行为，页面可以正常访问。如果你的网站依赖判断 `index.html`，可配置 `staticResources.disableIndexHtmlRedirect: true` 关闭该行为，详见「4.6 index.html 301 跳转控制」。
 
 ### Q: 文件服务器预览 Office 旧格式（.doc/.xls/.ppt）失败？
 

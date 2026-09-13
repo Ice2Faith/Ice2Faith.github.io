@@ -838,6 +838,7 @@ func (api *Api) Login(resp *goboot.CtxResp,user * User) *goboot.CtxResp {
 - 结构：StaticResources 定义了静态资源的配置结构
     - Enable：是否启用静态资源
     - DisablePreCompressGzipHandler：是否禁用预压缩gzip(.gz)文件响应中间件（默认false即启用）
+    - DisableIndexHtmlRedirect：是否禁用index.html结尾请求的301跳转（默认false保持Go原生行为，true时直接200返回文件内容并保持URL不变）
     - PreCompressGzip：启动时自动预压缩配置（PreCompressGzipConfig），对静态资源目录生成同名.gz文件
     - Items：静态资源映射列表（[]StaticResourcesItem）
 - 结构：PreCompressGzipConfig 定义了启动时自动预压缩的配置结构
@@ -856,6 +857,11 @@ func (api *Api) Login(resp *goboot.CtxResp,user * User) *goboot.CtxResp {
     - 客户端支持gzip且存在对应的.gz文件时，直接返回.gz文件，并设置 Content-Encoding: gzip
     - 仅处理 GET/HEAD 请求，跳过 Range 请求，未命中.gz文件时交由后续静态资源处理
     - 该中间件注册在通用gzip动态压缩之前，由 StaticResources.DisablePreCompressGzipHandler 控制是否启用
+- 函数：IndexHtmlFileResponseMiddleware 负责生成index.html文件的直接响应中间件
+    - 由于net/http的特性，http.FileServer会将任何以/index.html结尾的请求301重定向到所在目录
+    - 该中间件拦截此类请求，直接返回文件内容（200），保持URL不变
+    - 该中间件注册在静态资源路由之前，由 StaticResources.DisableIndexHtmlRedirect 控制是否启用
+- 函数：ServeFileContent 使用 http.ServeContent 直接以文件内容响应请求，避免301重定向
 - 结构：FileServer 定义了文件服务器的配置结构
     - 包含了文件根目录、URL路径等信息
     - 以及多个禁用开关：禁用上传、禁用下载、禁用列出、禁用浏览、禁用Office转换等
@@ -1273,6 +1279,10 @@ staticResources:
       filePath: ../dist
       tryFiles: index.htm index.html
 ```
+- [注意]由于net/http的特性，直接访问 xxx/index.html 会被301重定向到去掉index.html的目录
+  - 例如访问 /spec/index.html 会被301重定向到 /spec/
+  - 若希望保持URL不变（直接200返回文件内容，与nginx/apache行为一致）
+  - 配置 disableIndexHtmlRedirect: true 开启即可
 - 下面是通用配置
   - 开始了gzip和cors
 ```yaml
