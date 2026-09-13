@@ -12,6 +12,12 @@
 - **GitHub**: https://github.com/Ice2Faith/i2f-turbo-java
 - **Gitee**: https://gitee.com/Ice2Faith/i2f-turbo-java
 
+## 模块文档目录
+
+> 详细介绍每个模块的内容
+
+- 详细目录：[menus.md](modules/menus.md)
+- 
 ## 技术栈
 
 | 技术                   | 版本         | 说明            |
@@ -60,12 +66,6 @@ i2f-springboot (SpringBoot自动装配层)
     ↑
 i2f-springcloud (微服务层)
 ```
-
-## 模块文档目录
-
-> 详细介绍每个模块的内容
-
-- 详细目录：[menus.md](modules/menus.md)
 
 ## 核心模块详情
 
