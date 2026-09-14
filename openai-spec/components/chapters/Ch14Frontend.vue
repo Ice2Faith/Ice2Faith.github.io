@@ -53,6 +53,9 @@
                     <Step title="工具审批对话框">
                         <p>tool_calls 触发审批弹窗：批准 / 拒绝 / 编辑参数后放行（HITL）；支持<b>批量全拒 / 批量允许 / 批量填充拒绝原因</b>。</p>
                     </Step>
+                    <Step title="浏览器端工具委托">
+                        <p>识别 <code>webjs_*</code> 委托工具调用后弹出单选 / 多选交互弹窗（<code>tool_call_id</code> 查重防重复打扰，多个待处理调用逐个轮转），用户选择（可含自定义输入）以 <code>webjsToolResults</code> 随下一轮请求回传——工具执行环境从服务端委托到浏览器（详见第 07 章）。</p>
+                    </Step>
                     <Step title="未 resolved 授权恢复">
                         <p>每轮发送前检查 <code>toolApprovalList.length &gt; 0 &amp;&amp; !toolApproval.resolved</code>，存在未完成审批则自动重新唤起弹窗，待授权调用不丢失。</p>
                     </Step>

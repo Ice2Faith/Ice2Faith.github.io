@@ -16,7 +16,7 @@
                     <p>SseEmitter 5 分钟长连接，逐 chunk 中继 LLM 输出；支持 <code>reasoning_content</code> 思考过程独立渲染与流式打字机效果。</p>
                 </Card>
                 <Card color="#0b7285" idx="B" title="工具调用" tagline="Function Calling">
-                    <p>18 个内置工具类经 <code>@Tool</code> 注解自动生成 JSON Schema 注入对话；工具契约并行执行，HITL 人工审批把关危险操作。</p>
+                    <p>26 个内置工具类经 <code>@Tool</code> 注解自动生成 JSON Schema 注入对话；工具契约并行执行，HITL 人工审批把关危险操作，支持浏览器端工具委托。</p>
                 </Card>
                 <Card color="#2b8a3e" idx="C" title="技能系统" tagline="Skills">
                     <p>基于文件系统的 <code>SKILL.md</code> 技能定义，30 秒热扫描；技能提示词与技能工具按需注入，支持脚本执行与资源读取。</p>

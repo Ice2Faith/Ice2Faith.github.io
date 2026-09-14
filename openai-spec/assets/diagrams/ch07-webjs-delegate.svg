@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 286" role="img" aria-label="BS 架构工具委托链">
+<defs>
+<marker id="ah7d-t" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#0b7285"/></marker>
+<marker id="ah7d-o" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#e8590c"/></marker>
+</defs>
+<text class="svg-lbl-sm" x="20" y="26" style="fill:#0b7285;letter-spacing:.18em;">DECLARE · 服务端占位声明 · 模型正常调用</text>
+<text class="svg-lbl-sm" x="20" y="168" style="fill:#e8590c;letter-spacing:.18em;">DELEGATE · 浏览器执行委托 · 服务端消费回填</text>
+<line class="svg-line svg-dash" x1="20" y1="142" x2="920" y2="142"/>
+<rect class="svg-node svg-node-teal" x="20" y="42" width="196" height="62" rx="3"/>
+<text class="svg-lbl" x="118" y="68" text-anchor="middle">WebjsTools 占位 @Tool</text>
+<text class="svg-lbl-sm" x="118" y="86" text-anchor="middle">服务端仅注册、不执行</text>
+<rect class="svg-node svg-node-teal" x="256" y="42" width="196" height="62" rx="3"/>
+<text class="svg-lbl" x="354" y="68" text-anchor="middle">Schema 照常注入</text>
+<text class="svg-lbl-sm" x="354" y="86" text-anchor="middle">tools 字段披露 LLM</text>
+<rect class="svg-node svg-node-teal" x="492" y="42" width="196" height="62" rx="3"/>
+<text class="svg-lbl" x="590" y="68" text-anchor="middle">LLM 返回 tool_calls</text>
+<text class="svg-lbl-sm" x="590" y="86" text-anchor="middle">webjs_form_radio · checkbox</text>
+<path class="svg-line-teal flow-anim" d="M216,73 L256,73" marker-end="url(#ah7d-t)"/>
+<path class="svg-line-teal flow-anim" d="M452,73 L492,73" marker-end="url(#ah7d-t)"/>
+<path class="svg-line-acc svg-dash" d="M590,104 C590,152 120,132 120,182" marker-end="url(#ah7d-o)"/>
+<rect class="svg-node svg-node-acc" x="20" y="184" width="196" height="62" rx="3"/>
+<text class="svg-lbl" x="118" y="210" text-anchor="middle">前端拦截识别</text>
+<text class="svg-lbl-sm" x="118" y="228" text-anchor="middle">后缀匹配 · tool_call_id 查重</text>
+<rect class="svg-node svg-node-acc" x="256" y="184" width="196" height="62" rx="3"/>
+<text class="svg-lbl" x="354" y="210" text-anchor="middle">HITL 交互弹窗</text>
+<text class="svg-lbl-sm" x="354" y="228" text-anchor="middle">radio / checkbox · 自定义输入</text>
+<rect class="svg-node svg-node-acc" x="492" y="184" width="196" height="62" rx="3"/>
+<text class="svg-lbl" x="590" y="210" text-anchor="middle">webjsToolResults 回传</text>
+<text class="svg-lbl-sm" x="590" y="228" text-anchor="middle">{tool_call_id, content}</text>
+<rect class="svg-node svg-node-dark" x="728" y="184" width="192" height="62" rx="3"/>
+<text class="svg-lbl-w" x="824" y="210" text-anchor="middle">服务端优先消费</text>
+<text class="svg-lbl-sm" x="824" y="228" text-anchor="middle" style="fill:#8fb3d6;">命中跳过 callTool · 回填</text>
+<path class="svg-line-acc flow-anim" d="M216,215 L256,215" marker-end="url(#ah7d-o)"/>
+<path class="svg-line-acc flow-anim" d="M452,215 L492,215" marker-end="url(#ah7d-o)"/>
+<path class="svg-line-acc flow-anim" d="M688,215 L728,215" marker-end="url(#ah7d-o)"/>
+<text class="svg-lbl-sm" x="20" y="272">命中 webjsToolResults 直接采用为工具结果；tool_calls → tool 消息协议两端一致，执行环境对模型完全透明</text>
+</svg>

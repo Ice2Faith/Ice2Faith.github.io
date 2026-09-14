@@ -1,8 +1,8 @@
 <template>
     <div>
-        <LeadText>整个 AI 子系统遵循 SpringBoot Starter 哲学：<b>引入依赖即自动装配</b>，全部能力默认开启，用 <code>@ConditionalOnExpression</code> 挂接配置开关，用 <code>@ConditionalOnMissingBean</code> 让渡自定义实现。</LeadText>
+        <LeadText>整个 AI 子系统遵循 SpringBoot Starter 哲学：<b>引入依赖即自动装配</b>，绝大多数能力默认开启，用 <code>@ConditionalOnExpression</code> 挂接配置开关，用 <code>@ConditionalOnMissingBean</code> 让渡自定义实现。</LeadText>
 
-        <PanelTitle title="配置开关一览（默认全部为 true）" />
+        <PanelTitle title="配置开关一览" />
         <SpecTable :headers="['开关', '装配类 / Bean', '控制范围']">
             <tr v-for="row in switchRows" :key="row[0]">
                 <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td>
@@ -15,6 +15,9 @@
                 <StepList>
                     <Step title="条件表达式门控">
                         <p><code>@ConditionalOnExpression("${ai.xxx.enable:true}")</code> —— 默认开启，配置即关。</p>
+                    </Step>
+                    <Step title="环境探测门控">
+                        <p>脚本执行类工具叠加自定义 <code>Condition</code>：探测本机解释器（node / python / powershell）真实可用后才装配——工具池只暴露「现在就能跑」的能力，探测结果进程内静态缓存。</p>
                     </Step>
                     <Step title="缺失才装配">
                         <p><code>@ConditionalOnMissingBean</code> —— 用户自实现同类型 Bean 时自动让渡，扩展不冲突。</p>
@@ -74,6 +77,10 @@
                     ['<code>ai.rags.memory.enable</code>', '<code>MemoryTools</code>', '记忆三件套工具（search / save / delete）'],
                     ['<code>ai.tools.session-record.enable</code>', '<code>SessionRecordTools</code>', '循环工程会话记录读写工具'],
                     ['<code>ai.tools.groovy.enable</code>', '<code>GroovyTools</code>', 'Groovy 脚本执行工具（<b>默认关闭</b>，需 Groovy 依赖）'],
+                    ['<code>ai.tools.webjs.enable</code>', '<code>WebjsTools</code>', '浏览器端委托工具（单选 / 多选表单弹窗，<b>默认开启</b>）'],
+                    ['<code>ai.tools.powershell.enable</code>', '<code>PowershellTools</code>', 'PowerShell 命令 / 脚本执行（<b>默认关闭</b>，仅 Windows 平台装配）'],
+                    ['<code>ai.tools.nodejs.enable</code>', '<code>NodejsTools</code>', 'Node.js 脚本执行（<b>默认关闭</b>，需探测到 node 运行环境）'],
+                    ['<code>ai.tools.python.enable</code>', '<code>PythonTools</code>', 'Python 脚本执行（<b>默认关闭</b>，需探测到 python / python3 运行环境）'],
                     ['<code>ai.tts.qwen.enable</code>', '<code>QwenTtsOpsController</code>', '千问语音合成代理端点']
                 ],
                 ragParamRows: [
