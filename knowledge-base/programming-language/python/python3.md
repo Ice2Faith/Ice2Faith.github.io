@@ -55,3 +55,8 @@ python3.9 get-pip.py
 ```shell script
 python3 -V
 ```
+- 配置国内镜像源
+```shell script
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn
+```
