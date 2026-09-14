@@ -294,7 +294,7 @@
 
 # 操作系统（operation-system）
 
-- 操作系统相关的文档，包括Linux和Windows系统的常用命令与配置
+- 操作系统相关的文档，包括Linux、Windows、Android系统的常用命令与配置
 
 ## Linux
 
@@ -345,6 +345,13 @@
 
 - 详细文档：[cygwin.md](operation-system/windows/cygwin.md)
   - Cygwin安装与配置，在Windows环境中使用Linux命令，包括环境变量配置、apt-cyg包管理
+
+## Android
+
+- Android操作系统相关工具，通过Termux获得Linux终端环境
+
+- 详细文档：[termux.md](operation-system/android/termux/termux.md)
+  - Termux入门，Android上的Linux终端环境，包括安装与权限授予、基础概念（用户/存储/权限/网络/软件包管理）、基础配置（ll别名/存储挂载/国内镜像源/后台保活/架构确认）、常用软件包安装（Java/Python/ffmpeg/pandoc）、运行Java程序与可执行程序
 
 ---
 
