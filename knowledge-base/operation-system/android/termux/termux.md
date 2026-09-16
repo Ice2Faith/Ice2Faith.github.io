@@ -308,4 +308,58 @@ chmod +x app.elf
 ./app.elf
 ```
 
+## 拓展
+
+- 如果你需要使用一些 Android 原生的功能
+- 但是又不想自己编写 App 调用原生接口
+- 比如调用 TTS、震动等
+- 那么 Termux:Api 这个 App 就是一个不错的选择
+- 使用这个需要两个步骤
+- 首先安装这个 App ，这个 App 负责执行具体的原生操作
+- 然后，需要在 termux 里面安装对应的 `termux-api` 软件包
+- 软件包提供一些列命令行工具，负责发起调用
+- 工作原理：是通过系统通知方式、唤起服务实现的
+- 而不是什么rpc/http方式
+
+### Termux:Api 软件安装
+
+- 官方地址
+
+```shell
+https://github.com/termux/termux-api/releases
+```
+
+- 下载安装即可
+
+```shell
+wget https://github.com/termux/termux-api/releases/download/v0.53.0/termux-api-app_v0.53.0+github.debug.apk
+```
+
+- 需要说明的一点是
+- 因为这个作为一个执行层、囊括了非常多的功能
+- 因此，他的权限申请时非常多的
+- 根据自己的实际情况基于权限即可
+
+### termux-api 软件包安装
+
+- 进入 termux 终端
+- 输入下面的命令，进行安装即可
+
+```shell
+pkg install termux-api
+```
+
+### 验证
+
+- 执行下面的命令，手机应该震动
+
+```shell
+termux-vibrate -d 100
+```
+
+- 执行下面的命令，手机应该进行 TTS 语音播报
+
+```shell
+termux-tts-speak hello
+```
 
