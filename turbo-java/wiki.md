@@ -12,6 +12,12 @@
 - **GitHub**: https://github.com/Ice2Faith/i2f-turbo-java
 - **Gitee**: https://gitee.com/Ice2Faith/i2f-turbo-java
 
+## 项目全景概览
+
+> 大致介绍项目全景地图
+
+- 详细目录：[readme.md](graph/readme.md)
+
 ## 模块文档目录
 
 > 详细介绍每个模块的内容
