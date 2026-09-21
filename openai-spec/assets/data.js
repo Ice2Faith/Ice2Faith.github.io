@@ -23,7 +23,7 @@ function getSpecData() {
         ],
         stats: [
             { count: 49, label: 'Java 源文件', color: '#e8590c' },
-            { count: 22, label: '内置工具类', color: '#0b7285' },
+            { count: 26, label: '内置工具类', color: '#0b7285' },
             { count: 16, label: '回显消息类型', color: '#2b8a3e' },
             { count: 8, label: 'REST 端点', color: '#1971c2' },
             { count: 22, label: '角色预设 (Role)', color: '#e67700' },

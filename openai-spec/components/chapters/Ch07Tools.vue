@@ -35,13 +35,51 @@
             </tr>
         </SpecTable>
 
-        <PanelTitle title="内置工具清单 — ops 层 16 类 + 条件装配 6 类" />
+        <PanelTitle title="内置工具清单 — ops 层 16 类 + 脚本 / 委托 4 类 + 条件装配 6 类" />
         <SpecTable :headers="['工具类', '代表工具', '能力', '关键标签']">
             <tr v-for="row in toolRows" :key="row[0]">
                 <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td><td v-html="row[3]"></td>
             </tr>
         </SpecTable>
-        <BodyText size="12.5px">※ 条件装配：随 <code>ai.skills.enable</code> / <code>ai.rags.enable</code> / <code>ai.rags.memory.enable</code> / <code>ai.tools.session-record.enable</code> / <code>ai.tools.loop-engineering.enable</code> / <code>ai.tools.groovy.enable</code> 开关注入，详见第 13 章。</BodyText>
+        <BodyText size="12.5px">※ 条件装配：随 <code>ai.skills.enable</code> / <code>ai.rags.enable</code> / <code>ai.rags.memory.enable</code> / <code>ai.tools.session-record.enable</code> / <code>ai.tools.loop-engineering.enable</code> / <code>ai.tools.groovy.enable</code> 开关注入；脚本 / 委托类装配策略：Webjs 默认开启，PowerShell（仅 Windows）/ Node.js / Python 默认关闭且需探测到可用运行环境——详见下文与第 13 章。</BodyText>
+
+        <PanelTitle title="BS 架构下的工具委托链 — 执行环境解耦" />
+        <BodyText size="13.5px">并非所有工具都该在服务端执行：有一类工具的本质是<b>向浏览器用户提问</b>——单选、多选表单等，真正的执行环境在浏览器。框架为此设计了一条<b>工具委托（Tool Delegation）链</b>：服务端只做<b>声明式占位</b>，浏览器化身「第二执行后端」完成实际执行，两端以 <code>tool_call_id</code> 精确对号，<b>模型全程无感知</b>。</BodyText>
+        <DiagramPanel src="assets/diagrams/ch07-webjs-delegate.svg" caption="BS 工具委托链 — 服务端占位声明 → 浏览器拦截执行 → 服务端消费回填" />
+        <StepList>
+            <Step title="服务端占位声明">
+                <p><code>WebjsTools</code> 以标准 <code>@Tool</code> 注册 <code>webjs_form_radio</code> / <code>webjs_form_checkbox</code>，Schema 照常注入 <code>tools</code> 字段；方法体直接抛 <code>UnsupportedOperationException</code>——「此工具须浏览器端执行」的显式契约。</p>
+            </Step>
+            <Step title="模型正常调用">
+                <p>在 LLM 视角下它与普通工具毫无区别，照常返回 <code>tool_calls</code>——工具披露与调用协议零改动。</p>
+            </Step>
+            <Step title="前端拦截查重">
+                <p>组装下一轮请求时，前端检查最后一条 assistant 消息的 <code>tool_calls</code>：按工具名末段识别委托工具，并以 <code>tool_call_id</code> 在 <code>webjsToolResults</code> 中查重——已有结果的调用不再弹窗，防止重复打扰。</p>
+            </Step>
+            <Step title="HITL 弹窗收集">
+                <p>命中未处理的委托调用即弹出对应 UI（单选 / 多选 + 自定义输入项）；多个待处理调用逐个轮转，每次处理完即重新发轮。用户确认或取消后，以 <code>{tool_call_id, content}</code> 落档。</p>
+            </Step>
+            <Step title="随请求回传">
+                <p><code>OpenAiOperateDto.webjsToolResults</code> 随下一轮 <code>/stream</code> 请求送达服务端——工具结果从浏览器「寄回」，<b>「取消」也是一种合法结果</b>（null / 空数组），模型据此继续推理。</p>
+            </Step>
+            <Step title="服务端优先消费">
+                <p>工具执行循环先按 <code>tool_call_id</code> 匹配 <code>webjsToolResults</code>：命中则直接以其 <code>content</code> 作为工具结果（<b>跳过 ToolManager.callTool</b>）；未命中才走正常执行。随后统一回填标准 <code>ToolMessage</code>，进入下一轮推理。</p>
+            </Step>
+        </StepList>
+        <Callout color="#0b7285" title="委托链的三个不变 — 为什么说这是「协议内的扩展」">
+            <p><b>模型协议不变</b>：tool_calls 入、tool 消息出，模型对执行环境零感知；<b>对号机制不变</b>：仍以 <code>tool_call_id</code> 关联契约与结果，与普通工具共用同一条回填链路；<b>兜底语义不变</b>：若前端未拦截（如旧客户端直连），占位方法抛出的异常会作为工具结果返回，模型据此换用其他方式——「不支持」本身也是可推理的信息。</p>
+        </Callout>
+
+        <PanelTitle title="多语言脚本执行 — 环境探测式条件装配" />
+        <BodyText size="13.5px">PowerShell / Node.js / Python 三类脚本执行工具共享同一套装配范式：<b>默认关闭 + 运行时环境探测</b>。只有开关显式开启、且本机探测到真实可用的解释器时，工具才会注册进工具池——模型不会看到「看起来存在却执行不了」的工具。探测结果静态缓存（双检锁 + AtomicReference 存值 / 存 null），每个进程只探测一次。</BodyText>
+        <SpecTable :headers="['工具类', '环境探测条件（默认关闭）', '执行方式']">
+            <tr v-for="row in scriptRows" :key="row[0]">
+                <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td>
+            </tr>
+        </SpecTable>
+        <Callout color="#e8590c" title="临时脚本托管执行 — 一次进程，用后即焚">
+            <p>脚本内容先落盘为随机命名临时文件（<code>nodejs-{uuid}.js</code> / <code>py-{uuid}.py</code> / 随机 ps1），经 <code>OsUtil.execCmdForResult</code> 以 3 分钟超时执行，<code>finally</code> 中删除——不残留脚本资产；Python 自动注入 <code># -*- coding: utf-8 -*-</code> 编码头，规避 Windows 默认字符集吞中文；工作目录统一经 <code>LocalFileTools.getFile()</code> 安全根校验，与本地文件工具共用同一条目录围栏；三者均携带 <code>EXECUTABLE</code> + <code>HUMAN</code> 标签，前端强制人工审批后才执行。</p>
+        </Callout>
 
         <PanelTitle title="AiTags — 工具的「危险品标签」体系" />
         <BodyText size="13.5px">每个工具可携带多维标签，供前端审批策略与后端过滤决策使用：</BodyText>
@@ -108,7 +146,9 @@
             CodeBlock: '../md/CodeBlock.vue',
             TagCloud: '../md/TagCloud.vue',
             TagBadge: '../md/TagBadge.vue',
-            PkgTree: '../md/PkgTree.vue'
+            PkgTree: '../md/PkgTree.vue',
+            StepList: '../md/StepList.vue',
+            Step: '../md/Step.vue'
         },
         data: function () {
             return {
@@ -153,7 +193,16 @@
                     ['<code>MemoryTools</code> ※', '<code>memory_search / save / delete</code>', '用户级记忆检索 / 保存 / 删除', '<span class="tag t-t">RAG</span>'],
                     ['<code>SessionRecordTools</code> ※', '<code>session_record_read / session_record_update</code>', '循环工程会话记录读写（request / plan / checklist / agent）', '<span class="tag t-g">AUTO</span>'],
                     ['<code>LoopEngineeringTools</code> ※', '循环工程提示词', '注入五步工程化工作流提示词（进度恢复 → 需求 → 方案 → 待办 → 实施）', '<span class="tag t-g">AUTO</span>'],
-                    ['<code>GroovyTools</code> ※', '<code>groovy_run_script</code>', 'Groovy 脚本动态执行（GroovyShell）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span><span class="tag t-t">SCRIPT</span>']
+                    ['<code>GroovyTools</code> ※', '<code>groovy_run_script</code>', 'Groovy 脚本动态执行（GroovyShell）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span><span class="tag t-t">SCRIPT</span>'],
+                    ['<code>WebjsTools</code>', '<code>webjs_form_radio / webjs_form_checkbox</code>', 'BS 工具委托：浏览器弹窗收集人类输入，结果经 <code>webjsToolResults</code> 回传（默认开启）', '<span class="tag t-g">AUTO</span><span class="tag t-b">WEBJS</span>'],
+                    ['<code>PowershellTools</code> ※', '<code>run_powershell_command / run_powershell_script</code>', 'PowerShell 命令 / 脚本执行（仅 Windows，环境探测）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>'],
+                    ['<code>NodejsTools</code> ※', '<code>run_nodejs_script</code>', 'Node.js 脚本临时托管执行（探测 node 环境）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>'],
+                    ['<code>PythonTools</code> ※', '<code>run_python_script</code>', 'Python 脚本临时托管执行（探测 python / python3 环境）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>']
+                ],
+                scriptRows: [
+                    ['<code>PowershellTools</code>', '<code>ai.tools.powershell.enable</code> + <b>仅 Windows 平台</b>（WindowsFormCondition）', '<code>run_powershell_command</code> 直接执行命令；<code>run_powershell_script</code> 写临时 ps1 以 <code>-File</code> 模式执行，规避命令行字符集问题'],
+                    ['<code>NodejsTools</code>', '<code>ai.tools.nodejs.enable</code> + 探测 <code>node -v</code> 输出特征（NodejsInstalledCondition）', '<code>run_nodejs_script</code> 写临时 js 文件（UTF-8）执行'],
+                    ['<code>PythonTools</code>', '<code>ai.tools.python.enable</code> + 探测 <code>python</code> / <code>python3</code> 的 <code>--version</code> 输出特征（PythonInstalledCondition）', '<code>run_python_script</code> 写临时 py 文件（自动附加 UTF-8 编码头）执行']
                 ],
                 ctxRows: [
                     ['<code>put(key, value)</code>', '写入上下文键值', 'OpenAiOpsController 将 <code>req</code> 放入上下文'],
