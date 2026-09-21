@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7fafc"/>
+      <stop offset="1" stop-color="#e9eff5"/>
+    </linearGradient>
+    <linearGradient id="layerJdk" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1e4e79"/><stop offset="1" stop-color="#2e6da4"/>
+    </linearGradient>
+    <linearGradient id="layerExt" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1f7a5a"/><stop offset="1" stop-color="#2fa572"/>
+    </linearGradient>
+    <linearGradient id="layerSpring" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5b3a94"/><stop offset="1" stop-color="#7e57c2"/>
+    </linearGradient>
+    <marker id="up" markerWidth="12" markerHeight="12" refX="6" refY="2" orient="auto">
+      <path d="M6,0 L11,11 L1,11 Z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="760" fill="url(#bg1)"/>
+  <text x="600" y="46" text-anchor="middle" font-size="30" font-weight="700" fill="#1f2d3d">i2f-turbo-java · 分层依赖架构全景</text>
+  <text x="600" y="76" text-anchor="middle" font-size="15" fill="#64748b">自底向上逐层构建：基础工具 → JDK 扩展 → Spring 适配 → 第三方扩展 → 自动装配 → 微服务治理</text>
+
+  <!-- layer stack, top = springcloud -->
+  <!-- each layer: rect y from top downward, dependency arrow points upward (upper depends on lower) -->
+  <g>
+    <!-- L6 i2f-springcloud -->
+    <rect x="180" y="110" width="840" height="82" rx="10" fill="url(#layerSpring)" opacity="0.95"/>
+    <text x="205" y="146" font-size="21" font-weight="700" fill="#fff">i2f-springcloud</text>
+    <text x="205" y="172" font-size="14" fill="#e9defc">微服务层 · 注册/网关/熔断/配置/追踪等 23 Starter</text>
+    <text x="1000" y="155" text-anchor="end" font-size="34" font-weight="700" fill="#ffffff" opacity="0.35">23</text>
+
+    <!-- L5 i2f-springboot -->
+    <rect x="180" y="206" width="840" height="82" rx="10" fill="url(#layerSpring)" opacity="0.82"/>
+    <text x="205" y="242" font-size="21" font-weight="700" fill="#fff">i2f-springboot</text>
+    <text x="205" y="268" font-size="14" fill="#e9defc">SpringBoot 自动装配层 · 开箱即用 Starter 37</text>
+    <text x="1000" y="251" text-anchor="end" font-size="34" font-weight="700" fill="#ffffff" opacity="0.35">37</text>
+
+    <!-- L4 i2f-extension -->
+    <rect x="180" y="302" width="840" height="82" rx="10" fill="url(#layerExt)" opacity="0.95"/>
+    <text x="205" y="338" font-size="21" font-weight="700" fill="#fff">i2f-extension</text>
+    <text x="205" y="364" font-size="14" fill="#dcfce7">第三方扩展层 · AI / DB / 文件系统 / 分词 / 字节码 等 86</text>
+    <text x="1000" y="347" text-anchor="end" font-size="34" font-weight="700" fill="#ffffff" opacity="0.35">86</text>
+
+    <!-- L3 i2f-spring -->
+    <rect x="180" y="398" width="840" height="82" rx="10" fill="url(#layerSpring)" opacity="0.66"/>
+    <text x="205" y="434" font-size="21" font-weight="700" fill="#fff">i2f-spring</text>
+    <text x="205" y="460" font-size="14" fill="#e9defc">Spring 适配层 · core/web/security/redis/swl 等 8</text>
+    <text x="1000" y="443" text-anchor="end" font-size="34" font-weight="700" fill="#ffffff" opacity="0.35">8</text>
+
+    <!-- L2 i2f-jdk-ext -->
+    <rect x="180" y="494" width="840" height="82" rx="10" fill="url(#layerJdk)" opacity="0.82"/>
+    <text x="205" y="530" font-size="21" font-weight="700" fill="#fff">i2f-jdk-ext</text>
+    <text x="205" y="556" font-size="14" fill="#dbeafe">JDK 扩展层 · all / swl / web</text>
+    <text x="1000" y="539" text-anchor="end" font-size="34" font-weight="700" fill="#ffffff" opacity="0.35">3</text>
+
+    <!-- L1 i2f-jdk -->
+    <rect x="180" y="590" width="840" height="96" rx="10" fill="url(#layerJdk)" opacity="0.98"/>
+    <text x="205" y="628" font-size="22" font-weight="700" fill="#fff">i2f-jdk</text>
+    <text x="205" y="656" font-size="14" fill="#dbeafe">Java 基础工具库 · 核心模块，std/impl 契约分离，无外部框架依赖</text>
+    <text x="205" y="676" font-size="13" fill="#bfdbfe">注解 / 数据结构 / IO / 数据库 / JDBC / 编解码 / 缓存 / 序列化 / 并发 / 图形 / 反射 …</text>
+    <text x="1000" y="648" text-anchor="end" font-size="40" font-weight="700" fill="#ffffff" opacity="0.4">152</text>
+  </g>
+
+  <!-- dependency arrows on the left -->
+  <g stroke="#94a3b8" stroke-width="2.5" marker-end="url(#up)" fill="none">
+    <line x1="120" y1="686" x2="120" y2="118"/>
+  </g>
+  <text x="98" y="410" font-size="14" fill="#475569" transform="rotate(-90 98 410)" text-anchor="middle" font-weight="600">上 层 依 赖 于 下 层</text>
+
+  <!-- side note -->
+  <rect x="1040" y="110" width="130" height="576" rx="10" fill="#fff" stroke="#cbd5e1"/>
+  <text x="1105" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#334155">独立构建</text>
+  <line x1="1055" y1="152" x2="1155" y2="152" stroke="#e2e8f0"/>
+  <text x="1105" y="182" text-anchor="middle" font-size="13" fill="#0f766e" font-weight="600">i2f-tools</text>
+  <text x="1105" y="202" text-anchor="middle" font-size="12" fill="#64748b">7 个工具</text>
+  <text x="1105" y="238" text-anchor="middle" font-size="13" fill="#0f766e" font-weight="600">i2f-spring-ai</text>
+  <text x="1105" y="258" text-anchor="middle" font-size="12" fill="#64748b">JDK17</text>
+  <text x="1105" y="276" text-anchor="middle" font-size="12" fill="#64748b">3 个模块</text>
+  <text x="1105" y="330" text-anchor="middle" font-size="12" fill="#94a3b8">根 POM 统一</text>
+  <text x="1105" y="350" text-anchor="middle" font-size="12" fill="#94a3b8">依赖版本治理</text>
+
+  <text x="600" y="726" text-anchor="middle" font-size="12" fill="#94a3b8">数据来源：.wiki/wiki.md · 数字为该组内含 pom.xml 的子模块统计</text>
+</svg>

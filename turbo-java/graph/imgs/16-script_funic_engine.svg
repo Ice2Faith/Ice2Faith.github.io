@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg16" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#faf9ff"/><stop offset="1" stop-color="#eceafc"/>
+    </linearGradient>
+    <marker id="ar16" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#5b3a94"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg16)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">嵌入式脚本引擎 · ANTLR4 / Funic / TinyScript</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">同一 ANTLR4 运行时承载多门 DSL · Funic 是 TinyScript 的增强替代 · 均以 AllMixins 为内建函数库 · 服务 XProc4J</text>
+
+  <!-- base runtime -->
+  <text x="40" y="106" font-size="15" font-weight="700" fill="#1e4e79">① 运行时基座</text>
+  <g font-size="12.5">
+    <rect x="40" y="116" width="380" height="70" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="58" y="142" font-weight="700" fill="#1e4e79">i2f-extension-antlr4</text>
+    <text x="58" y="162" fill="#475569">ANTLR4 解析引擎（文法→AST→执行）</text>
+    <text x="58" y="180" fill="#94a3b8">三门 DSL 共享此运行时</text>
+
+    <rect x="430" y="116" width="380" height="70" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="448" y="142" font-weight="700" fill="#1e4e79">i2f-jdk / i2f-script</text>
+    <text x="448" y="162" fill="#475569">脚本能力 JDK 侧基础抽象</text>
+    <text x="448" y="180" fill="#94a3b8">上下文 / 解析器约定</text>
+
+    <rect x="820" y="116" width="380" height="70" rx="10" fill="#eef2f7" stroke="#94a3b8"/>
+    <text x="838" y="142" font-weight="700" fill="#334155">i2f-mixins（内建函数库）</text>
+    <text x="838" y="162" fill="#475569">AllMixins 18 类 / 500+ 函数注入脚本</text>
+    <text x="838" y="180" fill="#94a3b8">Funic 反射注册 · TinyScript 接口继承</text>
+  </g>
+
+  <!-- three langs -->
+  <text x="40" y="222" font-size="15" font-weight="700" fill="#1f7a5a">② 三门 DSL（同基座 · 不同文法）</text>
+  <g font-size="12.5">
+    <!-- Funic -->
+    <rect x="40" y="232" width="380" height="230" rx="12" fill="#d7efe1" stroke="#1f7a5a" stroke-width="2.5"/>
+    <text x="60" y="260" font-size="17" font-weight="700" fill="#166a4c">Funic · Functional Logic</text>
+    <text x="60" y="282" fill="#166a4c" font-weight="700">TinyScript 的增强替代（推荐）</text>
+    <text x="60" y="306" fill="#475569">文法 Funic.g4 · 575 行 · 扩展名 .fic</text>
+    <text x="60" y="326" fill="#475569">入口 Funic.script(formula, context)</text>
+    <text x="60" y="346" fill="#475569">解析器 FunicResolver / Default / Sandbox</text>
+    <text x="60" y="370" fill="#334155" font-weight="700">特性：</text>
+    <text x="60" y="390" fill="#475569">Lambda · go/await 异步并发 · 自定义函数</text>
+    <text x="60" y="410" fill="#475569">import 导入 · 沙箱执行 · synchronized</text>
+    <text x="60" y="430" fill="#475569">for-range · as 类型转换 · === · ... 展开</text>
+    <text x="60" y="450" fill="#94a3b8">变量直接访问，无需 ${}</text>
+
+    <!-- TinyScript -->
+    <rect x="430" y="232" width="380" height="230" rx="12" fill="#eef2f7" stroke="#94a3b8" stroke-dasharray="6 4"/>
+    <text x="450" y="260" font-size="17" font-weight="700" fill="#475569">TinyScript（旧）</text>
+    <text x="450" y="282" fill="#b45309" font-weight="700">将被 Funic 逐步完全替代</text>
+    <text x="450" y="306" fill="#475569">文法 TinyScript.g4 · 397 行 · 扩展名 .tis</text>
+    <text x="450" y="326" fill="#475569">入口 TinyScript.script(formula, context)</text>
+    <text x="450" y="346" fill="#475569">解析器 TinyScriptResolver / Default</text>
+    <text x="450" y="370" fill="#334155" font-weight="700">特性：</text>
+    <text x="450" y="390" fill="#475569">嵌套函数 · 多语句 · 控制流 · 自定义函数</text>
+    <text x="450" y="410" fill="#475569">JSON 构建 · 管道调用链 · 模板字符串</text>
+    <text x="450" y="430" fill="#475569">多行字符串 · 解包 · debugger 调试</text>
+    <text x="450" y="450" fill="#94a3b8">函数经 TinyScriptFunctions extends AllMixins</text>
+
+    <!-- calculator demo -->
+    <rect x="820" y="232" width="380" height="230" rx="12" fill="#f3eefe" stroke="#8a63d2"/>
+    <text x="840" y="260" font-size="17" font-weight="700" fill="#5b3a94">antlr4-calculator</text>
+    <text x="840" y="282" fill="#5b3a94" font-weight="700">文法示例 / 教学样例</text>
+    <text x="840" y="306" fill="#475569">演示 ANTLR4 构建表达式求值</text>
+    <text x="840" y="330" fill="#334155" font-weight="700">同族还含（供 XProc4J 混编）：</text>
+    <text x="840" y="354" fill="#475569">· extension-groovy（JVM 脚本）</text>
+    <text x="840" y="374" fill="#475569">· extension-ognl（默认执行器）</text>
+    <text x="840" y="394" fill="#475569">· extension-velocity（模板）</text>
+    <text x="840" y="418" fill="#94a3b8">IDEA 插件：.fic / .tis 高亮 + 补全</text>
+    <text x="840" y="438" fill="#94a3b8">（i2f-jdbc-procedure-idea-plugin）</text>
+  </g>
+
+  <!-- evolution arrow -->
+  <text x="40" y="500" font-size="15" font-weight="700" fill="#1f2d3d">③ 演进与集成</text>
+  <g font-size="12.5">
+    <rect x="40" y="512" width="560" height="80" rx="10" fill="#fbf1e6" stroke="#d09a4a"/>
+    <text x="150" y="548" text-anchor="middle" font-weight="700" fill="#8a5a1f">TinyScript</text>
+    <text x="150" y="568" text-anchor="middle" fill="#6b4f2a">历史 DSL</text>
+    <line x1="230" y1="552" x2="410" y2="552" stroke="#1f7a5a" stroke-width="3" marker-end="url(#ar16)"/>
+    <text x="320" y="544" text-anchor="middle" fill="#1f7a5a" font-weight="700">增强 · 替代</text>
+    <text x="470" y="548" text-anchor="middle" font-weight="700" fill="#166a4c">Funic</text>
+    <text x="470" y="568" text-anchor="middle" fill="#6b4f2a">语法更简洁 + 特性更全</text>
+    <text x="58" y="580" fill="#94a3b8" font-size="11">一键切换（XProc4J 内）：xproc4j.enable-funic=true</text>
+
+    <rect x="620" y="512" width="580" height="80" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="638" y="538" font-weight="700" fill="#1f7a5a">在 XProc4J 中的角色（见 15 号图）</text>
+    <text x="638" y="560" fill="#475569">Funic / TinyScript / OGNL / Groovy / JavaScript 混编执行</text>
+    <text x="638" y="580" fill="#94a3b8">脚本引擎共享 AllMixins，作为存储过程的内建函数生态</text>
+  </g>
+
+  <!-- footer -->
+  <g font-size="12.5" fill="#475569">
+    <text x="40" y="636" font-size="15" font-weight="700" fill="#1f2d3d">读图要点</text>
+    <text x="40" y="662">· 一个基座三门 DSL：extension-antlr4 提供解析运行时，Funic/TinyScript/Calculator 各定义文法，共享同一引擎。</text>
+    <text x="40" y="686">· Funic 与 TinyScript 的函数能力均来自 i2f-mixins：Funic 用 MixinProxyFactory 反射注册，TinyScript 用接口继承。</text>
+    <text x="40" y="710">· 迁移策略：存量脚本仍可用 TinyScript，新项目直接上 Funic；XProc4J 侧通过配置开关整体替换执行器，业务无感。</text>
+    <text x="40" y="734">· 文法规模量化对比：Funic.g4 575 行 vs TinyScript.g4 397 行，反映特性覆盖面的扩张。</text>
+  </g>
+</svg>

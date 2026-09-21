@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg7" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fcfdff"/><stop offset="1" stop-color="#eaf0f8"/>
+    </linearGradient>
+    <marker id="a7" markerWidth="11" markerHeight="11" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#64748b"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg7)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">std / impl 契约分层设计范式</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">接口(-std) 定义契约、实现(-impl) 提供能力：单向依赖、可替换、按需引入 —— 项目核心架构约定</text>
+
+  <!-- Concept diagram -->
+  <g>
+    <rect x="60" y="110" width="230" height="120" rx="12" fill="#1e4e79"/>
+    <text x="175" y="150" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">xxx-std</text>
+    <text x="175" y="176" text-anchor="middle" font-size="13" fill="#bfdbfe">契约 / 接口 / 抽象</text>
+    <text x="175" y="200" text-anchor="middle" font-size="12" fill="#93c5fd">无实现依赖，被消费方引用</text>
+
+    <g stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a7)">
+      <line x1="290" y1="150" x2="420" y2="118"/>
+      <line x1="290" y1="170" x2="420" y2="170"/>
+      <line x1="290" y1="190" x2="420" y2="222"/>
+    </g>
+
+    <g font-size="12.5">
+      <rect x="425" y="96" width="200" height="44" rx="9" fill="#fff" stroke="#2e6da4"/><text x="440" y="123" fill="#1e4e79" font-weight="700">xxx-impl</text><text x="560" y="123" text-anchor="end" fill="#64748b">JDK 默认实现</text>
+      <rect x="425" y="148" width="200" height="44" rx="9" fill="#fff" stroke="#15803d"/><text x="440" y="175" fill="#166534" font-weight="700">extension 实现</text><text x="610" y="175" text-anchor="end" fill="#64748b">三方引擎</text>
+      <rect x="425" y="200" width="200" height="44" rx="9" fill="#fff" stroke="#5b3a94"/><text x="440" y="227" fill="#5b21b6" font-weight="700">spring 实现</text><text x="610" y="227" text-anchor="end" fill="#64748b">框架适配</text>
+    </g>
+    <text x="700" y="118" font-size="13" fill="#475569">同一契约可有多种实现，</text>
+    <text x="700" y="140" font-size="13" fill="#475569">运行时按需择一注入，</text>
+    <text x="700" y="162" font-size="13" fill="#475569">消费方仅依赖 -std，</text>
+    <text x="700" y="184" font-size="13" fill="#475569">实现彼此可无缝替换。</text>
+  </g>
+
+  <!-- full pairs -->
+  <rect x="60" y="286" width="1120" height="4" rx="2" fill="#cbd5e1"/>
+  <text x="60" y="322" font-size="17" font-weight="700" fill="#1e4e79">① i2f-jdk 内完整 std / impl 对（12 组）</text>
+  <g font-size="13" fill="#1e293b">
+    <g>
+      <rect x="60" y="338" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="74" y="363">clock 时钟</text>
+      <rect x="245" y="338" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="259" y="363">codec 编解码</text>
+      <rect x="430" y="338" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="444" y="363">compress 压缩</text>
+      <rect x="615" y="338" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="629" y="363">context 上下文</text>
+      <rect x="800" y="338" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="814" y="363">crypto 加密</text>
+      <rect x="985" y="338" width="195" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="999" y="363">database-metadata 元数据</text>
+    </g>
+    <g>
+      <rect x="60" y="386" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="74" y="411">environment 环境</text>
+      <rect x="245" y="386" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="259" y="411">image 图像</text>
+      <rect x="430" y="386" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="444" y="411">jdbc 数据库访问</text>
+      <rect x="615" y="386" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="629" y="411">serialize 序列化</text>
+      <rect x="800" y="386" width="175" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="814" y="411">tuple 元组</text>
+      <rect x="985" y="386" width="195" height="40" rx="8" fill="#fff" stroke="#bfdbfe"/><text x="999" y="411">uid 分布式 ID</text>
+    </g>
+  </g>
+
+  <!-- std-only -->
+  <text x="60" y="466" font-size="17" font-weight="700" fill="#166534">② 契约在 -std、实现分居它处（7 组）</text>
+  <g font-size="13" fill="#1e293b">
+    <rect x="60" y="482" width="270" height="46" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/><text x="74" y="502" font-weight="600">ai-std</text><text x="74" y="520" fill="#64748b">→ ai-rest-openai（OpenAI 实现）</text>
+    <rect x="345" y="482" width="270" height="46" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/><text x="359" y="502" font-weight="600">log-std</text><text x="359" y="520" fill="#64748b">→ i2f-log（门面实现）</text>
+    <rect x="630" y="482" width="270" height="46" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/><text x="644" y="502" font-weight="600">cache-std</text><text x="644" y="520" fill="#64748b">→ i2f-cache / redis-cache</text>
+    <rect x="915" y="482" width="265" height="46" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/><text x="929" y="502" font-weight="600">proxy-std</text><text x="929" y="520" fill="#64748b">→ proxy-handlers</text>
+
+    <rect x="60" y="536" width="270" height="46" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/><text x="74" y="556" font-weight="600">match-std</text><text x="74" y="574" fill="#64748b">→ i2f-match（匹配实现）</text>
+    <rect x="345" y="536" width="270" height="46" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/><text x="359" y="556" font-weight="600">browser-std</text><text x="359" y="574" fill="#64748b">→ browser-selenium / playwright</text>
+    <rect x="630" y="536" width="270" height="46" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/><text x="644" y="556" font-weight="600">swl-std</text><text x="644" y="574" fill="#64748b">→ 各模块 swl 适配</text>
+  </g>
+
+  <!-- extension cross-layer -->
+  <text x="60" y="628" font-size="17" font-weight="700" fill="#5b21b6">③ 扩展层「一契约多引擎」跨模块协作</text>
+  <g font-size="13">
+    <rect x="60" y="644" width="540" height="120" rx="10" fill="#faf5ff" stroke="#ddd6fe"/>
+    <text x="80" y="672" font-weight="700" fill="#6b21a8">IJsonSerializer 契约（serialize-std）</text>
+    <text x="80" y="700" fill="#475569">实现：jackson · gson · fastjson · fastjson2 · fory-json</text>
+    <text x="80" y="724" fill="#64748b">同一 JSON 契约并列多引擎，按偏好切换</text>
+    <text x="80" y="748" fill="#94a3b8" font-size="12">→ 详见 04-extension_integrations 图 JSON 域</text>
+
+    <rect x="620" y="644" width="560" height="120" rx="10" fill="#faf5ff" stroke="#ddd6fe"/>
+    <text x="640" y="672" font-weight="700" fill="#6b21a8">IRedisClient 契约（redis-api）</text>
+    <text x="640" y="700" fill="#475569">实现：jedis（JedisPool 路线） · spring-redis（i2f-spring）</text>
+    <text x="640" y="724" fill="#64748b">redis-cache 仅依赖契约，不绑定具体实现</text>
+    <text x="640" y="748" fill="#94a3b8" font-size="12">→ 一契约双实现，消费方面向 IRedisClient 编程</text>
+  </g>
+
+  <text x="620" y="800" text-anchor="middle" font-size="12" fill="#94a3b8">数据来源：i2f-jdk 目录 -std/-impl 实测 + .wiki/wiki.md 项目特性「接口-实现分离」</text>
+</svg>

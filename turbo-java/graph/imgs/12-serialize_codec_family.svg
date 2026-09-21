@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg12" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfefc"/><stop offset="1" stop-color="#e7f1ec"/>
+    </linearGradient>
+    <marker id="ar12" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#475569"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg12)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">序列化 / 编解码 · 契约族谱</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">i2f-serialize-std 定义接口继承链 · JSON 引擎「一契约多实现」并列 · codec 负责字节↔字符编解码</text>
+
+  <!-- ===== Left: contract inheritance chain ===== -->
+  <text x="40" y="106" font-size="15" font-weight="700" fill="#1f7a5a">① 契约继承链（i2f-serialize-std）：由粗到细逐层特化</text>
+  <g font-size="12.5">
+    <rect x="40" y="118" width="360" height="52" rx="8" fill="#eef2f7" stroke="#94a3b8"/>
+    <text x="58" y="140" font-weight="700" fill="#334155">ICodec</text>
+    <text x="58" y="160" fill="#64748b">最根：对象 ↔ 字节/字符串 编解码总契约</text>
+
+    <line x1="220" y1="170" x2="220" y2="184" stroke="#475569" stroke-width="2" marker-end="url(#ar12)"/>
+    <rect x="40" y="186" width="360" height="52" rx="8" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="58" y="208" font-weight="700" fill="#1f7a5a">ISerializer</text>
+    <text x="58" y="228" fill="#64748b">序列化语义：serialize / deserialize</text>
+
+    <line x1="220" y1="238" x2="220" y2="252" stroke="#475569" stroke-width="2" marker-end="url(#ar12)"/>
+    <rect x="40" y="254" width="360" height="52" rx="8" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="58" y="276" font-weight="700" fill="#1f7a5a">ITypeSerializer</text>
+    <text x="58" y="296" fill="#64748b">带类型信息：Class / Type / TypeRef 分派</text>
+
+    <line x1="220" y1="306" x2="220" y2="320" stroke="#475569" stroke-width="2" marker-end="url(#ar12)"/>
+    <rect x="40" y="322" width="360" height="52" rx="8" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="58" y="344" font-weight="700" fill="#1f7a5a">IStringTypeSerializer / IStringObjectSerializer</text>
+    <text x="58" y="364" fill="#64748b">输出为「字符串」的特化分支（文本协议）</text>
+
+    <line x1="220" y1="374" x2="220" y2="388" stroke="#475569" stroke-width="2" marker-end="url(#ar12)"/>
+    <rect x="40" y="390" width="360" height="60" rx="8" fill="#d7efe1" stroke="#1f7a5a" stroke-width="2"/>
+    <text x="58" y="414" font-weight="700" fill="#166a4c">IJsonSerializer</text>
+    <text x="58" y="434" fill="#64748b">JSON 契约：+ map2Bean / bean2Map / deserializeAsMap</text>
+  </g>
+
+  <!-- ===== Right: JSON engine zoo ===== -->
+  <text x="450" y="106" font-size="15" font-weight="700" fill="#c2410c">② IJsonSerializer 的多引擎并列实现（一契约多引擎）</text>
+  <g font-size="12.5">
+    <line x1="400" y1="420" x2="448" y2="150" stroke="#2fa572" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="405" y="270" font-size="11" fill="#1f7a5a" transform="rotate(-70 405 270)">implements</text>
+
+    <rect x="470" y="120" width="240" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="486" y="146" font-weight="700" fill="#c2410c">extension-jackson</text>
+    <text x="486" y="166" fill="#475569">Jackson ObjectMapper 适配</text>
+    <text x="486" y="184" fill="#94a3b8">事实标准 · 日期/Include 配置最全</text>
+    <text x="486" y="200" fill="#94a3b8">其余实现的对照基准</text>
+
+    <rect x="730" y="120" width="240" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="746" y="146" font-weight="700" fill="#c2410c">extension-gson</text>
+    <text x="746" y="166" fill="#475569">Google Gson 适配</text>
+    <text x="746" y="184" fill="#94a3b8">GsonJsonSerializer</text>
+    <text x="746" y="200" fill="#94a3b8">轻量、注解友好</text>
+
+    <rect x="990" y="120" width="220" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="1006" y="146" font-weight="700" fill="#c2410c">extension-fastjson</text>
+    <text x="1006" y="166" fill="#475569">阿里 fastjson v1 适配</text>
+    <text x="1006" y="184" fill="#94a3b8">高性能历史版本</text>
+
+    <rect x="470" y="220" width="240" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="486" y="246" font-weight="700" fill="#c2410c">extension-fastjson2</text>
+    <text x="486" y="266" fill="#475569">fastjson2 重写版适配</text>
+    <text x="486" y="284" fill="#94a3b8">安全与性能改进</text>
+
+    <rect x="730" y="220" width="240" height="86" rx="10" fill="#fef3e6" stroke="#e0913a" stroke-width="2"/>
+    <text x="746" y="246" font-weight="700" fill="#b45309">extension-fory-json</text>
+    <text x="746" y="266" fill="#475569">Apache Fory（Fury 继任）新引入</text>
+    <text x="746" y="284" fill="#94a3b8">单类参考实现 · 今日新增</text>
+    <text x="746" y="300" fill="#94a3b8">fory-json:1.7.4 provided</text>
+
+    <rect x="990" y="220" width="220" height="86" rx="10" fill="#eef2f7" stroke="#94a3b8"/>
+    <text x="1006" y="246" font-weight="700" fill="#334155">springboot-jackson-sensible</text>
+    <text x="1006" y="266" fill="#475569">Jackson「合理默认」装配</text>
+    <text x="1006" y="284" fill="#94a3b8">Starter 侧统一 JSON 行为</text>
+  </g>
+
+  <!-- ===== Bottom: codec + serialize-impl ===== -->
+  <text x="40" y="486" font-size="15" font-weight="700" fill="#1e4e79">③ 配套实现与编解码子族</text>
+  <g font-size="12.5">
+    <rect x="40" y="498" width="380" height="96" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="58" y="524" font-weight="700" fill="#1e4e79">i2f-serialize-impl</text>
+    <text x="58" y="544" fill="#475569">serialize-std 的 JDK 内置实现</text>
+    <text x="58" y="562" fill="#475569">Java 原生序列化 / 通用适配器</text>
+    <text x="58" y="580" fill="#94a3b8">StringBytesSerializerAdapter 桥接</text>
+
+    <rect x="440" y="498" width="360" height="96" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="458" y="524" font-weight="700" fill="#1e4e79">i2f-codec-std ↔ i2f-codec-impl</text>
+    <text x="458" y="544" fill="#475569">字节↔字符编码契约与实现</text>
+    <text x="458" y="562" fill="#475569">Base64 / Hex / 字符集等编解码</text>
+    <text x="458" y="580" fill="#94a3b8">面向「传输编码」，与序列化互补</text>
+
+    <rect x="820" y="498" width="390" height="96" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="838" y="524" font-weight="700" fill="#334155">契约族谱的设计意图</text>
+    <text x="838" y="546" fill="#475569">· 消费方仅依赖 std，JSON 引擎随需切换</text>
+    <text x="838" y="566" fill="#475569">· 引擎以 provided 引入，避免打包冲突</text>
+    <text x="838" y="586" fill="#475569">· 跨引擎语义差异需在读侧对齐（见文档）</text>
+  </g>
+
+  <!-- footer -->
+  <g font-size="12.5" fill="#475569">
+    <text x="40" y="640" font-size="15" font-weight="700" fill="#1f2d3d">读图要点</text>
+    <text x="40" y="666">· 一条继承链五层特化：ICodec → ISerializer → ITypeSerializer → IString*Serializer → IJsonSerializer，越向下越贴近具体文本协议。</text>
+    <text x="40" y="690">· 五个 JSON 引擎（jackson/gson/fastjson/fastjson2/fory-json）实现同一 IJsonSerializer，可平替；jackson 为对照基准。</text>
+    <text x="40" y="714">· serialize（对象↔结构）与 codec（字节↔字符编码）分工互补，分别有 std/impl 契约对。</text>
+    <text x="40" y="738">· 引擎配置默认值不一致（日期格式、null 处理、包含策略）是跨引擎切换的隐性差异点，详见各模块瑕疵章节。</text>
+  </g>
+</svg>

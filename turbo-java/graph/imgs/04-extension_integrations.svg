@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 800" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfefc"/><stop offset="1" stop-color="#e9f4ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="1240" height="800" fill="url(#bg4)"/>
+  <text x="620" y="44" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">i2f-extension · 第三方集成全景</text>
+  <text x="620" y="72" text-anchor="middle" font-size="14" fill="#64748b">86 个扩展模块，每个对应一种三方库/技术栈的二次封装，多数三方依赖以 provided 引入、运行时自备</text>
+
+  <g font-size="10.5">
+    <!-- row1 y=100 -->
+    <g><rect x="22" y="100" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="38" y="126" font-size="15" font-weight="700" fill="#166534">AI 大模型</text>
+      <text x="38" y="148" fill="#475569">ai-dashscope · ai-openai</text><text x="38" y="166" fill="#475569">ai-langchain4j8</text><text x="38" y="184" fill="#475569">ai-rag-sqlite</text></g>
+    <g><rect x="264" y="100" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="280" y="126" font-size="15" font-weight="700" fill="#166534">JSON 序列化</text>
+      <text x="280" y="148" fill="#475569">jackson · fastjson · fastjson2</text><text x="280" y="166" fill="#475569">gson · fory-json</text><text x="280" y="184" fill="#475569">（一契约 IJsonSerializer 多引擎）</text></g>
+    <g><rect x="506" y="100" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="522" y="126" font-size="15" font-weight="700" fill="#166534">数据库 / ORM / 搜索</text>
+      <text x="522" y="148" fill="#475569">mybatis · mongodb</text><text x="522" y="166" fill="#475569">elasticsearch</text></g>
+    <g><rect x="748" y="100" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="764" y="126" font-size="15" font-weight="700" fill="#166534">缓存 / Redis</text>
+      <text x="764" y="148" fill="#475569">redis-api（契约）</text><text x="764" y="166" fill="#475569">jedis · redis-cache · hazelcast</text></g>
+    <g><rect x="990" y="100" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="1006" y="126" font-size="15" font-weight="700" fill="#166534">文件系统</text>
+      <text x="1006" y="148" fill="#475569">filesystem-ftp / sftp / hdfs</text><text x="1006" y="166" fill="#475569">filesystem-minio</text><text x="1006" y="184" fill="#475569">filesystem-oss-aliyun / aws-s3</text></g>
+
+    <!-- row2 y=210 -->
+    <g><rect x="22" y="210" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="38" y="236" font-size="15" font-weight="700" fill="#166534">OSS 对象存储</text>
+      <text x="38" y="258" fill="#475569">oss-aliyun · oss-aws-s3</text><text x="38" y="276" fill="#475569">minio</text></g>
+    <g><rect x="264" y="210" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="280" y="236" font-size="15" font-weight="700" fill="#166534">网络通信</text>
+      <text x="280" y="258" fill="#475569">netty · okhttp</text><text x="280" y="276" fill="#475569">httpclient</text></g>
+    <g><rect x="506" y="210" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="522" y="236" font-size="15" font-weight="700" fill="#166534">文档 / Excel</text>
+      <text x="522" y="258" fill="#475569">document · easyexcel</text><text x="522" y="276" fill="#475569">fastexcel</text></g>
+    <g><rect x="748" y="210" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="764" y="236" font-size="15" font-weight="700" fill="#166534">模板引擎</text>
+      <text x="764" y="258" fill="#475569">freemarker · velocity</text><text x="764" y="276" fill="#475569">velocity-bindsql</text></g>
+    <g><rect x="990" y="210" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="1006" y="236" font-size="15" font-weight="700" fill="#166534">日志</text>
+      <text x="1006" y="258" fill="#475569">slf4j · slf4j-log</text><text x="1006" y="276" fill="#475569">log-slf4j</text></g>
+
+    <!-- row3 y=320 -->
+    <g><rect x="22" y="320" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="38" y="346" font-size="15" font-weight="700" fill="#166534">加密</text>
+      <text x="38" y="368" fill="#475569">jce-bc · jce-sm-antherd</text></g>
+    <g><rect x="264" y="320" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="280" y="346" font-size="15" font-weight="700" fill="#166534">图像处理</text>
+      <text x="280" y="368" fill="#475569">opencv · opencv-data</text><text x="280" y="386" fill="#475569">opencv-javacv · image-metadata</text></g>
+    <g><rect x="506" y="320" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="522" y="346" font-size="15" font-weight="700" fill="#166534">中文分词</text>
+      <text x="522" y="368" fill="#475569">tokenlization-ansj / hanlp</text><text x="522" y="386" fill="#475569">tokenlization-jcseg / jieba</text></g>
+    <g><rect x="748" y="320" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="764" y="346" font-size="15" font-weight="700" fill="#166534">语音 TTS / ASR</text>
+      <text x="764" y="368" fill="#475569">tts-espeak · tts-jacob</text><text x="764" y="386" fill="#475569">asr-vosk · ocr-tesseract</text></g>
+    <g><rect x="990" y="320" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="1006" y="346" font-size="15" font-weight="700" fill="#166534">压缩</text>
+      <text x="1006" y="368" fill="#475569">compress · 7zip · zip4j</text></g>
+
+    <!-- row4 y=430 -->
+    <g><rect x="22" y="430" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="38" y="456" font-size="15" font-weight="700" fill="#166534">定时任务</text>
+      <text x="38" y="478" fill="#475569">cron · quartz</text></g>
+    <g><rect x="264" y="430" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="280" y="456" font-size="15" font-weight="700" fill="#166534">脚本 / 语法</text>
+      <text x="280" y="478" fill="#475569">groovy · ognl</text><text x="280" y="496" fill="#475569">antlr4（TinyScript/Funic/计算）</text></g>
+    <g><rect x="506" y="430" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="522" y="456" font-size="15" font-weight="700" fill="#166534">字节码</text>
+      <text x="522" y="478" fill="#475569">javassist · cglib</text><text x="522" y="496" fill="#475569">agent-javassist · aspectj</text></g>
+    <g><rect x="748" y="430" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="764" y="456" font-size="15" font-weight="700" fill="#166534">浏览器自动化</text>
+      <text x="764" y="478" fill="#475569">browser-selenium</text><text x="764" y="496" fill="#475569">browser-playwright</text></g>
+    <g><rect x="990" y="430" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="1006" y="456" font-size="15" font-weight="700" fill="#166534">二维码 / 验证码 / 邮件</text>
+      <text x="1006" y="478" fill="#475569">qrcode · verifycode</text><text x="1006" y="496" fill="#475569">email · gif</text></g>
+
+    <!-- row5 y=540 -->
+    <g><rect x="22" y="540" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="38" y="566" font-size="15" font-weight="700" fill="#166534">分布式协调</text>
+      <text x="38" y="588" fill="#475569">zookeeper · hazelcast</text><text x="38" y="606" fill="#475569">canal</text></g>
+    <g><rect x="264" y="540" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="280" y="566" font-size="15" font-weight="700" fill="#166534">数据同步 / 流计算</text>
+      <text x="280" y="588" fill="#475569">jdbc-procedure-datax</text><text x="280" y="606" fill="#475569">jdbc-procedure-flink</text></g>
+    <g><rect x="506" y="540" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="522" y="566" font-size="15" font-weight="700" fill="#166534">存储过程编排</text>
+      <text x="522" y="588" fill="#475569">xproc4j</text><text x="522" y="606" fill="#475569">（XML JDBC 过程框架）</text></g>
+    <g><rect x="748" y="540" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="764" y="566" font-size="15" font-weight="700" fill="#166534">逆向工程</text>
+      <text x="764" y="588" fill="#475569">reverse-engineer-generator</text><text x="764" y="606" fill="#475569">sqlparser</text></g>
+    <g><rect x="990" y="540" width="230" height="98" rx="9" fill="#fff" stroke="#bbf7d0"/><text x="1006" y="566" font-size="15" font-weight="700" fill="#166534">其他扩展</text>
+      <text x="1006" y="588" fill="#475569">ftp · sftp · hdfs · swl</text><text x="1006" y="606" fill="#475569">antlr4-calculator/funic/…</text></g>
+
+    <!-- row6 aggregate strip -->
+    <g><rect x="22" y="650" width="1198" height="80" rx="10" fill="#ecfdf5" stroke="#86efac"/>
+      <text x="42" y="682" font-size="16" font-weight="700" fill="#166534">聚合与契约</text>
+      <text x="42" y="708" fill="#334155">i2f-extension-all（全量 fat jar 聚合，含 assembly）· i2f-extension-swl（SWL 扩展聚合）</text>
+      <text x="720" y="682" fill="#166534" font-weight="600">设计范式：std/impl 契约分离贯穿扩展层</text>
+      <text x="720" y="708" fill="#475569">如 redis-api ↔ jedis / spring-redis；serialize-std ↔ jackson/gson/fory/fastjson</text></g>
+  </g>
+  <text x="620" y="778" text-anchor="middle" font-size="12" fill="#94a3b8">数据来源：.wiki/wiki.md 第 3 节 i2f-extension 功能分类表</text>
+</svg>

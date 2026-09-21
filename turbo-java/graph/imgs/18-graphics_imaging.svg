@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg18" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfcfe"/><stop offset="1" stop-color="#e6eef5"/>
+    </linearGradient>
+    <marker id="ar18" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#0e7490"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg18)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">图形学与图像处理 · 纯 Java 渲染引擎 + 视觉扩展</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">graphics-2d 几何基础 → graphics-3d 完整渲染管线 · image-std/impl 图像抽象 · extension 侧 OpenCV/OCR/二维码等视觉能力</text>
+
+  <!-- 2D -->
+  <text x="40" y="104" font-size="15" font-weight="700" fill="#1e4e79">① 二维图形学 i2f-graphics-2d（纯 Java AWT · 零依赖）</text>
+  <g font-size="12">
+    <rect x="40" y="114" width="1160" height="92" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="58" y="140" font-weight="700" fill="#1e4e79">几何原语</text>
+    <text x="150" y="140" fill="#475569">Point / Vector / Line / Flat / Scope / Size · 贝塞尔曲线</text>
+    <text x="58" y="164" font-weight="700" fill="#1e4e79">分析/变换</text>
+    <text x="150" y="164" fill="#475569">多边形(面积/顺逆时针/凸凹) · 4 种坐标投影 · 11 种仿射变换(平移/缩放/旋转/错切/反射/任意点线)</text>
+    <text x="58" y="188" font-weight="700" fill="#1e4e79">绘制器</text>
+    <text x="150" y="188" fill="#475569">函数图像 FunctionPainter(直角/极坐标/参数方程 3 模式) · Swing 可视化组件 · 分形樱花树生成器</text>
+  </g>
+
+  <!-- 3D -->
+  <text x="40" y="234" font-size="15" font-weight="700" fill="#0e7490">② 三维引擎 i2f-graphics-3d（构建于 2D 之上 · 完整渲染管线）</text>
+  <g font-size="12">
+    <rect x="40" y="244" width="1160" height="86" rx="10" fill="#e0f2f7" stroke="#0e7490"/>
+    <!-- pipeline -->
+    <text x="58" y="268" font-weight="700" fill="#155e75">渲染管线</text>
+    <text x="150" y="268" fill="#475569">变换链 → 背面剔除 → Phong 光照/材质 → 三维投影 → 二维显示</text>
+    <text x="58" y="292" font-weight="700" fill="#155e75">建模/投影</text>
+    <text x="150" y="292" fill="#475569">12 几何体(球/柱/锥/环/正多面体/旋转体/分形) · 10 投影(三视图/正交/斜投影/透视) · 25+ 三维变换</text>
+    <text x="58" y="316" font-weight="700" fill="#155e75">光照/交互</text>
+    <text x="150" y="316" fill="#475569">Phong(漫反射+镜面+环境光+衰减) · 20+ 材质(金银宝石金属) · 散点三角化 · Alt/Ctrl/Shift+滚轮交互视窗</text>
+  </g>
+
+  <!-- entry points -->
+  <g font-size="12.5">
+    <rect x="40" y="344" width="560" height="52" rx="10" fill="#ffffff" stroke="#cfd8e3"/>
+    <text x="58" y="366" font-weight="700" fill="#334155">核心入口</text>
+    <text x="58" y="386" fill="#475569">D3Painter(三维) · FunctionPainter(函数图像) · D2Frame / D3Frame(窗口)</text>
+    <rect x="620" y="344" width="580" height="52" rx="10" fill="#ffffff" stroke="#cfd8e3"/>
+    <text x="638" y="366" font-weight="700" fill="#334155">配套 i2f-graphics</text>
+    <text x="638" y="386" fill="#475569">图形学公共基础（颜色/几何共享类型），2D/3D 之下的地基</text>
+  </g>
+
+  <!-- image + color -->
+  <text x="40" y="432" font-size="15" font-weight="700" fill="#1f7a5a">③ 图像抽象与颜色（jdk 契约层）</text>
+  <g font-size="12">
+    <rect x="40" y="442" width="300" height="80" rx="10" fill="#d7efe1" stroke="#1f7a5a" stroke-width="2"/>
+    <text x="58" y="470" font-weight="700" fill="#166a4c">image-std ↔ image-impl</text>
+    <text x="58" y="492" fill="#475569">图像读写/处理契约 + 实现</text>
+    <text x="58" y="510" fill="#94a3b8">标准库侧图像能力</text>
+
+    <rect x="350" y="442" width="250" height="80" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="368" y="470" font-weight="700" fill="#1f7a5a">i2f-color</text>
+    <text x="368" y="492" fill="#475569">颜色体系与工具</text>
+    <text x="368" y="510" fill="#94a3b8">图形/图像共用</text>
+
+    <rect x="610" y="442" width="230" height="80" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="628" y="470" font-weight="700" fill="#1f7a5a">i2f-verifycode</text>
+    <text x="628" y="492" fill="#475569">验证码生成（jdk）</text>
+    <text x="628" y="510" fill="#94a3b8">图形绘制应用</text>
+
+    <rect x="850" y="442" width="350" height="80" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="868" y="470" font-weight="700" fill="#1f7a5a">i2f-robot</text>
+    <text x="868" y="492" fill="#475569">屏幕/桌面自动化（截图/键鼠）</text>
+    <text x="868" y="510" fill="#94a3b8">连接图形与原生输入</text>
+  </g>
+
+  <!-- extension vision -->
+  <text x="40" y="556" font-size="15" font-weight="700" fill="#c2410c">④ 视觉/多媒体扩展（i2f-extension · provided 引入三方引擎）</text>
+  <g font-size="12">
+    <rect x="40" y="566" width="290" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="56" y="592" font-weight="700" fill="#c2410c">OpenCV 三件套</text>
+    <text x="56" y="612" fill="#475569">extension-opencv</text>
+    <text x="56" y="630" fill="#475569">extension-opencv-data</text>
+    <text x="56" y="646" fill="#475569">extension-opencv-javacv</text>
+
+    <rect x="340" y="566" width="220" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="356" y="592" font-weight="700" fill="#c2410c">OCR</text>
+    <text x="356" y="612" fill="#475569">extension-ocr-tesseract</text>
+    <text x="356" y="630" fill="#94a3b8">文字识别</text>
+
+    <rect x="570" y="566" width="220" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="586" y="592" font-weight="700" fill="#c2410c">二维码 / GIF</text>
+    <text x="586" y="612" fill="#475569">extension-qrcode</text>
+    <text x="586" y="630" fill="#475569">extension-gif</text>
+
+    <rect x="800" y="566" width="200" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="816" y="592" font-weight="700" fill="#c2410c">图像元数据</text>
+    <text x="816" y="612" fill="#475569">image-metadata</text>
+    <text x="816" y="630" fill="#94a3b8">EXIF 等</text>
+
+    <rect x="1010" y="566" width="190" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="1026" y="592" font-weight="700" fill="#c2410c">验证码</text>
+    <text x="1026" y="612" fill="#475569">extension-verifycode</text>
+    <text x="1026" y="630" fill="#94a3b8">扩展侧实现</text>
+  </g>
+
+  <!-- footer -->
+  <g font-size="12.5" fill="#475569">
+    <text x="40" y="690" font-size="15" font-weight="700" fill="#1f2d3d">读图要点</text>
+    <text x="40" y="716">· 两条技术路线：jdk 侧 graphics/image 是纯 Java 自研渲染（零依赖、可学习计算机图形学）；extension 侧接入 OpenCV/Tesseract 等工业引擎。</text>
+    <text x="40" y="740">· 递进关系：graphics(基础) → graphics-2d(几何/变换) → graphics-3d(渲染管线)，后者构建于前者之上。</text>
+    <text x="40" y="764">· 图像能力亦遵循 std/impl 契约分层（image-std ↔ image-impl），与全仓范式一致。</text>
+  </g>
+</svg>

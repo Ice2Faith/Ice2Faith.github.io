@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 780" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfdff"/><stop offset="1" stop-color="#eaf0f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1240" height="780" fill="url(#bg3)"/>
+  <text x="620" y="44" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">i2f-jdk · 核心能力分类全景</text>
+  <text x="620" y="72" text-anchor="middle" font-size="14" fill="#64748b">152 个子模块按能力域归类的地图；命名遵循 {功能}-std（接口）/ {功能}-impl（实现）契约分离</text>
+
+  <!-- legend -->
+  <g font-size="12" fill="#475569">
+    <rect x="150" y="86" width="14" height="14" rx="3" fill="#2e6da4"/><text x="170" y="98">数据/IO</text>
+    <rect x="270" y="86" width="14" height="14" rx="3" fill="#0f766e"/><text x="290" y="98">数据访问</text>
+    <rect x="400" y="86" width="14" height="14" rx="3" fill="#4338ca"/><text x="420" y="98">安全/编码</text>
+    <rect x="540" y="86" width="14" height="14" rx="3" fill="#15803d"/><text x="560" y="98">并发/运行时</text>
+    <rect x="700" y="86" width="14" height="14" rx="3" fill="#b45309"/><text x="720" y="98">文本/图形</text>
+    <rect x="840" y="86" width="14" height="14" rx="3" fill="#7e57c2"/><text x="860" y="98">元编程/抽象</text>
+    <rect x="1020" y="86" width="14" height="14" rx="3" fill="#0891b2"/><text x="1040" y="98">网络/AI/其他</text>
+  </g>
+
+  <!-- tiles: 6 cols x 5 rows, tile 190x118, gapx=10, x0=25; gapy=12, y0=112 -->
+  <g font-size="11">
+    <!-- row1 -->
+    <g><rect x="25" y="112" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="25" y="112" width="190" height="7" rx="3" fill="#2e6da4"/>
+      <text x="40" y="140" font-size="15" font-weight="700" fill="#1f2d3d">注解体系</text>
+      <text x="40" y="164" fill="#475569">annotations</text><text x="40" y="182" fill="#475569">-api / -core / -db</text><text x="40" y="200" fill="#475569">-ext</text></g>
+    <g><rect x="225" y="112" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="225" y="112" width="190" height="7" rx="3" fill="#2e6da4"/>
+      <text x="240" y="140" font-size="15" font-weight="700" fill="#1f2d3d">数据结构</text>
+      <text x="240" y="164" fill="#475569">array / tuple-std/-impl</text><text x="240" y="182" fill="#475569">iterator / container</text><text x="240" y="200" fill="#475569">reference / bytes</text></g>
+    <g><rect x="425" y="112" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="425" y="112" width="190" height="7" rx="3" fill="#2e6da4"/>
+      <text x="440" y="140" font-size="15" font-weight="700" fill="#1f2d3d">IO 体系</text>
+      <text x="440" y="164" fill="#475569">io-file / io-stream</text><text x="440" y="182" fill="#475569">io-filesystem</text><text x="440" y="200" fill="#475569">（统一文件系统抽象）</text></g>
+    <g><rect x="625" y="112" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="625" y="112" width="190" height="7" rx="3" fill="#0f766e"/>
+      <text x="640" y="140" font-size="15" font-weight="700" fill="#1f2d3d">数据库元数据</text>
+      <text x="640" y="164" fill="#475569">database / -dialect</text><text x="640" y="182" fill="#475569">-type / -metadata-*</text><text x="640" y="200" fill="#475569">（34 种库 + 逆向工程）</text></g>
+    <g><rect x="825" y="112" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="825" y="112" width="190" height="7" rx="3" fill="#0f766e"/>
+      <text x="840" y="140" font-size="15" font-weight="700" fill="#1f2d3d">JDBC 全流程</text>
+      <text x="840" y="164" fill="#475569">jdbc-std / -impl / -data</text><text x="840" y="182" fill="#475569">jdbc-bql / -proxy</text><text x="840" y="200" fill="#475569">jdbc-procedure</text></g>
+    <g><rect x="1025" y="112" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="1025" y="112" width="190" height="7" rx="3" fill="#0f766e"/>
+      <text x="1040" y="140" font-size="15" font-weight="700" fill="#1f2d3d">SQL 绑定/查询</text>
+      <text x="1040" y="164" fill="#475569">bindsql / -page</text><text x="1040" y="182" fill="#475569">-stringify / bql</text><text x="1040" y="200" fill="#475569">（四层抽象 + Wrapper）</text></g>
+
+    <!-- row2 -->
+    <g><rect x="25" y="242" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="25" y="242" width="190" height="7" rx="3" fill="#4338ca"/>
+      <text x="40" y="270" font-size="15" font-weight="700" fill="#1f2d3d">编解码/加密</text>
+      <text x="40" y="294" fill="#475569">codec-std / -impl</text><text x="40" y="312" fill="#475569">crypto-std / -impl</text><text x="40" y="330" fill="#475569">sm-crypto / hash</text></g>
+    <g><rect x="225" y="242" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="225" y="242" width="190" height="7" rx="3" fill="#4338ca"/>
+      <text x="240" y="270" font-size="15" font-weight="700" fill="#1f2d3d">缓存</text>
+      <text x="240" y="294" fill="#475569">cache / cache-std</text><text x="240" y="312" fill="#475569">lru-cache / lru-map</text></g>
+    <g><rect x="425" y="242" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="425" y="242" width="190" height="7" rx="3" fill="#4338ca"/>
+      <text x="440" y="270" font-size="15" font-weight="700" fill="#1f2d3d">序列化 / 压缩</text>
+      <text x="440" y="294" fill="#475569">serialize-std / -impl</text><text x="440" y="312" fill="#475569">compress-std / -impl</text></g>
+    <g><rect x="625" y="242" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="625" y="242" width="190" height="7" rx="3" fill="#15803d"/>
+      <text x="640" y="270" font-size="15" font-weight="700" fill="#1f2d3d">并发 / 线程</text>
+      <text x="640" y="294" fill="#475569">thread / atomic</text><text x="640" y="312" fill="#475569">lock / pool / limit</text></g>
+    <g><rect x="825" y="242" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="825" y="242" width="190" height="7" rx="3" fill="#15803d"/>
+      <text x="840" y="270" font-size="15" font-weight="700" fill="#1f2d3d">日期时间 / 时钟</text>
+      <text x="840" y="294" fill="#475569">datetime</text><text x="840" y="312" fill="#475569">clock-std / clock-impl</text></g>
+    <g><rect x="1025" y="242" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="1025" y="242" width="190" height="7" rx="3" fill="#b45309"/>
+      <text x="1040" y="270" font-size="15" font-weight="700" fill="#1f2d3d">文本 / 国际化</text>
+      <text x="1040" y="294" fill="#475569">text / i18n</text><text x="1040" y="312" fill="#475569">translate / -zh2pinyin</text></g>
+
+    <!-- row3 -->
+    <g><rect x="25" y="372" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="25" y="372" width="190" height="7" rx="3" fill="#b45309"/>
+      <text x="40" y="400" font-size="15" font-weight="700" fill="#1f2d3d">图形图像</text>
+      <text x="40" y="424" fill="#475569">graphics / -2d / -3d</text><text x="40" y="442" fill="#475569">image-std / -impl</text><text x="40" y="460" fill="#475569">color / qrcode</text></g>
+    <g><rect x="225" y="372" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="225" y="372" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="240" y="400" font-size="15" font-weight="700" fill="#1f2d3d">反射 / 编译</text>
+      <text x="240" y="424" fill="#475569">reflect / compiler</text><text x="240" y="442" fill="#475569">script / javacode-graph</text></g>
+    <g><rect x="425" y="372" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="425" y="372" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="440" y="400" font-size="15" font-weight="700" fill="#1f2d3d">函数式 / Lambda</text>
+      <text x="440" y="424" fill="#475569">functional / -lambda</text><text x="440" y="442" fill="#475569">lambda-core / invokable</text></g>
+    <g><rect x="625" y="372" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="625" y="372" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="640" y="400" font-size="15" font-weight="700" fill="#1f2d3d">Mixin 混入体系</text>
+      <text x="640" y="424" fill="#475569">mixins</text><text x="640" y="442" fill="#475569">500+ 内建函数</text><text x="640" y="460" fill="#475569">脚本引擎函数库核心</text></g>
+    <g><rect x="825" y="372" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="825" y="372" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="840" y="400" font-size="15" font-weight="700" fill="#1f2d3d">上下文 / 环境</text>
+      <text x="840" y="424" fill="#475569">context-std / -impl</text><text x="840" y="442" fill="#475569">environment-std / -impl</text><text x="840" y="460" fill="#475569">IContext / IEnvironment</text></g>
+    <g><rect x="1025" y="372" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="1025" y="372" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="1040" y="400" font-size="15" font-weight="700" fill="#1f2d3d">事件 / 生命周期</text>
+      <text x="1040" y="424" fill="#475569">event / lifecycle</text><text x="1040" y="442" fill="#475569">detegate / mutator</text></g>
+
+    <!-- row4 -->
+    <g><rect x="25" y="502" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="25" y="502" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="40" y="530" font-size="15" font-weight="700" fill="#1f2d3d">日志</text>
+      <text x="40" y="554" fill="#475569">log-std / log</text><text x="40" y="572" fill="#475569">门面 + SPI 双重扩展</text></g>
+    <g><rect x="225" y="502" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="225" y="502" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="240" y="530" font-size="15" font-weight="700" fill="#1f2d3d">认证 / 安全</text>
+      <text x="240" y="554" fill="#475569">authentication</text><text x="240" y="572" fill="#475569">firewall / otpauth</text></g>
+    <g><rect x="425" y="502" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="425" y="502" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="440" y="530" font-size="15" font-weight="700" fill="#1f2d3d">校验 / 数学</text>
+      <text x="440" y="554" fill="#475569">check / check-filter</text><text x="440" y="572" fill="#475569">math / algo</text></g>
+    <g><rect x="625" y="502" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="625" y="502" width="190" height="7" rx="3" fill="#7e57c2"/>
+      <text x="640" y="530" font-size="15" font-weight="700" fill="#1f2d3d">页面 / 抽象基础</text>
+      <text x="640" y="554" fill="#475569">page / rowset</text><text x="640" y="572" fill="#475569">design-pattern / swl</text></g>
+    <g><rect x="825" y="502" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="825" y="502" width="190" height="7" rx="3" fill="#0891b2"/>
+      <text x="840" y="530" font-size="15" font-weight="700" fill="#1f2d3d">网络 / HTTP / 代理</text>
+      <text x="840" y="554" fill="#475569">network</text><text x="840" y="572" fill="#475569">http-proxy / proxy-*</text></g>
+    <g><rect x="1025" y="502" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="1025" y="502" width="190" height="7" rx="3" fill="#0891b2"/>
+      <text x="1040" y="530" font-size="15" font-weight="700" fill="#1f2d3d">原生调用</text>
+      <text x="1040" y="554" fill="#475569">native-core</text><text x="1040" y="572" fill="#475569">native-windows(-easyx)</text></g>
+
+    <!-- row5 -->
+    <g><rect x="25" y="632" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="25" y="632" width="190" height="7" rx="3" fill="#0891b2"/>
+      <text x="40" y="660" font-size="15" font-weight="700" fill="#1f2d3d">AI 标准 / 实现</text>
+      <text x="40" y="684" fill="#475569">ai-std（平台无关）</text><text x="40" y="702" fill="#475569">ai-rest-openai</text></g>
+    <g><rect x="225" y="632" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="225" y="632" width="190" height="7" rx="3" fill="#0891b2"/>
+      <text x="240" y="660" font-size="15" font-weight="700" fill="#1f2d3d">启动器 / 追踪</text>
+      <text x="240" y="684" fill="#475569">launcher</text><text x="240" y="702" fill="#475569">trace / trace-mdc</text></g>
+    <g><rect x="425" y="632" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="425" y="632" width="190" height="7" rx="3" fill="#0891b2"/>
+      <text x="440" y="660" font-size="15" font-weight="700" fill="#1f2d3d">运行时 / 系统</text>
+      <text x="440" y="684" fill="#475569">jvm / os / agent</text><text x="440" y="702" fill="#475569">unsafe / spi</text></g>
+    <g><rect x="625" y="632" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="625" y="632" width="190" height="7" rx="3" fill="#0891b2"/>
+      <text x="640" y="660" font-size="15" font-weight="700" fill="#1f2d3d">数据/编码杂项</text>
+      <text x="640" y="684" fill="#475569">code / dict / enums</text><text x="640" y="702" fill="#475569">packet / uid / number-idcard</text></g>
+    <g><rect x="825" y="632" width="190" height="118" rx="9" fill="#fff" stroke="#e2e8f0"/><rect x="825" y="632" width="190" height="7" rx="3" fill="#0891b2"/>
+      <text x="840" y="660" font-size="15" font-weight="700" fill="#1f2d3d">模板/表单/响应</text>
+      <text x="840" y="684" fill="#475569">template-render</text><text x="840" y="702" fill="#475569">form / resp / xml</text></g>
+    <g><rect x="1025" y="632" width="190" height="118" rx="9" fill="#eef2ff" stroke="#c7d2fe"/><rect x="1025" y="632" width="190" height="7" rx="3" fill="#4338ca"/>
+      <text x="1040" y="660" font-size="15" font-weight="700" fill="#3730a3">聚合包</text>
+      <text x="1040" y="684" fill="#4338ca">i2f-jdk-all</text><text x="1040" y="704" fill="#64748b">一次性引入全部</text><text x="1040" y="722" fill="#64748b">JDK 工具依赖</text></g>
+  </g>
+</svg>

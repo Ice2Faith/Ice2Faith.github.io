@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 860" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfdff"/><stop offset="1" stop-color="#eef3f9"/>
+    </linearGradient>
+  </defs>
+  <rect width="1240" height="860" fill="url(#bg2)"/>
+  <text x="620" y="48" text-anchor="middle" font-size="30" font-weight="700" fill="#1f2d3d">顶级模块组 · 能力版图全景</text>
+  <text x="620" y="78" text-anchor="middle" font-size="15" fill="#64748b">8 大模块组、约 320 个子模块的能力分布与规模一览（数字为组内含 pom.xml 子模块数）</text>
+
+  <!-- card layout: 4 columns x 2 rows -->
+  <g font-size="13">
+    <!-- helper: each card 285w x 320h -->
+    <!-- Card 1: i2f-jdk -->
+    <g>
+      <rect x="40" y="110" width="285" height="330" rx="12" fill="#fff" stroke="#bfdbfe" stroke-width="1.5"/>
+      <rect x="40" y="110" width="285" height="56" rx="12" fill="#1e4e79"/>
+      <rect x="40" y="140" width="285" height="26" fill="#1e4e79"/>
+      <text x="60" y="146" font-size="19" font-weight="700" fill="#fff">i2f-jdk</text>
+      <text x="305" y="148" text-anchor="end" font-size="24" font-weight="700" fill="#93c5fd">152</text>
+      <text x="60" y="192" fill="#334155" font-weight="600">Java 基础工具库（核心）</text>
+      <text x="60" y="212" fill="#64748b">仅依赖 JDK，std/impl 契约分离</text>
+      <g fill="#1e293b">
+        <text x="60" y="242">▪ 注解体系 / 数据结构 / 容器</text>
+        <text x="60" y="266">▪ IO 文件·流·文件系统</text>
+        <text x="60" y="290">▪ 数据库元数据 / JDBC / BQL</text>
+        <text x="60" y="314">▪ 编解码 / 加密 / 国密 / 哈希</text>
+        <text x="60" y="338">▪ 缓存 / 序列化 / 压缩</text>
+        <text x="60" y="362">▪ 并发·线程·锁·池·限流</text>
+        <text x="60" y="386">▪ 图形 2D/3D / 图像 / 颜色</text>
+        <text x="60" y="410">▪ 反射·编译·脚本 / Mixin</text>
+      </g>
+      <text x="60" y="432" fill="#94a3b8">… 等约 30 类能力</text>
+    </g>
+
+    <!-- Card 2: i2f-extension -->
+    <g>
+      <rect x="345" y="110" width="285" height="330" rx="12" fill="#fff" stroke="#bbf7d0" stroke-width="1.5"/>
+      <rect x="345" y="110" width="285" height="56" rx="12" fill="#1f7a5a"/>
+      <rect x="345" y="140" width="285" height="26" fill="#1f7a5a"/>
+      <text x="365" y="146" font-size="19" font-weight="700" fill="#fff">i2f-extension</text>
+      <text x="610" y="148" text-anchor="end" font-size="24" font-weight="700" fill="#86efac">86</text>
+      <text x="365" y="192" fill="#334155" font-weight="600">第三方库集成封装</text>
+      <text x="365" y="212" fill="#64748b">每个模块对应一个三方库/技术栈</text>
+      <g fill="#1e293b">
+        <text x="365" y="242">▪ AI（DashScope/OpenAI/LangChain4j）</text>
+        <text x="365" y="266">▪ JSON（Jackson/fastjson/gson/fory）</text>
+        <text x="365" y="290">▪ DB/ORM（MyBatis/Mongo/ES）</text>
+        <text x="365" y="314">▪ 文件系统 / OSS（FTP/SFTP/HDFS/MinIO）</text>
+        <text x="365" y="338">▪ 网络（Netty/OkHttp/HttpClient）</text>
+        <text x="365" y="362">▪ 图像/OCR/分词/TTS·ASR</text>
+        <text x="365" y="386">▪ 字节码（Javassist/Cglib/AspectJ）</text>
+        <text x="365" y="410">▪ 定时/脚本/压缩/浏览器/邮件</text>
+      </g>
+      <text x="365" y="432" fill="#94a3b8">… 等 20+ 集成域</text>
+    </g>
+
+    <!-- Card 3: i2f-springboot -->
+    <g>
+      <rect x="650" y="110" width="285" height="330" rx="12" fill="#fff" stroke="#ddd6fe" stroke-width="1.5"/>
+      <rect x="650" y="110" width="285" height="56" rx="12" fill="#5b3a94"/>
+      <rect x="650" y="140" width="285" height="26" fill="#5b3a94"/>
+      <text x="670" y="146" font-size="19" font-weight="700" fill="#fff">i2f-springboot</text>
+      <text x="915" y="148" text-anchor="end" font-size="24" font-weight="700" fill="#c4b5fd">37</text>
+      <text x="670" y="192" fill="#334155" font-weight="600">SpringBoot Starter 集合</text>
+      <text x="670" y="212" fill="#64748b">开箱即用自动装配</text>
+      <g fill="#1e293b">
+        <text x="670" y="242">▪ web / websocket / security / auth</text>
+        <text x="670" y="266">▪ redis / redisson / mybatis</text>
+        <text x="670" y="290">▪ kafka / rabbitmq / zookeeper</text>
+        <text x="670" y="314">▪ quartz / xxl-job 分布式任务</text>
+        <text x="670" y="338">▪ ai / ops 运维控制台</text>
+        <text x="670" y="362">▪ trace-mdc 全链路追踪</text>
+        <text x="670" y="386">▪ dynamic-datasource / jdbc-bql</text>
+        <text x="670" y="410">▪ xproc4j / swagger2 / totp …</text>
+      </g>
+      <text x="670" y="432" fill="#94a3b8">… 共 37 个 Starter</text>
+    </g>
+
+    <!-- Card 4: i2f-springcloud -->
+    <g>
+      <rect x="955" y="110" width="285" height="330" rx="12" fill="#fff" stroke="#fde68a" stroke-width="1.5"/>
+      <rect x="955" y="110" width="285" height="56" rx="12" fill="#b45309"/>
+      <rect x="955" y="140" width="285" height="26" fill="#b45309"/>
+      <text x="975" y="146" font-size="19" font-weight="700" fill="#fff">i2f-springcloud</text>
+      <text x="1220" y="148" text-anchor="end" font-size="24" font-weight="700" fill="#fcd34d">23</text>
+      <text x="975" y="192" fill="#334155" font-weight="600">微服务治理 Starter</text>
+      <text x="975" y="212" fill="#64748b">注册/网关/调用/熔断/配置</text>
+      <g fill="#1e293b">
+        <text x="975" y="242">▪ 注册中心 Nacos/Eureka/Consul</text>
+        <text x="975" y="266">▪ 网关 Gateway / Zuul</text>
+        <text x="975" y="290">▪ 调用 OpenFeign/Ribbon/LB</text>
+        <text x="975" y="314">▪ 熔断 Sentinel / Hystrix</text>
+        <text x="975" y="338">▪ 分布式事务 Seata</text>
+        <text x="975" y="362">▪ 配置中心 Config / 动态刷新</text>
+        <text x="975" y="386">▪ 追踪 Sleuth / Zipkin</text>
+        <text x="975" y="410">▪ 监控 Actuator / Admin</text>
+      </g>
+      <text x="975" y="432" fill="#94a3b8">… 微服务全家桶</text>
+    </g>
+
+    <!-- Card 5: i2f-spring -->
+    <g>
+      <rect x="40" y="470" width="285" height="180" rx="12" fill="#fff" stroke="#ddd6fe" stroke-width="1.5"/>
+      <rect x="40" y="470" width="285" height="50" rx="12" fill="#7e57c2"/>
+      <rect x="40" y="498" width="285" height="22" fill="#7e57c2"/>
+      <text x="60" y="502" font-size="18" font-weight="700" fill="#fff">i2f-spring</text>
+      <text x="305" y="504" text-anchor="end" font-size="22" font-weight="700" fill="#ede9fe">8</text>
+      <text x="60" y="546" fill="#64748b">Spring 体系封装（不依赖 Boot）</text>
+      <g fill="#1e293b">
+        <text x="60" y="576">▪ core / web / mvc-metadata</text>
+        <text x="60" y="600">▪ security / authentication / redis</text>
+        <text x="60" y="624">▪ swl 适配 / all 聚合</text>
+      </g>
+    </g>
+
+    <!-- Card 6: i2f-jdk-ext -->
+    <g>
+      <rect x="345" y="470" width="285" height="180" rx="12" fill="#fff" stroke="#bfdbfe" stroke-width="1.5"/>
+      <rect x="345" y="470" width="285" height="50" rx="12" fill="#2e6da4"/>
+      <rect x="345" y="498" width="285" height="22" fill="#2e6da4"/>
+      <text x="365" y="502" font-size="18" font-weight="700" fill="#fff">i2f-jdk-ext</text>
+      <text x="610" y="504" text-anchor="end" font-size="22" font-weight="700" fill="#dbeafe">3</text>
+      <text x="365" y="546" fill="#64748b">非默认 JRE 扩展包（javax/jakarta）</text>
+      <g fill="#1e293b">
+        <text x="365" y="576">▪ i2f-jdk-ext-all 全量聚合</text>
+        <text x="365" y="600">▪ i2f-jdk-ext-swl SWL 扩展</text>
+        <text x="365" y="624">▪ i2f-jdk-ext-web Web 相关扩展</text>
+      </g>
+    </g>
+
+    <!-- Card 7: i2f-tools -->
+    <g>
+      <rect x="650" y="470" width="285" height="180" rx="12" fill="#fff" stroke="#99f6e4" stroke-width="1.5"/>
+      <rect x="650" y="470" width="285" height="50" rx="12" fill="#0f766e"/>
+      <rect x="650" y="498" width="285" height="22" fill="#0f766e"/>
+      <text x="670" y="502" font-size="18" font-weight="700" fill="#fff">i2f-tools</text>
+      <text x="915" y="504" text-anchor="end" font-size="22" font-weight="700" fill="#ccfbf1">7</text>
+      <text x="670" y="546" fill="#64748b">独立工具模块</text>
+      <g fill="#1e293b">
+        <text x="670" y="576">▪ XProc4J IDEA 插件（Gradle 构建）</text>
+        <text x="670" y="600">▪ maven-plugin / source-copier</text>
+        <text x="670" y="624">▪ agent / encrypt / ops / face-recognizer</text>
+      </g>
+    </g>
+
+    <!-- Card 8: i2f-spring-ai -->
+    <g>
+      <rect x="955" y="470" width="285" height="180" rx="12" fill="#fff" stroke="#fecdd3" stroke-width="1.5"/>
+      <rect x="955" y="470" width="285" height="50" rx="12" fill="#be123c"/>
+      <rect x="955" y="498" width="285" height="22" fill="#be123c"/>
+      <text x="975" y="502" font-size="18" font-weight="700" fill="#fff">i2f-spring-ai</text>
+      <text x="1220" y="504" text-anchor="end" font-size="18" font-weight="700" fill="#fecdd3">JDK17</text>
+      <text x="975" y="546" fill="#64748b">Spring AI（独立构建，需 JDK17）</text>
+      <g fill="#1e293b">
+        <text x="975" y="576">▪ alibaba-starter 阿里 AI 集成</text>
+        <text x="975" y="600">▪ sse-mcp-server MCP 服务</text>
+        <text x="975" y="624">▪ chat-starter（含 Web UI）</text>
+      </g>
+    </g>
+  </g>
+
+  <text x="620" y="820" text-anchor="middle" font-size="12" fill="#94a3b8">数据来源：.wiki/wiki.md · 各卡片枚举为该组代表性能力，非穷举</text>
+</svg>

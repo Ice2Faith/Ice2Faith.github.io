@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 840" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg5" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#faf9ff"/><stop offset="1" stop-color="#eeeafc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1240" height="840" fill="url(#bg5)"/>
+  <text x="620" y="44" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">Spring 体系 · Starter 全景</text>
+  <text x="620" y="72" text-anchor="middle" font-size="14" fill="#64748b">i2f-spring（Framework 封装）→ i2f-springboot（自动装配 Starter）→ i2f-springcloud（微服务治理 Starter）</text>
+
+  <!-- Column A: i2f-spring -->
+  <g>
+    <rect x="24" y="100" width="270" height="700" rx="12" fill="#fff" stroke="#ddd6fe" stroke-width="1.5"/>
+    <rect x="24" y="100" width="270" height="52" rx="12" fill="#5b3a94"/><rect x="24" y="130" width="270" height="22" fill="#5b3a94"/>
+    <text x="44" y="134" font-size="19" font-weight="700" fill="#fff">i2f-spring</text>
+    <text x="274" y="136" text-anchor="end" font-size="20" font-weight="700" fill="#c4b5fd">8</text>
+    <text x="44" y="180" font-size="13" fill="#64748b">Spring Framework 基础封装</text>
+    <text x="44" y="200" font-size="12" fill="#94a3b8">不依赖 Spring Boot</text>
+    <g font-size="13.5" fill="#1e293b">
+      <rect x="40" y="220" width="238" height="40" rx="7" fill="#f5f3ff"/><text x="54" y="245">spring-core · Spring 核心封装</text>
+      <rect x="40" y="266" width="238" height="40" rx="7" fill="#f5f3ff"/><text x="54" y="291">spring-web · Web 封装</text>
+      <rect x="40" y="312" width="238" height="40" rx="7" fill="#f5f3ff"/><text x="54" y="337">spring-mvc-metadata · MVC 元数据</text>
+      <rect x="40" y="358" width="238" height="40" rx="7" fill="#f5f3ff"/><text x="54" y="383">spring-security · Security 封装</text>
+      <rect x="40" y="404" width="238" height="40" rx="7" fill="#f5f3ff"/><text x="54" y="429">spring-authentication · 认证封装</text>
+      <rect x="40" y="450" width="238" height="40" rx="7" fill="#f5f3ff"/><text x="54" y="475">spring-redis · Redis 封装</text>
+      <rect x="40" y="496" width="238" height="40" rx="7" fill="#f5f3ff"/><text x="54" y="521">spring-swl · SWL Spring 适配</text>
+      <rect x="40" y="542" width="238" height="40" rx="7" fill="#ede9fe"/><text x="54" y="567" fill="#5b21b6">spring-all · 全量聚合</text>
+    </g>
+    <text x="44" y="620" font-size="12" fill="#94a3b8">适配层：把 i2f-jdk 的 IContext</text>
+    <text x="44" y="640" font-size="12" fill="#94a3b8">/ IEnvironment 桥接到 Spring</text>
+    <text x="44" y="660" font-size="12" fill="#94a3b8">ApplicationContext / Environment</text>
+  </g>
+
+  <!-- Column B: i2f-springboot -->
+  <g>
+    <rect x="306" y="100" width="450" height="700" rx="12" fill="#fff" stroke="#c7d2fe" stroke-width="1.5"/>
+    <rect x="306" y="100" width="450" height="52" rx="12" fill="#4338ca"/><rect x="306" y="130" width="450" height="22" fill="#4338ca"/>
+    <text x="326" y="134" font-size="19" font-weight="700" fill="#fff">i2f-springboot</text>
+    <text x="736" y="136" text-anchor="end" font-size="20" font-weight="700" fill="#a5b4fc">37</text>
+    <text x="326" y="178" font-size="13" fill="#64748b">开箱即用自动装配 Starter（@ConditionalOnClass 按需激活）</text>
+
+    <text x="326" y="212" font-size="14" font-weight="700" fill="#4338ca">Web / 安全</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="326" y="236">spring · websocket · security · shiro · auth</text>
+      <text x="326" y="258">swagger2 · jackson-sensible · http-proxy</text>
+    </g>
+    <text x="326" y="290" font-size="14" font-weight="700" fill="#4338ca">数据 / 缓存</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="326" y="314">mybatis · redis · redisson · dynamic-datasource</text>
+      <text x="326" y="336">jdbc-bql · oss-minio · encrypt-property</text>
+    </g>
+    <text x="326" y="368" font-size="14" font-weight="700" fill="#4338ca">消息 / 任务</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="326" y="392">kafka · rabbitmq · quartz · xxl-job · zookeeper</text>
+      <text x="326" y="414">activity · limit 限流</text>
+    </g>
+    <text x="326" y="446" font-size="14" font-weight="700" fill="#4338ca">AI / 运维 / 观测</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="326" y="470">ai · ops 运维控制台 · trace-mdc 全链路追踪</text>
+      <text x="326" y="492">nginx-rtmp-auth-server · ssh-tunnel · totp</text>
+    </g>
+    <text x="326" y="524" font-size="14" font-weight="700" fill="#4338ca">过程 / 编排</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="326" y="548">xproc4j · dubbo · swl</text>
+    </g>
+    <rect x="322" y="576" width="418" height="120" rx="10" fill="#eef2ff" stroke="#c7d2fe"/>
+    <text x="338" y="602" font-size="13.5" font-weight="700" fill="#3730a3">重点 Starter</text>
+    <text x="338" y="628" font-size="12.5" fill="#334155">▪ ops-starter — Web 运维控制台，13+ 模块、55 自动配置</text>
+    <text x="338" y="650" font-size="12.5" fill="#334155">▪ trace-mdc-starter — TraceId 全链路透传，10 配置类</text>
+    <text x="338" y="672" font-size="12.5" fill="#334155">▪ ai-starter — OpenAI 兼容 AI 对话装配</text>
+    <text x="338" y="694" font-size="12.5" fill="#334155">▪ xproc4j-starter — XML 存储过程框架一键接入</text>
+  </g>
+
+  <!-- Column C: i2f-springcloud -->
+  <g>
+    <rect x="768" y="100" width="448" height="700" rx="12" fill="#fff" stroke="#fde68a" stroke-width="1.5"/>
+    <rect x="768" y="100" width="448" height="52" rx="12" fill="#b45309"/><rect x="768" y="130" width="448" height="22" fill="#b45309"/>
+    <text x="788" y="134" font-size="19" font-weight="700" fill="#fff">i2f-springcloud</text>
+    <text x="1196" y="136" text-anchor="end" font-size="20" font-weight="700" fill="#fcd34d">23</text>
+    <text x="788" y="178" font-size="13" fill="#64748b">微服务治理 Starter（Netflix / Alibaba / 官方 多栈）</text>
+    <g font-size="12.5">
+      <text x="788" y="212" font-weight="700" fill="#b45309">注册中心</text>
+      <text x="788" y="234" fill="#1e293b">nacos · eureka-server/client · consul</text>
+      <text x="788" y="268" font-weight="700" fill="#b45309">服务网关</text>
+      <text x="788" y="290" fill="#1e293b">gateway · gateway-swl · zuul</text>
+      <text x="788" y="324" font-weight="700" fill="#b45309">服务调用</text>
+      <text x="788" y="346" fill="#1e293b">openfeign · ribbon · loadbalancer</text>
+      <text x="788" y="380" font-weight="700" fill="#b45309">熔断降级</text>
+      <text x="788" y="402" fill="#1e293b">sentinel · hystrix</text>
+      <text x="788" y="436" font-weight="700" fill="#b45309">分布式事务</text>
+      <text x="788" y="458" fill="#1e293b">seata</text>
+      <text x="788" y="492" font-weight="700" fill="#b45309">配置中心 / 刷新</text>
+      <text x="788" y="514" fill="#1e293b">config-server · config-client · refresh</text>
+      <text x="788" y="548" font-weight="700" fill="#b45309">服务发现</text>
+      <text x="788" y="570" fill="#1e293b">discovery · discovery-server</text>
+      <text x="788" y="604" font-weight="700" fill="#b45309">链路追踪</text>
+      <text x="788" y="626" fill="#1e293b">sleuth · zipkin</text>
+      <text x="788" y="660" font-weight="700" fill="#b45309">监控</text>
+      <text x="788" y="682" fill="#1e293b">actuator · actuator-admin</text>
+    </g>
+    <text x="788" y="726" font-size="12" fill="#94a3b8">对齐 Spring Cloud 2021.0.8 / Alibaba 2021.0.5.0</text>
+  </g>
+
+  <text x="620" y="824" text-anchor="middle" font-size="12" fill="#94a3b8">数据来源：.wiki/wiki.md 第 4/5/6 节 · 模块名省略 i2f-springboot-/i2f-springcloud- 前缀</text>
+</svg>

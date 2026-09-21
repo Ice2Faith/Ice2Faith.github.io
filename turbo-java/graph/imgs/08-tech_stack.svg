@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 780" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg8" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfcfe"/><stop offset="1" stop-color="#e9eef6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1240" height="780" fill="url(#bg8)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">技术栈 · 构建与依赖治理全景</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">根坐标 i2f.turbo:i2f-turbo-java · 版本 1.0-jdk8 · 编码 UTF-8 · 最低 JDK 8 · 根 POM 统一治理</text>
+
+  <!-- Left: tech stack -->
+  <g>
+    <rect x="30" y="100" width="590" height="470" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <rect x="30" y="100" width="590" height="46" rx="12" fill="#1e4e79"/><rect x="30" y="128" width="590" height="18" fill="#1e4e79"/>
+    <text x="52" y="130" font-size="18" font-weight="700" fill="#fff">核心技术栈与版本</text>
+    <g font-size="14">
+      <!-- rows: name / version / note -->
+      <g fill="#1e293b">
+        <rect x="48" y="158" width="554" height="42" rx="6" fill="#f8fafc"/>
+        <text x="66" y="184" font-weight="600">Java</text><text x="300" y="184" fill="#0f766e" font-weight="700">1.8 (JDK8)</text><text x="430" y="184" fill="#64748b">最低支持版本</text>
+        <rect x="48" y="204" width="554" height="42" rx="6" fill="#fff"/>
+        <text x="66" y="230" font-weight="600">Maven</text><text x="300" y="230" fill="#0f766e" font-weight="700">多模块</text><text x="430" y="230" fill="#64748b">聚合构建 / 依赖管理</text>
+        <rect x="48" y="250" width="554" height="42" rx="6" fill="#f8fafc"/>
+        <text x="66" y="276" font-weight="600">Lombok</text><text x="300" y="276" fill="#0f766e" font-weight="700">1.18.44</text><text x="430" y="276" fill="#64748b">注解简化（provided）</text>
+        <rect x="48" y="296" width="554" height="42" rx="6" fill="#fff"/>
+        <text x="66" y="322" font-weight="600">Spring Framework</text><text x="300" y="322" fill="#0f766e" font-weight="700">5.3.31</text><text x="430" y="322" fill="#64748b">核心框架</text>
+        <rect x="48" y="342" width="554" height="42" rx="6" fill="#f8fafc"/>
+        <text x="66" y="368" font-weight="600">Spring Security</text><text x="300" y="368" fill="#0f766e" font-weight="700">5.7.11</text><text x="430" y="368" fill="#64748b">安全框架</text>
+        <rect x="48" y="388" width="554" height="42" rx="6" fill="#fff"/>
+        <text x="66" y="414" font-weight="600">Spring Boot</text><text x="300" y="414" fill="#0f766e" font-weight="700">2.7.18</text><text x="430" y="414" fill="#64748b">快速开发框架</text>
+        <rect x="48" y="434" width="554" height="42" rx="6" fill="#f8fafc"/>
+        <text x="66" y="460" font-weight="600">Spring Cloud</text><text x="300" y="460" fill="#0f766e" font-weight="700">2021.0.8</text><text x="430" y="460" fill="#64748b">微服务框架</text>
+        <rect x="48" y="480" width="554" height="42" rx="6" fill="#fff"/>
+        <text x="66" y="506" font-weight="600">Cloud Alibaba</text><text x="300" y="506" fill="#0f766e" font-weight="700">2021.0.5.0</text><text x="430" y="506" fill="#64748b">阿里微服务组件</text>
+        <rect x="48" y="526" width="554" height="42" rx="6" fill="#f8fafc"/>
+        <text x="66" y="552" font-weight="600">Jackson · SLF4J · Servlet</text><text x="360" y="552" fill="#0f766e" font-weight="700">2.13.5 · 1.7.36 · 4.0.1</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Right top: build plugins -->
+  <g>
+    <rect x="640" y="100" width="570" height="220" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <rect x="640" y="100" width="570" height="46" rx="12" fill="#0f766e"/><rect x="640" y="128" width="570" height="18" fill="#0f766e"/>
+    <text x="662" y="130" font-size="18" font-weight="700" fill="#fff">Maven 构建插件</text>
+    <g font-size="13.5" fill="#1e293b">
+      <text x="662" y="176" font-weight="600" fill="#0f766e">compiler 3.8.1</text><text x="662" y="196" fill="#64748b">启用 -parameters，支持 Lombok</text>
+      <text x="662" y="228" font-weight="600" fill="#0f766e">resources 2.6</text><text x="662" y="248" fill="#64748b">打包 src/main/java 下非 Java 资源（xml/json/ftl/yaml…）</text>
+      <text x="960" y="176" font-weight="600" fill="#0f766e">jar 3.0.2</text><text x="960" y="196" fill="#64748b">清单注入项目元信息</text>
+      <text x="960" y="228" font-weight="600" fill="#0f766e">assembly 3.1.0</text><text x="960" y="248" fill="#64748b">全量 fat jar 打包（含依赖）</text>
+      <text x="662" y="286" fill="#94a3b8" font-size="12.5">资源过滤排除二进制（doc/xls/pdf/zip/dll/so）</text>
+      <text x="662" y="306" fill="#94a3b8" font-size="12.5">构建：mvn clean install -DskipTests</text>
+    </g>
+  </g>
+
+  <!-- Right mid: dependency governance -->
+  <g>
+    <rect x="640" y="336" width="570" height="234" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <rect x="640" y="336" width="570" height="46" rx="12" fill="#5b3a94"/><rect x="640" y="364" width="570" height="18" fill="#5b3a94"/>
+    <text x="662" y="366" font-size="18" font-weight="700" fill="#fff">依赖治理策略</text>
+    <g font-size="13.5" fill="#1e293b">
+      <text x="662" y="408">▪</text><text x="682" y="408" font-weight="600">根 POM dependencyManagement</text>
+      <text x="700" y="428" fill="#64748b">统管所有内部模块与三方版本，BOM 导入 Spring 全家桶</text>
+      <text x="662" y="458">▪</text><text x="682" y="458" font-weight="600">内部版本统一 i2f.version（1.0-jdk8）</text>
+      <text x="662" y="488">▪</text><text x="682" y="488" font-weight="600">Lombok 置 provided；三方库多以 provided/optional 引入</text>
+      <text x="700" y="508" fill="#64748b">纯 JDK 模块打包含全部依赖；依赖三方模块仅打包自身代码</text>
+      <text x="662" y="538">▪</text><text x="682" y="538" font-weight="600">各层提供 *-all 聚合包</text>
+      <text x="700" y="558" fill="#64748b">一次性引入对应组全部依赖，即插即用</text>
+    </g>
+  </g>
+
+  <!-- Bottom: project features -->
+  <g>
+    <rect x="30" y="586" width="1180" height="150" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <rect x="30" y="586" width="1180" height="44" rx="12" fill="#334155"/><rect x="30" y="612" width="1180" height="18" fill="#334155"/>
+    <text x="52" y="616" font-size="17" font-weight="700" fill="#fff">项目七大特性</text>
+    <g font-size="13.5">
+      <g>
+        <rect x="50" y="646" width="360" height="30" rx="15" fill="#eef2ff"/><text x="66" y="666" fill="#3730a3">① 接口-实现分离（std / impl）</text>
+        <rect x="430" y="646" width="360" height="30" rx="15" fill="#ecfdf5"/><text x="446" y="666" fill="#166534">② SWL 抽象层贯穿多模块</text>
+        <rect x="810" y="646" width="380" height="30" rx="15" fill="#fef2f2"/><text x="826" y="666" fill="#b91c1c">③ 全量聚合包 *-all</text>
+        <rect x="50" y="686" width="360" height="30" rx="15" fill="#f5f3ff"/><text x="66" y="706" fill="#6d28d9">④ Spring 体系全覆盖（核心→微服务）</text>
+        <rect x="430" y="686" width="360" height="30" rx="15" fill="#fff7ed"/><text x="446" y="706" fill="#c2410c">⑤ 80+ 丰富第三方集成</text>
+        <rect x="810" y="686" width="380" height="30" rx="15" fill="#f0f9ff"/><text x="826" y="706" fill="#0369a1">⑥ 核心模块 JDK8 兼容　⑦ 根 POM 统一依赖管理</text>
+      </g>
+    </g>
+  </g>
+  <text x="620" y="762" text-anchor="middle" font-size="12" fill="#94a3b8">数据来源：.wiki/wiki.md 技术栈 / 构建配置 / 项目特性 章节</text>
+</svg>

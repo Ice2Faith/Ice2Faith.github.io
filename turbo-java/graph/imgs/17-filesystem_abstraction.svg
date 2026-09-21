@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg17" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f9fcfb"/><stop offset="1" stop-color="#e4efe9"/>
+    </linearGradient>
+    <marker id="ar17" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#1f7a5a"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg17)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">统一文件系统抽象 · 一套 API 收敛 7 种存储后端</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">业务面向 IFileSystem / IFile 编程 · 接口→抽象类→实现分层 · 底层本地/FTP/SFTP/HDFS/MinIO/OSS/S3 无缝切换</text>
+
+  <!-- interface layer -->
+  <text x="40" y="106" font-size="15" font-weight="700" fill="#1f7a5a">① 契约与抽象（i2f-jdk / i2f-io-filesystem）</text>
+  <g font-size="12.5">
+    <rect x="40" y="116" width="280" height="86" rx="10" fill="#d7efe1" stroke="#1f7a5a" stroke-width="2.5"/>
+    <text x="58" y="142" font-weight="700" fill="#166a4c">IFileSystem</text>
+    <text x="58" y="164" fill="#475569">文件系统契约 · 25 方法</text>
+    <text x="58" y="184" fill="#94a3b8">挂载点/根/解析/能力</text>
+
+    <rect x="330" y="116" width="280" height="86" rx="10" fill="#d7efe1" stroke="#1f7a5a" stroke-width="2.5"/>
+    <text x="348" y="142" font-weight="700" fill="#166a4c">IFile</text>
+    <text x="348" y="164" fill="#475569">文件节点契约 · 35+ 方法</text>
+    <text x="348" y="184" fill="#94a3b8">读写/属性/遍历/复制移动</text>
+
+    <rect x="620" y="116" width="280" height="86" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="638" y="142" font-weight="700" fill="#1f7a5a">AbsFileSystem / AbsFile</text>
+    <text x="638" y="164" fill="#475569">模板方法 + 委托模式基类</text>
+    <text x="638" y="184" fill="#94a3b8">复用骨架，子类仅实现差异</text>
+
+    <rect x="910" y="116" width="290" height="86" rx="10" fill="#eef2f7" stroke="#94a3b8"/>
+    <text x="928" y="140" font-weight="700" fill="#334155">安全特性</text>
+    <text x="928" y="162" fill="#475569">absPath() 防路径遍历攻击</text>
+    <text x="928" y="182" fill="#475569">getStrictFile() 限定子树访问</text>
+  </g>
+
+  <!-- implementations -->
+  <text x="40" y="240" font-size="15" font-weight="700" fill="#c2410c">② 7 种实现（JDK 本地 + 6 种 extension 后端，一契约多实现）</text>
+  <g font-size="12">
+    <!-- row 1 -->
+    <rect x="40" y="252" width="270" height="86" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="56" y="278" font-weight="700" fill="#1e4e79">JdkFileSystem</text>
+    <text x="56" y="298" fill="#475569">模块：i2f-io-filesystem</text>
+    <text x="56" y="316" fill="#475569">底层：java.io.File</text>
+    <text x="56" y="332" fill="#94a3b8">本地文件系统（单例）</text>
+
+    <rect x="320" y="252" width="270" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="336" y="278" font-weight="700" fill="#c2410c">FtpFileSystem</text>
+    <text x="336" y="298" fill="#475569">模块：filesystem-ftp</text>
+    <text x="336" y="316" fill="#475569">底层：Commons Net</text>
+    <text x="336" y="332" fill="#94a3b8">FTP 协议 · 自动重连</text>
+
+    <rect x="600" y="252" width="270" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="616" y="278" font-weight="700" fill="#c2410c">SftpFileSystem</text>
+    <text x="616" y="298" fill="#475569">模块：filesystem-sftp</text>
+    <text x="616" y="316" fill="#475569">底层：JSch</text>
+    <text x="616" y="332" fill="#94a3b8">密码 / 私钥认证</text>
+
+    <rect x="880" y="252" width="320" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="896" y="278" font-weight="700" fill="#c2410c">ProxySftpFileSystem</text>
+    <text x="896" y="298" fill="#475569">模块：filesystem-sftp（同模块变体）</text>
+    <text x="896" y="316" fill="#475569">底层：JSch + 端口转发</text>
+    <text x="896" y="332" fill="#94a3b8">跳板机代理 SFTP</text>
+
+    <!-- row 2 -->
+    <rect x="40" y="348" width="270" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="56" y="374" font-weight="700" fill="#c2410c">HdfsFileSystem</text>
+    <text x="56" y="394" fill="#475569">模块：filesystem-hdfs</text>
+    <text x="56" y="412" fill="#475569">底层：Hadoop</text>
+    <text x="56" y="428" fill="#94a3b8">HDFS 分布式文件系统</text>
+
+    <rect x="320" y="348" width="270" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="336" y="374" font-weight="700" fill="#c2410c">MinioFileSystem</text>
+    <text x="336" y="394" fill="#475569">模块：filesystem-minio</text>
+    <text x="336" y="412" fill="#475569">底层：MinIO SDK</text>
+    <text x="336" y="428" fill="#94a3b8">MinIO 对象存储</text>
+
+    <rect x="600" y="348" width="270" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="616" y="374" font-weight="700" fill="#c2410c">AliyunOssFileSystem</text>
+    <text x="616" y="394" fill="#475569">模块：filesystem-oss-aliyun</text>
+    <text x="616" y="412" fill="#475569">底层：Aliyun OSS SDK</text>
+    <text x="616" y="428" fill="#94a3b8">阿里云对象存储</text>
+
+    <rect x="880" y="348" width="320" height="86" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="896" y="374" font-weight="700" fill="#c2410c">AwsS3OssFileSystem</text>
+    <text x="896" y="394" fill="#475569">模块：filesystem-oss-aws-s3</text>
+    <text x="896" y="412" fill="#475569">底层：AWS SDK v2</text>
+    <text x="896" y="428" fill="#94a3b8">AWS S3 对象存储</text>
+  </g>
+
+  <!-- cross ops + naming note -->
+  <text x="40" y="474" font-size="15" font-weight="700" fill="#1f2d3d">③ 跨系统操作与命名辨析</text>
+  <g font-size="12.5">
+    <rect x="40" y="486" width="560" height="96" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="58" y="512" font-weight="700" fill="#1f7a5a">跨后端透明操作</text>
+    <text x="58" y="534" fill="#475569">AbsFile.copyTo() / moveTo() 自动检测是否同一文件系统</text>
+    <text x="58" y="554" fill="#475569">→ 支持「本地→OSS」「FTP→SFTP」等跨系统搬运，无需业务分支</text>
+    <text x="58" y="574" fill="#94a3b8">上层还含 i2f-io-file（文件工具）、i2f-io-stream（流）</text>
+
+    <rect x="610" y="486" width="590" height="96" rx="10" fill="#fbf1e6" stroke="#d09a4a"/>
+    <text x="628" y="512" font-weight="700" fill="#8a5a1f">命名辨析：filesystem-* vs 裸名扩展</text>
+    <text x="628" y="534" fill="#475569">i2f-extension-ftp / sftp / minio / oss-* / hdfs = 原始 SDK 薄封装</text>
+    <text x="628" y="554" fill="#475569">i2f-extension-filesystem-* = 实现 IFileSystem 统一契约</text>
+    <text x="628" y="574" fill="#94a3b8">Starter：springboot-oss-minio-starter（对象存储装配）</text>
+  </g>
+
+  <!-- footer -->
+  <g font-size="12.5" fill="#475569">
+    <text x="40" y="622" font-size="15" font-weight="700" fill="#1f2d3d">读图要点</text>
+    <text x="40" y="648">· 与序列化 / Redis 同构：一份 IFileSystem 契约、7 种后端实现，是「按需换存储」范式的又一典型。</text>
+    <text x="40" y="672">· 分层落地：接口(IFileSystem/IFile) → 抽象基类(Abs*) → 具体实现，最大化复用、最小化差异实现成本。</text>
+    <text x="40" y="696">· 安全内建：路径遍历防护与子树限定在抽象层统一实现，所有后端共享同一安全语义。</text>
+    <text x="40" y="720">· extension 依赖以 provided 引入（Commons Net / JSch / Hadoop / MinIO / OSS / AWS SDK），运行期自备。</text>
+  </g>
+</svg>

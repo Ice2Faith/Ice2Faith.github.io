@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg9" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfcfe"/><stop offset="1" stop-color="#e9eef6"/>
+    </linearGradient>
+    <linearGradient id="barJdk" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1e4e79"/><stop offset="1" stop-color="#3a7bbf"/>
+    </linearGradient>
+    <linearGradient id="barExt" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1f7a5a"/><stop offset="1" stop-color="#37b07d"/>
+    </linearGradient>
+    <linearGradient id="barTools" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8a5a1f"/><stop offset="1" stop-color="#d09a4a"/>
+    </linearGradient>
+    <linearGradient id="barBoot" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5b3a94"/><stop offset="1" stop-color="#8a63d2"/>
+    </linearGradient>
+    <linearGradient id="barMinor" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4a5568"/><stop offset="1" stop-color="#8a97a8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg9)"/>
+  <text x="620" y="44" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">仓库规模 · 度量仪表盘</text>
+  <text x="620" y="72" text-anchor="middle" font-size="14" fill="#64748b">按 src/main/java 实测统计（不含 target / 生成物）：约 348K 行 · ~3574 个类文件 · ~320 子模块 / 324 pom</text>
+
+  <!-- stat tiles -->
+  <g font-size="12" text-anchor="middle">
+    <g><rect x="40" y="92" width="180" height="86" rx="10" fill="#ffffff" stroke="#cfd8e3"/>
+      <text x="130" y="128" font-size="30" font-weight="700" fill="#1e4e79">~348K</text>
+      <text x="130" y="152" fill="#475569">main 代码行 (LOC)</text>
+      <text x="130" y="168" fill="#94a3b8">3,736 行 / 74 test 类</text></g>
+    <g><rect x="240" y="92" width="180" height="86" rx="10" fill="#ffffff" stroke="#cfd8e3"/>
+      <text x="330" y="128" font-size="30" font-weight="700" fill="#1f7a5a">3,574</text>
+      <text x="330" y="152" fill="#475569">main .java 类文件</text>
+      <text x="330" y="168" fill="#94a3b8">平均每类 ~97 行</text></g>
+    <g><rect x="440" y="92" width="180" height="86" rx="10" fill="#ffffff" stroke="#cfd8e3"/>
+      <text x="530" y="128" font-size="30" font-weight="700" fill="#5b3a94">324</text>
+      <text x="530" y="152" fill="#475569">pom.xml 模块总数</text>
+      <text x="530" y="168" fill="#94a3b8">~320 子模块 + 分组聚合</text></g>
+    <g><rect x="640" y="92" width="180" height="86" rx="10" fill="#ffffff" stroke="#cfd8e3"/>
+      <text x="730" y="128" font-size="30" font-weight="700" fill="#8a5a1f">19 / 12 / 2</text>
+      <text x="730" y="152" fill="#475569">-std / -impl / -api 契约模块</text>
+      <text x="730" y="168" fill="#94a3b8">契约分层范式规模</text></g>
+    <g><rect x="840" y="92" width="360" height="86" rx="10" fill="#fff7ed" stroke="#f0c890"/>
+      <text x="1020" y="120" font-size="22" font-weight="700" fill="#8a5a1f">i2f-jdk 独占 ~52% 代码量</text>
+      <text x="1020" y="145" font-size="13" fill="#6b4f2a">181,876 / 348,030 行：基础层是仓库的绝对重心</text>
+      <text x="1020" y="166" font-size="13" fill="#94a3b8">扩展层以 provided 轻依赖为主（见 10 号图）</text></g>
+  </g>
+
+  <!-- bar chart -->
+  <text x="60" y="228" font-size="17" font-weight="700" fill="#1f2d3d">各组代码量对比（main LOC，条长按 181,876 行满刻度）</text>
+  <g font-size="13">
+    <!-- axis baseline x=250, full width 560 -->
+    <line x1="250" y1="248" x2="250" y2="628" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <!-- jdk -->
+    <text x="240" y="285" text-anchor="end" fill="#334155">i2f-jdk</text>
+    <rect x="250" y="264" width="560" height="30" rx="4" fill="url(#barJdk)"/>
+    <text x="818" y="285" fill="#1e4e79" font-weight="700">181,876 · 2592 java · 152 模块</text>
+
+    <!-- extension -->
+    <text x="240" y="331" text-anchor="end" fill="#334155">i2f-extension</text>
+    <rect x="250" y="310" width="231" height="30" rx="4" fill="url(#barExt)"/>
+    <text x="489" y="331" fill="#1f7a5a" font-weight="700">75,151 · 662 java · 86 模块</text>
+
+    <!-- tools -->
+    <text x="240" y="377" text-anchor="end" fill="#334155">i2f-tools</text>
+    <rect x="250" y="356" width="147" height="30" rx="4" fill="url(#barTools)"/>
+    <text x="405" y="377" fill="#8a5a1f" font-weight="700">47,608 · 726 java · 7 模块</text>
+
+    <!-- springboot -->
+    <text x="240" y="423" text-anchor="end" fill="#334155">i2f-springboot</text>
+    <rect x="250" y="402" width="100" height="30" rx="4" fill="url(#barBoot)"/>
+    <text x="358" y="423" fill="#5b3a94" font-weight="700">32,364 · 464 java · 37 模块</text>
+
+    <!-- jdk-ext -->
+    <text x="240" y="469" text-anchor="end" fill="#334155">i2f-jdk-ext</text>
+    <rect x="250" y="448" width="12" height="30" rx="3" fill="url(#barMinor)"/>
+    <text x="270" y="469" fill="#475569" font-weight="700">3,701 · 28 java · 3 模块</text>
+
+    <!-- spring -->
+    <text x="240" y="515" text-anchor="end" fill="#334155">i2f-spring</text>
+    <rect x="250" y="494" width="13" height="30" rx="3" fill="url(#barMinor)"/>
+    <text x="271" y="515" fill="#475569" font-weight="700">4,107 · 49 java · 8 模块</text>
+
+    <!-- springcloud -->
+    <text x="240" y="561" text-anchor="end" fill="#334155">i2f-springcloud</text>
+    <rect x="250" y="540" width="10" height="30" rx="3" fill="url(#barMinor)"/>
+    <text x="268" y="561" fill="#475569" font-weight="700">3,223 · 53 java · 23 模块</text>
+
+    <!-- spring-ai -->
+    <text x="240" y="607" text-anchor="end" fill="#334155">i2f-spring-ai</text>
+    <rect x="250" y="586" width="4" height="30" rx="2" fill="#cbd5e1"/>
+    <text x="262" y="607" fill="#94a3b8" font-weight="700">3 模块 · JDK17 独立构建（不并入 jdk8 主 reactor 统计）</text>
+  </g>
+
+  <!-- footer insight -->
+  <g font-size="12.5" fill="#475569">
+    <text x="60" y="676" font-size="15" font-weight="700" fill="#1f2d3d">度量解读</text>
+    <text x="60" y="702">· i2f-jdk 是重心：单组代码量超过其余所有组之和，体现「JDK 增强层」的定位——大量细粒度基础契约与工具沉淀。</text>
+    <text x="60" y="726">· i2f-tools 以 7 个模块承载 47K 行（单模块最重）：面向完整工具/应用级能力，模块内聚度高。</text>
+    <text x="60" y="750">· i2f-spring / springcloud LOC 低但模块数不少：Starter 多为薄装配层，重逻辑下沉到 jdk/extension。</text>
+    <text x="60" y="774">· 测试占比极小（3,736 行 / 74 类，约占 main 的 1.1%）：本仓库以「可复用基础设施」为主，验证多依赖消费方工程。</text>
+  </g>
+</svg>

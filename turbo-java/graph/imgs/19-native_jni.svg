@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg19" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfcfe"/><stop offset="1" stop-color="#eae7f2"/>
+    </linearGradient>
+    <marker id="ar19" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#475569"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg19)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">JNI 原生调用体系 · Windows API / EasyX / 启动器</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">native-core 指针基座 → native-windows 双层封装 Win32（153 文件）→ easyx 图形 · 辅以 launcher 动态 Classpath 与 agent 增强</text>
+
+  <!-- core -->
+  <text x="40" y="106" font-size="15" font-weight="700" fill="#1e4e79">① 原生基座 i2f-native-core（5 文件）</text>
+  <g font-size="12.5">
+    <rect x="40" y="116" width="1160" height="72" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="58" y="142" font-weight="700" fill="#1e4e79">指针类型体系</text>
+    <text x="180" y="142" fill="#475569">Ptr / MallocPtr / NewPtr / NewArrayPtr —— Java 侧对原生内存指针的强类型封装</text>
+    <text x="58" y="166" font-weight="700" fill="#1e4e79">库加载工具</text>
+    <text x="180" y="166" fill="#475569">NativeUtil.loadClasspathLib —— 从 classpath 加载本地 .dll/.so 动态库</text>
+  </g>
+
+  <!-- windows -->
+  <text x="40" y="218" font-size="15" font-weight="700" fill="#5b3a94">② Windows API i2f-native-windows（153 文件 · 双层封装）</text>
+  <g font-size="12.5">
+    <rect x="40" y="228" width="560" height="88" rx="10" fill="#f3eefe" stroke="#8a63d2"/>
+    <text x="58" y="254" font-weight="700" fill="#5b3a94">NativesWindows（native 层，918 行）</text>
+    <text x="58" y="276" fill="#475569">声明式 native 方法，直连 JNI</text>
+    <text x="58" y="298" fill="#94a3b8">底层：常量体系 94 类 + 句柄类型 50 类</text>
+
+    <rect x="620" y="228" width="580" height="88" rx="10" fill="#eae0f7" stroke="#8a63d2" stroke-width="2"/>
+    <text x="638" y="254" font-weight="700" fill="#5b3a94">WinApi（高层封装，3487 行）</text>
+    <text x="638" y="276" fill="#475569">面向业务的友好 API，覆盖 20+ 类 Win32 能力</text>
+    <text x="638" y="298" fill="#94a3b8">Hwnd/Hdc/Handle/HKey/ScHandle/HBitmap 等强类型句柄</text>
+  </g>
+  <line x1="602" y1="272" x2="618" y2="272" stroke="#475569" stroke-width="2" marker-end="url(#ar19)"/>
+
+  <!-- API categories grid -->
+  <text x="40" y="352" font-size="15" font-weight="700" fill="#1f2d3d">③ Win32 能力覆盖（20+ 类）</text>
+  <g font-size="12">
+    <rect x="40" y="362" width="280" height="60" rx="8" fill="#ffffff" stroke="#cfd8e3"/><text x="56" y="386" font-weight="700" fill="#334155">窗口管理</text><text x="56" y="406" fill="#64748b">查找/创建/消息/位置/样式/循环</text>
+    <rect x="330" y="362" width="280" height="60" rx="8" fill="#ffffff" stroke="#cfd8e3"/><text x="346" y="386" font-weight="700" fill="#334155">GDI 绘图（200+ 方法）</text><text x="346" y="406" fill="#64748b">画笔/画刷/字体/位图/路径/变换</text>
+    <rect x="620" y="362" width="280" height="60" rx="8" fill="#ffffff" stroke="#cfd8e3"/><text x="636" y="386" font-weight="700" fill="#334155">进程 / 线程</text><text x="636" y="406" fill="#64748b">枚举/优先级/亲和性/同步等待</text>
+    <rect x="910" y="362" width="290" height="60" rx="8" fill="#ffffff" stroke="#cfd8e3"/><text x="926" y="386" font-weight="700" fill="#334155">文件操作</text><text x="926" y="406" fill="#64748b">读写/属性/加密/磁盘/回收站/Shell</text>
+
+    <rect x="40" y="430" width="280" height="60" rx="8" fill="#ffffff" stroke="#cfd8e3"/><text x="56" y="454" font-weight="700" fill="#334155">注册表</text><text x="56" y="474" fill="#64748b">键值 CRUD/枚举/启动项</text>
+    <rect x="330" y="430" width="280" height="60" rx="8" fill="#ffffff" stroke="#cfd8e3"/><text x="346" y="454" font-weight="700" fill="#334155">服务管理</text><text x="346" y="474" fill="#64748b">SCM/枚举/启停/创建/删除</text>
+    <rect x="620" y="430" width="280" height="60" rx="8" fill="#ffffff" stroke="#cfd8e3"/><text x="636" y="454" font-weight="700" fill="#334155">设备 / 输入模拟</text><text x="636" y="474" fill="#64748b">键盘/鼠标/音量/媒体/控制台</text>
+    <rect x="910" y="430" width="290" height="60" rx="8" fill="#ffffff" stroke="#cfd8e3"/><text x="926" y="454" font-weight="700" fill="#334155">系统 / COM / Win32 App</text><text x="926" y="474" fill="#64748b">关机/网络/内存 · Shell · 原生桌面应用</text>
+  </g>
+
+  <!-- easyx -->
+  <text x="40" y="526" font-size="15" font-weight="700" fill="#0e7490">④ EasyX 图形 i2f-native-windows-easyx（9 文件）</text>
+  <g font-size="12.5">
+    <rect x="40" y="536" width="560" height="72" rx="10" fill="#e0f2f7" stroke="#0e7490"/>
+    <text x="58" y="562" font-weight="700" fill="#155e75">EasyXApi（954 行）封装 EasyX 图形库</text>
+    <text x="58" y="584" fill="#475569">图形窗口/双缓冲/图像加载保存 · 圆/矩形/椭圆/扇形/多边形/圆角矩形(各 4 变体) · 文本/像素/颜色</text>
+    <text x="58" y="600" fill="#94a3b8">把 Windows 原生绘图能力暴露给 Java（呼应 18 图形学：纯 Java 渲染 vs 原生 GDI/EasyX）</text>
+
+    <rect x="620" y="536" width="580" height="72" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="638" y="560" font-weight="700" fill="#475569">相关运行时基础设施</text>
+    <text x="638" y="580" fill="#475569">i2f-launcher：动态 Classpath 启动器 · i2f-agent / extension-agent-javassist：字节码增强</text>
+    <text x="638" y="600" fill="#94a3b8">与 native 体系共同构成「贴近操作系统」的一层能力</text>
+  </g>
+
+  <!-- launcher detail band -->
+  <g font-size="12">
+    <rect x="40" y="620" width="1160" height="56" rx="10" fill="#fbf1e6" stroke="#d09a4a"/>
+    <text x="58" y="644" font-weight="700" fill="#8a5a1f">i2f-launcher 要点</text>
+    <text x="180" y="644" fill="#6b4f2a">ExtClasspathClassLoader 子优先加载（打破双亲委派）· 递归扫描 lib/plugin/ext-lib 目录（含 JAR 内嵌 JAR）· Manifest 键 Ext-Main-Class / Ext-Path</text>
+    <text x="180" y="664" fill="#94a3b8">作为 JAR Main-Class 先于应用运行，反射调用真正 main()，实现插件式应用；参考 Spring Boot Launcher 简化</text>
+  </g>
+
+  <!-- footer -->
+  <g font-size="12.5" fill="#475569">
+    <text x="40" y="708" font-size="15" font-weight="700" fill="#1f2d3d">读图要点</text>
+    <text x="40" y="734">· 双层封装范式：native 声明层（NativesWindows）与高层易用层（WinApi）分离，指针/句柄/常量强类型化，屏蔽 JNI 细节。</text>
+    <text x="40" y="758">· 规模集中：native-windows 单模块 153 文件、WinApi 3487 行 + 94 常量类 + 50 句柄类，是全仓最「重」的 Windows 平台绑定。</text>
+    <text x="40" y="782">· 平台边界：该体系面向 Windows，属 i2f-jdk 侧原生扩展；跨平台场景应回到 18 号图的纯 Java graphics 方案。</text>
+  </g>
+</svg>

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg14" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfcfe"/><stop offset="1" stop-color="#e9eff6"/>
+    </linearGradient>
+    <marker id="ar14" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#475569"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg14)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">数据 / JDBC · 管线全景</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">JDBC 抽象 → 查询构建(BQL/BindSQL) → 元数据/方言 → 多存储引擎(MySQL/Redis/ES/Mongo) → 数据集成(DataX/Flink) → Spring 装配</text>
+
+  <!-- Band 1: JDBC abstraction -->
+  <text x="40" y="104" font-size="15" font-weight="700" fill="#1e4e79">① JDBC 抽象与执行</text>
+  <g font-size="12">
+    <rect x="40" y="112" width="200" height="78" rx="9" fill="#e8f0f8" stroke="#2e6da4"/><text x="54" y="136" font-weight="700" fill="#1e4e79">jdbc-std ↔ jdbc-impl</text><text x="54" y="156" fill="#475569">JDBC 契约与默认实现</text><text x="54" y="174" fill="#94a3b8">连接/执行抽象</text>
+    <rect x="250" y="112" width="180" height="78" rx="9" fill="#e8f0f8" stroke="#2e6da4"/><text x="264" y="136" font-weight="700" fill="#1e4e79">jdbc-data</text><text x="264" y="156" fill="#475569">数据读写映射</text><text x="264" y="174" fill="#94a3b8">结果 ↔ 对象</text>
+    <rect x="440" y="112" width="200" height="78" rx="9" fill="#e8f0f8" stroke="#2e6da4"/><text x="454" y="136" font-weight="700" fill="#1e4e79">jdbc-proxy(-xml)</text><text x="454" y="156" fill="#475569">接口式 SQL 代理</text><text x="454" y="174" fill="#94a3b8">XML 映射变体</text>
+    <rect x="650" y="112" width="170" height="78" rx="9" fill="#e8f0f8" stroke="#2e6da4"/><text x="664" y="136" font-weight="700" fill="#1e4e79">rowset</text><text x="664" y="156" fill="#475569">结果集封装</text><text x="664" y="174" fill="#94a3b8">行/列访问</text>
+    <rect x="830" y="112" width="180" height="78" rx="9" fill="#e8f0f8" stroke="#2e6da4"/><text x="844" y="136" font-weight="700" fill="#1e4e79">database</text><text x="844" y="156" fill="#475569">库级操作工具</text><text x="844" y="174" fill="#94a3b8">DDL/通用</text>
+    <rect x="1020" y="112" width="190" height="78" rx="9" fill="#e8f0f8" stroke="#2e6da4"/><text x="1034" y="136" font-weight="700" fill="#1e4e79">jdbc-procedure</text><text x="1034" y="156" fill="#475569">存储过程抽象</text><text x="1034" y="174" fill="#94a3b8">对接 ⑤ 集成</text>
+  </g>
+
+  <line x1="620" y1="190" x2="620" y2="206" stroke="#475569" stroke-width="2" marker-end="url(#ar14)"/>
+
+  <!-- Band 2: query building -->
+  <text x="40" y="228" font-size="15" font-weight="700" fill="#1f7a5a">② 查询构建 / DSL</text>
+  <g font-size="12">
+    <rect x="40" y="236" width="180" height="76" rx="9" fill="#e7f6ee" stroke="#2fa572"/><text x="54" y="260" font-weight="700" fill="#1f7a5a">bql</text><text x="54" y="280" fill="#475569">对象化查询语言</text><text x="54" y="298" fill="#94a3b8">Query → SQL</text>
+    <rect x="230" y="236" width="200" height="76" rx="9" fill="#e7f6ee" stroke="#2fa572"/><text x="244" y="260" font-weight="700" fill="#1f7a5a">jdbc-bql</text><text x="244" y="280" fill="#475569">BQL 落到 JDBC 执行</text><text x="244" y="298" fill="#94a3b8">查询构建 + 执行</text>
+    <rect x="440" y="236" width="220" height="76" rx="9" fill="#e7f6ee" stroke="#2fa572"/><text x="454" y="260" font-weight="700" fill="#1f7a5a">bindsql (page/stringify)</text><text x="454" y="280" fill="#475569">SQL 绑定 · 分页 · 格式化</text><text x="454" y="298" fill="#94a3b8">三件套协同</text>
+    <rect x="670" y="236" width="180" height="76" rx="9" fill="#e7f6ee" stroke="#2fa572"/><text x="684" y="260" font-weight="700" fill="#1f7a5a">extension-sqlparser</text><text x="684" y="280" fill="#475569">SQL 解析</text><text x="684" y="298" fill="#94a3b8">方言改写/校验</text>
+    <rect x="860" y="236" width="200" height="76" rx="9" fill="#e7f6ee" stroke="#2fa572"/><text x="874" y="260" font-weight="700" fill="#1f7a5a">extension-velocity-bindsql</text><text x="874" y="280" fill="#475569">模板引擎动态 SQL</text><text x="874" y="298" fill="#94a3b8">Velocity ↔ bindsql</text>
+    <rect x="1070" y="236" width="140" height="76" rx="9" fill="#f1f5f9" stroke="#cbd5e1"/><text x="1084" y="262" font-weight="700" fill="#64748b">page</text><text x="1084" y="282" fill="#475569">分页契约</text><text x="1084" y="300" fill="#94a3b8">配合 bindsql-page</text>
+  </g>
+
+  <line x1="620" y1="312" x2="620" y2="328" stroke="#475569" stroke-width="2" marker-end="url(#ar14)"/>
+
+  <!-- Band 3: metadata + dialect -->
+  <text x="40" y="350" font-size="15" font-weight="700" fill="#8a5a1f">③ 数据库元数据 &amp; 方言</text>
+  <g font-size="12">
+    <rect x="40" y="358" width="330" height="72" rx="9" fill="#fbf1e6" stroke="#d09a4a"/><text x="54" y="382" font-weight="700" fill="#8a5a1f">database-metadata (std/impl/data/bean)</text><text x="54" y="402" fill="#475569">表/列/键元数据契约 + 实现 + 数据 + Bean</text><text x="54" y="420" fill="#94a3b8">逆向工程与代码生成的信息源</text>
+    <rect x="380" y="358" width="200" height="72" rx="9" fill="#fbf1e6" stroke="#d09a4a"/><text x="394" y="382" font-weight="700" fill="#8a5a1f">database-dialect</text><text x="394" y="402" fill="#475569">方言差异</text><text x="394" y="420" fill="#94a3b8">分页/类型/关键字</text>
+    <rect x="590" y="358" width="200" height="72" rx="9" fill="#fbf1e6" stroke="#d09a4a"/><text x="604" y="382" font-weight="700" fill="#8a5a1f">database-type</text><text x="604" y="402" fill="#475569">JDBC ↔ Java 类型映射</text><text x="604" y="420" fill="#94a3b8">跨库类型对齐</text>
+    <rect x="800" y="358" width="410" height="72" rx="9" fill="#fbf1e6" stroke="#d09a4a"/><text x="814" y="382" font-weight="700" fill="#8a5a1f">extension-reverse-engineer-generator</text><text x="814" y="402" fill="#475569">基于元数据的逆向生成（实体/Mapper/SQL）</text><text x="814" y="420" fill="#94a3b8">消费 database-metadata 输出工程骨架</text>
+  </g>
+
+  <!-- Band 4: storage engines + cache -->
+  <text x="40" y="456" font-size="15" font-weight="700" fill="#c2410c">④ 多存储 / 缓存引擎（extension + jdk 契约）</text>
+  <g font-size="12">
+    <rect x="40" y="464" width="150" height="82" rx="9" fill="#fff1e6" stroke="#f0a05a"/><text x="54" y="488" font-weight="700" fill="#c2410c">extension-mybatis</text><text x="54" y="508" fill="#475569">MyBatis 适配</text><text x="54" y="526" fill="#94a3b8">Mapper 生态</text>
+    <rect x="200" y="464" width="150" height="82" rx="9" fill="#fff1e6" stroke="#f0a05a"/><text x="214" y="488" font-weight="700" fill="#c2410c">extension-mongodb</text><text x="214" y="508" fill="#475569">文档库</text><text x="214" y="526" fill="#94a3b8">NoSQL</text>
+    <rect x="360" y="464" width="180" height="82" rx="9" fill="#fff1e6" stroke="#f0a05a"/><text x="374" y="488" font-weight="700" fill="#c2410c">extension-elastic-search</text><text x="374" y="508" fill="#475569">全文/向量检索</text><text x="374" y="526" fill="#94a3b8">搜索</text>
+    <rect x="550" y="464" width="330" height="82" rx="9" fill="#d7efe1" stroke="#1f7a5a" stroke-width="2"/><text x="564" y="486" font-weight="700" fill="#166a4c">Redis 一契约双实现</text><text x="564" y="506" fill="#475569">redis-api(契约) ← jedis / spring-redis 两实现</text><text x="564" y="524" fill="#475569">redis-cache：IRedisClient 之上落地分布式缓存</text><text x="564" y="538" fill="#94a3b8">详见 modules 文档：setUnique / clean→flushDb 语义</text>
+    <rect x="890" y="464" width="150" height="82" rx="9" fill="#fff1e6" stroke="#f0a05a"/><text x="904" y="488" font-weight="700" fill="#c2410c">hazelcast</text><text x="904" y="508" fill="#475569">内存数据网格</text><text x="904" y="526" fill="#94a3b8">分布式</text>
+    <rect x="1050" y="464" width="160" height="82" rx="9" fill="#e8f0f8" stroke="#2e6da4"/><text x="1064" y="488" font-weight="700" fill="#1e4e79">cache-std ↔ cache</text><text x="1064" y="508" fill="#475569">lru-cache / lru-map</text><text x="1064" y="526" fill="#94a3b8">本地缓存契约</text>
+  </g>
+
+  <line x1="620" y1="546" x2="620" y2="562" stroke="#475569" stroke-width="2" marker-end="url(#ar14)"/>
+
+  <!-- Band 5+6: integration + spring -->
+  <text x="40" y="584" font-size="15" font-weight="700" fill="#5b3a94">⑤ 数据集成 · ⑥ Spring 装配</text>
+  <g font-size="12">
+    <rect x="40" y="592" width="250" height="76" rx="9" fill="#f3eefe" stroke="#8a63d2"/><text x="54" y="616" font-weight="700" fill="#5b3a94">extension-jdbc-procedure-datax</text><text x="54" y="636" fill="#475569">DataX 批量数据同步</text><text x="54" y="654" fill="#94a3b8">异构库搬运</text>
+    <rect x="300" y="592" width="250" height="76" rx="9" fill="#f3eefe" stroke="#8a63d2"/><text x="314" y="616" font-weight="700" fill="#5b3a94">extension-jdbc-procedure-flink</text><text x="314" y="636" fill="#475569">Flink 流式处理</text><text x="314" y="654" fill="#94a3b8">实时计算接入</text>
+    <rect x="560" y="592" width="650" height="76" rx="9" fill="#f3eefe" stroke="#8a63d2"/><text x="574" y="614" font-weight="700" fill="#5b3a94">⑥ Spring Boot 数据 Starter 装配</text><text x="574" y="634" fill="#475569">springboot-jdbc-bql-starter · mybatis-starter · redis-starter · redisson-starter · （i2f-spring-redis 提供 redis-api 的 Spring 侧实现）</text><text x="574" y="654" fill="#94a3b8">Starter 只做自动装配，数据能力下沉至 jdk/extension 契约与实现。</text>
+  </g>
+
+  <!-- footer -->
+  <g font-size="12.5" fill="#475569">
+    <text x="40" y="702" font-size="15" font-weight="700" fill="#1f2d3d">读图要点</text>
+    <text x="40" y="728">· 全链闭环：抽象(jdbc-std) → 构建(bql/bindsql) → 元数据/方言 → 引擎(MySQL/Redis/ES/Mongo) → 集成(DataX/Flink) → Starter。</text>
+    <text x="40" y="752">· 契约复用典范：redis-api 一份契约、jedis 与 spring-redis 两套实现，与序列化族同构——换引擎不改业务。</text>
+    <text x="40" y="776">· 元数据驱动：database-metadata 四件套 + 逆向生成器，支撑从库表结构到工程代码的自动化。</text>
+  </g>
+</svg>

@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg11" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#faf9ff"/><stop offset="1" stop-color="#eceafc"/>
+    </linearGradient>
+    <marker id="ar11" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#7c5cc4"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg11)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">AI 能力栈 · 分层全景</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">契约(i2f-ai-std) → 多引擎适配(openai/dashscope/langchain4j) → RAG/Agent → Spring Boot 装配 + MCP → JDK17 独立 spring-ai</text>
+
+  <!-- Layer 1: contract -->
+  <text x="40" y="106" font-size="15" font-weight="700" fill="#5b3a94">① 契约层 · i2f-jdk</text>
+  <g font-size="12.5">
+    <rect x="40" y="116" width="380" height="74" rx="10" fill="#f3eefe" stroke="#8a63d2"/>
+    <text x="60" y="142" font-weight="700" fill="#5b3a94">i2f-ai-std</text>
+    <text x="60" y="162" fill="#475569">AI 能力统一契约（模型/对话抽象）</text>
+    <text x="60" y="180" fill="#94a3b8">下游引擎实现此接口 → 可替换后端</text>
+    <rect x="440" y="116" width="360" height="74" rx="10" fill="#f3eefe" stroke="#8a63d2"/>
+    <text x="460" y="142" font-weight="700" fill="#5b3a94">i2f-ai-rest-openai</text>
+    <text x="460" y="162" fill="#475569">JDK 侧 OpenAI REST 轻量直连实现</text>
+    <text x="460" y="180" fill="#94a3b8">无重量框架依赖，直接 HTTP 调用</text>
+    <rect x="820" y="116" width="380" height="74" rx="10" fill="#eef2f7" stroke="#94a3b8"/>
+    <text x="840" y="142" font-weight="700" fill="#334155">i2f-agent · i2f-tools-agent</text>
+    <text x="840" y="162" fill="#475569">Java Agent 字节码增强 / 工具侧 agent</text>
+    <text x="840" y="180" fill="#94a3b8">运行时插桩，服务于探针/无侵入采集</text>
+  </g>
+
+  <line x1="620" y1="190" x2="620" y2="212" stroke="#7c5cc4" stroke-width="2" marker-end="url(#ar11)"/>
+
+  <!-- Layer 2: engine adapters -->
+  <text x="40" y="234" font-size="15" font-weight="700" fill="#1f7a5a">② 引擎适配层 · i2f-extension（三方 SDK 二次封装，provided 引入）</text>
+  <g font-size="12.5">
+    <rect x="40" y="244" width="285" height="92" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="58" y="270" font-weight="700" fill="#1f7a5a">extension-ai-openai</text>
+    <text x="58" y="290" fill="#475569">OpenAI 官方 SDK 适配</text>
+    <text x="58" y="308" fill="#475569">对话/补全 → i2f-ai-std</text>
+    <text x="58" y="326" fill="#94a3b8">海外主流大模型接入</text>
+
+    <rect x="335" y="244" width="285" height="92" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="353" y="270" font-weight="700" fill="#1f7a5a">extension-ai-dashscope</text>
+    <text x="353" y="290" fill="#475569">阿里云百炼 DashScope 适配</text>
+    <text x="353" y="308" fill="#475569">通义系列模型接入</text>
+    <text x="353" y="326" fill="#94a3b8">国产大模型路线</text>
+
+    <rect x="630" y="244" width="285" height="92" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="648" y="270" font-weight="700" fill="#1f7a5a">extension-ai-langchain4j8</text>
+    <text x="648" y="290" fill="#475569">LangChain4j（JDK8 版）编排适配</text>
+    <text x="648" y="308" fill="#475569">链式/工具调用/RAG 编排</text>
+    <text x="648" y="326" fill="#94a3b8">应用层编排框架接入</text>
+
+    <rect x="925" y="244" width="275" height="92" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="943" y="270" font-weight="700" fill="#1f7a5a">extension-ai-rag-sqlite</text>
+    <text x="943" y="290" fill="#475569">基于 SQLite 的 RAG 向量检索</text>
+    <text x="943" y="308" fill="#475569">轻量本地知识库</text>
+    <text x="943" y="326" fill="#94a3b8">检索增强生成 · 免外部向量库</text>
+  </g>
+
+  <line x1="620" y1="336" x2="620" y2="358" stroke="#7c5cc4" stroke-width="2" marker-end="url(#ar11)"/>
+
+  <!-- Layer 3: spring boot -->
+  <text x="40" y="380" font-size="15" font-weight="700" fill="#c2410c">③ 应用装配层 · i2f-springboot（Starter 自动装配 + MCP）</text>
+  <g font-size="12.5">
+    <rect x="40" y="390" width="375" height="96" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="58" y="416" font-weight="700" fill="#c2410c">springboot-ai-starter</text>
+    <text x="58" y="436" fill="#475569">AI 能力自动装配入口</text>
+    <text x="58" y="454" fill="#475569">统一配置 ai.* 前缀 · 注入引擎 Bean</text>
+    <text x="58" y="472" fill="#94a3b8">让上层零样板接入 AI</text>
+
+    <rect x="425" y="390" width="385" height="96" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="443" y="416" font-weight="700" fill="#c2410c">springboot-ai-mcp-client</text>
+    <text x="443" y="436" fill="#475569">MCP（Model Context Protocol）客户端</text>
+    <text x="443" y="454" fill="#475569">连接工具/资源服务端</text>
+    <text x="443" y="472" fill="#94a3b8">标准化模型-工具上下文协议</text>
+
+    <rect x="820" y="390" width="380" height="96" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="838" y="416" font-weight="700" fill="#c2410c">springboot-ai-mcp-server</text>
+    <text x="838" y="436" fill="#475569">MCP 服务端</text>
+    <text x="838" y="454" fill="#475569">把本地能力暴露为 MCP 工具</text>
+    <text x="838" y="472" fill="#94a3b8">与 client 构成完整 MCP 环</text>
+  </g>
+
+  <line x1="620" y1="486" x2="620" y2="508" stroke="#7c5cc4" stroke-width="2" marker-end="url(#ar11)"/>
+
+  <!-- Layer 4: spring-ai JDK17 -->
+  <text x="40" y="530" font-size="15" font-weight="700" fill="#1e4e79">④ 前沿实验组 · i2f-spring-ai（JDK17 独立构建，脱离 jdk8 主 reactor）</text>
+  <g font-size="12.5">
+    <rect x="40" y="540" width="560" height="92" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="58" y="566" font-weight="700" fill="#1e4e79">i2f-spring-ai-alibaba-starter</text>
+    <text x="58" y="586" fill="#475569">Spring AI Alibaba 装配 · 对接国产模型生态</text>
+    <text x="58" y="604" fill="#475569">基于 Spring AI 官方抽象（JDK17）</text>
+    <text x="58" y="622" fill="#94a3b8">与 extension 侧 dashscope 形成「新旧两条 AI 路线」</text>
+
+    <rect x="610" y="540" width="300" height="92" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="628" y="566" font-weight="700" fill="#1e4e79">i2f-spring-ai-sse-mcp-server</text>
+    <text x="628" y="586" fill="#475569">SSE 传输的 MCP 服务端</text>
+    <text x="628" y="604" fill="#475569">Server-Sent Events 流式</text>
+    <text x="628" y="622" fill="#94a3b8">流式工具服务</text>
+
+    <rect x="920" y="540" width="280" height="92" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-dasharray="5 4"/>
+    <text x="938" y="566" font-weight="700" fill="#64748b">test-spring-ai-chat</text>
+    <text x="938" y="586" fill="#475569">对话样例（test 模块）</text>
+    <text x="938" y="604" fill="#94a3b8">演示 / 验证用途</text>
+    <text x="938" y="622" fill="#94a3b8">不纳入生产文档化范围</text>
+  </g>
+
+  <!-- footer -->
+  <g font-size="12.5" fill="#475569">
+    <text x="40" y="672" font-size="15" font-weight="700" fill="#1f2d3d">读图要点</text>
+    <text x="40" y="698">· 双契约体系：JDK8 侧走自研 i2f-ai-std；JDK17 侧拥抱官方 Spring AI 抽象，两代并存、物理隔离构建。</text>
+    <text x="40" y="722">· 引擎可插拔：openai / dashscope / langchain4j 均向契约收敛，业务通过 ai-starter 配置切换后端而少改代码。</text>
+    <text x="40" y="746">· MCP 已成对：client + server（含 SSE 流式变体）覆盖「消费工具」与「暴露工具」两端，是本栈的连接协议主线。</text>
+    <text x="40" y="770">· RAG 本地化：ai-rag-sqlite 以 SQLite 承载向量检索，契合仓库「轻量、免重型外部依赖」取向。</text>
+  </g>
+</svg>

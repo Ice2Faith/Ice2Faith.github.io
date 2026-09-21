@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 820" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bg13" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfcfe"/><stop offset="1" stop-color="#e7ecf4"/>
+    </linearGradient>
+    <marker id="ar13" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#334155"/></marker>
+  </defs>
+  <rect width="1240" height="820" fill="url(#bg13)"/>
+  <text x="620" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#1f2d3d">加密与安全 · 能力全景</text>
+  <text x="620" y="70" text-anchor="middle" font-size="14" fill="#64748b">crypto 契约(crypto-std↔impl) · 国密(sm-crypto) · JCE Provider 适配(bc/antherd) · hash/otp · 认证与防火墙 · Spring 侧装配</text>
+
+  <!-- Row A: core crypto contract -->
+  <text x="40" y="106" font-size="15" font-weight="700" fill="#1e4e79">① 加解密核心（契约分层）</text>
+  <g font-size="12.5">
+    <rect x="40" y="116" width="270" height="92" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="58" y="142" font-weight="700" fill="#1e4e79">i2f-crypto-std</text>
+    <text x="58" y="162" fill="#475569">加密统一契约：对称/非对称/摘要</text>
+    <text x="58" y="180" fill="#475569">算法与模式抽象</text>
+    <text x="58" y="198" fill="#94a3b8">消费方面向接口</text>
+
+    <line x1="312" y1="162" x2="342" y2="162" stroke="#334155" stroke-width="2" marker-end="url(#ar13)"/>
+    <rect x="346" y="116" width="270" height="92" rx="10" fill="#dfeaf5" stroke="#2e6da4" stroke-width="2"/>
+    <text x="364" y="142" font-weight="700" fill="#1e4e79">i2f-crypto-impl</text>
+    <text x="364" y="162" fill="#475569">JCE 默认实现（AES/RSA/…）</text>
+    <text x="364" y="180" fill="#475569">对接 JDK 原生 javax.crypto</text>
+    <text x="364" y="198" fill="#94a3b8">无三方依赖即可用</text>
+
+    <rect x="640" y="116" width="270" height="92" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="658" y="142" font-weight="700" fill="#1e4e79">i2f-hash</text>
+    <text x="658" y="162" fill="#475569">哈希/摘要工具族</text>
+    <text x="658" y="180" fill="#475569">MD/SHA 系列与一致性哈希</text>
+    <text x="658" y="198" fill="#94a3b8">签名与去重的底座</text>
+
+    <rect x="934" y="116" width="276" height="92" rx="10" fill="#e8f0f8" stroke="#2e6da4"/>
+    <text x="952" y="142" font-weight="700" fill="#1e4e79">i2f-otpauth</text>
+    <text x="952" y="162" fill="#475569">一次性口令 / TOTP·HOTP</text>
+    <text x="952" y="180" fill="#475569">双因子认证令牌</text>
+    <text x="952" y="198" fill="#94a3b8">对接 authenticator 类应用</text>
+  </g>
+
+  <!-- Row B: national crypto + JCE providers -->
+  <text x="40" y="248" font-size="15" font-weight="700" fill="#1f7a5a">② 国密算法 &amp; JCE Provider 适配（extension 侧三方库）</text>
+  <g font-size="12.5">
+    <rect x="40" y="258" width="270" height="92" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="58" y="284" font-weight="700" fill="#1f7a5a">i2f-sm-crypto</text>
+    <text x="58" y="304" fill="#475569">国密 SM2/SM3/SM4 实现</text>
+    <text x="58" y="322" fill="#475569">国产密码算法能力</text>
+    <text x="58" y="340" fill="#94a3b8">合规场景</text>
+
+    <rect x="346" y="258" width="270" height="92" rx="10" fill="#e7f6ee" stroke="#2fa572"/>
+    <text x="364" y="284" font-weight="700" fill="#1f7a5a">i2f-sm-crypto-swl</text>
+    <text x="364" y="304" fill="#475569">SWL 抽象下的国密封装</text>
+    <text x="364" y="322" fill="#475569">与服务/组件装配解耦</text>
+    <text x="364" y="340" fill="#94a3b8">复用 swl 抽象层</text>
+
+    <rect x="640" y="258" width="270" height="92" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="658" y="284" font-weight="700" fill="#c2410c">extension-jce-bc</text>
+    <text x="658" y="304" fill="#475569">BouncyCastle Provider 适配</text>
+    <text x="658" y="322" fill="#475569">补强 JDK 密码算法库</text>
+    <text x="658" y="340" fill="#94a3b8">provided 引入</text>
+
+    <rect x="934" y="258" width="276" height="92" rx="10" fill="#fff1e6" stroke="#f0a05a"/>
+    <text x="952" y="284" font-weight="700" fill="#c2410c">extension-jce-sm-antherd</text>
+    <text x="952" y="304" fill="#475569">安同 TD 国密 JCE Provider</text>
+    <text x="952" y="322" fill="#475569">第三方国密硬件/库接入</text>
+    <text x="952" y="340" fill="#94a3b8">Provider 插拔</text>
+  </g>
+
+  <!-- Row C: authentication & firewall -->
+  <text x="40" y="390" font-size="15" font-weight="700" fill="#5b3a94">③ 认证 · 鉴权 · 防火墙（业务安全层）</text>
+  <g font-size="12.5">
+    <rect x="40" y="400" width="285" height="92" rx="10" fill="#f3eefe" stroke="#8a63d2"/>
+    <text x="58" y="426" font-weight="700" fill="#5b3a94">i2f-authentication</text>
+    <text x="58" y="446" fill="#475569">认证模型与凭证契约</text>
+    <text x="58" y="464" fill="#475569">主体/凭据/授权基础</text>
+    <text x="58" y="482" fill="#94a3b8">JDK 侧安全原语</text>
+
+    <rect x="355" y="400" width="285" height="92" rx="10" fill="#f3eefe" stroke="#8a63d2"/>
+    <text x="373" y="426" font-weight="700" fill="#5b3a94">i2f-firewall</text>
+    <text x="373" y="446" fill="#475569">规则式防护 / 黑白名单</text>
+    <text x="373" y="464" fill="#475569">访问过滤与拦截</text>
+    <text x="373" y="482" fill="#94a3b8">边界防护能力</text>
+
+    <rect x="670" y="400" width="250" height="92" rx="10" fill="#f3eefe" stroke="#8a63d2"/>
+    <text x="688" y="426" font-weight="700" fill="#5b3a94">spring-authentication</text>
+    <text x="688" y="446" fill="#475569">Spring 侧认证集成</text>
+    <text x="688" y="464" fill="#475569">i2f-spring 组</text>
+    <text x="688" y="482" fill="#94a3b8">框架化落地</text>
+
+    <rect x="940" y="400" width="270" height="92" rx="10" fill="#f3eefe" stroke="#8a63d2"/>
+    <text x="958" y="424" font-weight="700" fill="#5b3a94">Starter 装配</text>
+    <text x="958" y="444" fill="#475569">springboot-auth-starter</text>
+    <text x="958" y="462" fill="#475569">springboot-totp-starter</text>
+    <text x="958" y="480" fill="#475569">nginx-rtmp-auth-server-starter</text>
+  </g>
+
+  <!-- bottom flow -->
+  <text x="40" y="536" font-size="15" font-weight="700" fill="#1f2d3d">能力堆叠关系</text>
+  <g font-size="12.5">
+    <rect x="40" y="548" width="1170" height="70" rx="10" fill="#ffffff" stroke="#cfd8e3"/>
+    <text x="66" y="576" fill="#475569" font-weight="700">契约 (crypto-std / authentication)</text>
+    <line x1="330" y1="571" x2="366" y2="571" stroke="#334155" stroke-width="2" marker-end="url(#ar13)"/>
+    <text x="372" y="576" fill="#475569" font-weight="700">实现 (crypto-impl / sm-crypto)</text>
+    <line x1="640" y1="571" x2="676" y2="571" stroke="#334155" stroke-width="2" marker-end="url(#ar13)"/>
+    <text x="682" y="576" fill="#475569" font-weight="700">Provider 增强 (jce-bc / jce-sm-antherd)</text>
+    <line x1="980" y1="571" x2="1006" y2="571" stroke="#334155" stroke-width="2" marker-end="url(#ar13)"/>
+    <text x="1010" y="576" fill="#475569" font-weight="700">Starter</text>
+    <text x="66" y="604" fill="#94a3b8">上层只依赖契约与工具，算法后端（JCE / BouncyCastle / 国密 Provider）在运行期按需插拔替换。</text>
+  </g>
+
+  <!-- footer -->
+  <g font-size="12.5" fill="#475569">
+    <text x="40" y="656" font-size="15" font-weight="700" fill="#1f2d3d">读图要点</text>
+    <text x="40" y="682">· 三条主线：通用密码(crypto-std/impl)、国密(sm-crypto + jce-sm)、身份与边界(authentication + firewall + otpauth)。</text>
+    <text x="40" y="706">· JCE Provider 模式让算法来源可插拔：默认 JDK、BouncyCastle、第三方国密库均可作为底层 Provider。</text>
+    <text x="40" y="730">· Spring 侧只做「装配与集成」，密码算法本体下沉到 jdk/extension，保持薄装配原则。</text>
+    <text x="40" y="754">· totp-starter / otpauth 组合覆盖双因子认证；nginx-rtmp-auth-server-starter 面向流媒体鉴权等特定场景。</text>
+  </g>
+</svg>
