@@ -1074,6 +1074,12 @@
 
 - 详细文档：[i2f-extension-browser-selenium](./i2f-extension/i2f-extension-browser-selenium/readme.md)
 
+### i2f-extension-caffeine
+
+> Caffeine（2.9.3，provided）本地缓存契约适配：CaffeineCache 落地 IContainerCache（maximumSize 容量淘汰 + null 占位包装），CaffeineExpireCache 落地 IExpireContainerCache——借 Caffeine 原生 per-entry Expiry 直接实现逐条 TTL，无需 Guava 式后台清扫线程；与 guava、hazelcast、redis-cache 同属 cache 契约实现族。
+
+- 详细文档：[i2f-extension-caffeine](./i2f-extension/i2f-extension-caffeine/readme.md)
+
 ### i2f-extension-canal
 
 > 基于 Alibaba Canal 的 MySQL Binlog 订阅消费模板：`CanalClient` 模板方法封装「连接→订阅→轮询→解析→分发」骨架，子类只需重写 insert/delete/update 三个钩子；canal 依赖 provided + optional。
