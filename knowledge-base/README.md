@@ -1,8 +1,8 @@
 # i2f-turbo-knowledge
 
 - 知识库文档索引，涵盖编程语言、中间件组件、操作系统等方面的技术文档
-- github仓库：[github](https://github.com/Ice2Faith/i2f-turbo-knowledge)
-- gitee仓库：[gitee](https://gitee.com/Ice2Faith/i2f-turbo-knowledge)
+- github仓库：[github](https://github.com/Ice2Faith/i2f-turbo-knowledge.git)
+- gitee仓库：[gitee](https://github.com/Ice2Faith/i2f-turbo-knowledge.git)
 
 ---
 
@@ -294,7 +294,7 @@
 
 # 操作系统（operation-system）
 
-- 操作系统相关的文档，包括Linux、Windows、Android系统的常用命令与配置
+- 操作系统相关的文档，包括Linux和Windows系统的常用命令与配置
 
 ## Linux
 
@@ -345,13 +345,6 @@
 
 - 详细文档：[cygwin.md](operation-system/windows/cygwin.md)
   - Cygwin安装与配置，在Windows环境中使用Linux命令，包括环境变量配置、apt-cyg包管理
-
-## Android
-
-- Android操作系统相关工具，通过Termux获得Linux终端环境
-
-- 详细文档：[termux.md](operation-system/android/termux/termux.md)
-  - Termux入门，Android上的Linux终端环境，包括安装与权限授予、基础概念（用户/存储/权限/网络/软件包管理）、基础配置（ll别名/存储挂载/国内镜像源/后台保活/架构确认）、常用软件包安装（Java/Python/ffmpeg/pandoc）、运行Java程序与可执行程序
 
 ---
 
@@ -449,3 +442,16 @@
 
 - 详细文档：[web-cdn-import.md](programming-language/web/web-cdn-import.md)
   - WEB资源的CDN引入方式，包括静态引入、公共CDN源、国内镜像CDN替换、常用库CDN引用（Vue/Element-UI/Vant/Axios等）
+
+---
+
+# 学习
+
+## 软件考试
+
+### 高级
+
+- 高级软件考试
+
+- 详细文档：[sys-arch.md](learn/soft-exam/senior/sys-arch/sys-arch.md)
+  - 系统架构师
