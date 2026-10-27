@@ -189,4 +189,44 @@
 
 # 软件架构基础
 
-[05-software-archtecture-base.md](chapters/05-software-archtecture-base.md)
+[05-software-architecture-base.md](chapters/05-software-architecture-base.md)
+
+# 软件架构进阶
+
+[06-software-architecture-senior.md](chapters/06-software-architecture-senior.md)
+
+# 软件架构实战
+
+[07-software-architecture-apply.md](chapters/07-software-architecture-apply.md)
+
+# 论文写作指导
+
+[08-paper-guide.md](chapters/08-paper-guide.md)
+
+# 计算机网络
+
+[09-computer-network.md](chapters/09-computer-network.md)
+
+# 信息安全
+
+[10-information-security.md](chapters/10-information-security.md)
+
+# 信息系统
+
+[11-information-system.md](chapters/11-information-system.md)
+
+# 计算机组成
+
+[12-computer-compose.md](chapters/12-computer-compose.md)[12-computer-compose.md](chapters%2F12-computer-compose.md)
+
+# 操作系统
+
+[13-operation-system.md](chapters/13-operation-system.md)
+
+# 法律法规
+
+[14-law-rule.md](chapters/14-law-rule.md)
+
+# 进度管理
+
+[15-process-manage.md](chapters/15-process-manage.md)
