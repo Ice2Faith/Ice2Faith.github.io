@@ -1,6 +1,6 @@
 # MySQL procedure
 
-## 自动将表添加到备份表
+## 1. 自动将表添加到备份表
 - 删除已有存过
 ```sql
 drop procedure sp_his_bak;
@@ -50,7 +50,7 @@ select @bak_sql;
 ```
 
 ---
-## 自动创建表的历史表
+## 2. 自动创建表的历史表
 - 删除已有存过
 ```sql
 drop procedure sp_his_make;

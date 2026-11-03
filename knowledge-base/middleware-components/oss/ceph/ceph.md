@@ -1,6 +1,6 @@
 # ceph 分布式存储
 
-## 简介
+## 1. 简介
 - 统一存储
 - 支持块、对象、文件的所有存储形态
 - 开源、免费
@@ -10,13 +10,13 @@
 - 集群也被称为RADOS(reliable automatic distributed object store)
 - librados是其api，提供了各种编程语言的客户端
 
-## 组成
+## 2. 组成
 - Monitor 监视器，维护集群状态以及认证
 - Manager 守护进程，跟踪运行指标
 - OSD 处理数据的存储和复制
 - MDS 存储元数据
 
-## 安装
+## 3. 安装
 - 环境准备
 ```shell script
 
@@ -42,7 +42,7 @@
 
 ```
 
-## 运维
+## 4. 运维
 - 查看版本
 ```
 ceph -v

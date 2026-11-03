@@ -6,13 +6,13 @@
 - 也就是说，这一组容器也是运行在一台主机上，不是分布在多台主机上
 - 这一点要有清楚的认知
 
-## 安装与验证
+## 1. 安装与验证
 
-### 前置条件
+### 1.1. 前置条件
 
 - 已经安装了docker
 
-### 安装
+### 1.2. 安装
 
 - 直接安装即可
 
@@ -28,13 +28,13 @@ docker compose version
 
 - 能够看到正常输出版本信息即可
 
-## 操作
+## 2. 操作
 
 - docker compose 的操作是依赖于一个叫做 docker-compose.yml 的配置文件的
 - 这个配置文件的作用就是说明了这一组容器具体有哪些，各自的配置是怎么样的
 - 简单来说，就是描述了一组 docker run 所需要的信息的配置文件
 
-### docker-compose.yml 案例
+### 2.1. docker-compose.yml 案例
 
 - 下面来看一个简单的例子说明
 
@@ -59,7 +59,7 @@ services: # 说明有哪些容器需要进行管理
 
 - 这个实例非常简单，包含了两个nginx和redis两个容器
 
-### 操作命令
+### 2.2. 操作命令
 
 - 所有的操作几乎都是基于 docker-compose.yml 文件进行的
 - 所以，一般情况下，都需要先 cd 到 docker-compose.yml 文件所在的目录
@@ -241,7 +241,7 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 - 遵循的原则是同名覆盖，后者覆盖前者
 
-## docker-compose.yml 详解
+## 3. docker-compose.yml 详解
 
 - 详情可以查看：
 

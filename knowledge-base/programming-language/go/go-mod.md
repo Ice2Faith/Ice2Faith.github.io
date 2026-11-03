@@ -38,7 +38,7 @@ go run main.go
 go build main.go
 ```
 
-## 下载依赖
+## 1. 下载依赖
 - 查找包网站
 ```shell script
 https://pkg.go.dev/
@@ -54,7 +54,7 @@ gin (github.com/gin-gonic/gin)
 ```shell script
 github.com/gin-gonic/gin
 ```
-### 直接下载方式
+### 1.1. 直接下载方式
 - 命令行下载依赖
 ```shell script
 go get -u github.com/gin-gonic/gin
@@ -65,7 +65,7 @@ import (
     "github.com/gin-gonic/gin"
 )
 ```
-### 使用download一键下载
+### 1.2. 使用download一键下载
 - 此方式类似于webpack中的npm-install方式
 - 这种方式，一般是导入别人的项目时
 - 一键安装所有依赖的方式
@@ -79,7 +79,7 @@ import (
 ```shell script
 go mod download
 ```
-### 使用vendor方式
+### 1.3. 使用vendor方式
 - 此方式和download方式类似
 - 区别于download下载的依赖在公共MOD中
 - 而vendor方式下载的依赖则直接在项目的vendor目录下

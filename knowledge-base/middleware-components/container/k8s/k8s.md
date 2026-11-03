@@ -17,15 +17,15 @@ https://kubernetes.io/zh-cn/docs/home/
 https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_source=d1585431b7321cc3953866535fa8c067
 ```
 
-## 基础概念
+## 1. 基础概念
 
-### 宿主机
+### 1.1. 宿主机
 
 - 宿主机的概念，这是相对的
 - 简单说就是，如果一个系统A运行在另一个系统B内部，依赖于另一个系统B的运行才能运行
 - 那么，这时候，被依赖的系统B就是宿主机
 
-### 虚拟机
+### 1.2. 虚拟机
 
 - 虚拟机，也就是虚拟主机，留存最广的就是 VmWare , VirtualBox 等虚拟机软件
 - 虚拟机的本质就是，在宿主机内部运行一个真实的操作系统
@@ -40,7 +40,7 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 就算虚拟机内部系统不使用这些资源，也占用着这些资源
 - 导致宿主机无法使用这些资源
 
-### 虚拟化
+### 1.3. 虚拟化
 
 - 虚拟化，其实是很早就有的一个概念，只不过后面伴随云服务才慢慢发展起来
 - 前面，因为【虚拟机】的资源占用和预分配问题
@@ -72,7 +72,7 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 但是，却限制在了一台主机上，不能够跨主机进行管理
 - 也造成了一定的不便
 
-### 微服务
+### 1.4. 微服务
 
 - 微服务，从概念上来说，就是讲一个庞大的系统（大而杂），按照功能和相关性
 - 划分为多个自治的微小服务（微而精）
@@ -96,7 +96,7 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 使得开发者不能专注自身的业务逻辑
 - 而需要额外处理一些微服务框架的问题
 
-### 容器化
+### 1.5. 容器化
 
 - 容器化，也叫容器云，这一部分就要就是说 k8s 的内容
 - 虽然，也有一些和 k8s 类似的产品
@@ -119,12 +119,12 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 能够实现，容器的跨节点部署，多容器的统一管理，自动扩缩容，自动恢复
 - 统一的微服务基础设施（网关、服务注册、服务发现、配置中心、负载均衡、流量熔断）
 
-## k8s 简介
+## 2. k8s 简介
 
 - k8s 在前面的【容器化】概念中也说明了一些基础的概念
 - 简单说，k8s 就是统一了多容器跨节点编排的具有微服务基础设施支撑的平台
 
-### k8s 具有哪些能力
+### 2.1. k8s 具有哪些能力
 
 - 多租户/命名空间隔离：可以实现多个命名空间的隔离，比如：开发环境，测试环境，或者按照项目划分的命名空间
 - 多容器管理：提供了对多个容器的统一管理能力
@@ -135,7 +135,7 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 服务注册/发现：自动管理整个集群的服务，基于DNS进行服务的注册和发现
 - 负载均衡/流量熔断：自动将流量负载到具体的服务实例上，异常的服务实例自动排除
 
-### k8s 基础概念
+### 2.2. k8s 基础概念
 
 - 在k8s中，认为一切皆资源
 - 使用资源类型划分
@@ -152,15 +152,15 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 这样，用户就变成了没登录的状态，这样是不对的，这种就是有状态的
 - 虽然，k8s已经支持有状态服务的部署，但是实际上不建议有状态的服务部署到k8s中
 
-## 基础组件
+## 3. 基础组件
 
-### 网关：Ingress
+### 3.1. 网关：Ingress
 - 实际上就是基于nginx封装（后来随着标准制定，也有其他方案替换）的一个入口网关
 - 实现南北流量控制
 - 用户的访问，外部系统的访问，都经过网关才能访问到系统内部
 - 因此，用户访问网关，网关转发到Service服务，服务负载到容器Pod
 
-### 服务：Service
+### 3.2. 服务：Service
 - 也就是将运行相同内容的多个容器（Pod）归并为一个Service服务
 - 使得这些容器的流量入口统一，都统一从Service进行访问
 - 这样，Service内部实现负载均衡和熔断机制
@@ -176,7 +176,7 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 对微服务而言，就像访问一台固定的主机即可
 - 通过DNS的方式屏蔽了负载均衡这些细节
 
-### 部署：Deployment
+### 3.3. 部署：Deployment
 - 其实就是管理容器如何生成、运行、停止的描述性信息
 - 主要作用就是记录了镜像时怎么变成容器的Pod的
 - 这样，k8s就能够知道如何去管理容器Pod了
@@ -189,23 +189,23 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 也就是产生一个版本
 - 每个 ReplicaSet 中就管理了多个容器Pod
 
-### 容器节点：Pod
+### 3.4. 容器节点：Pod
 - 是k8s运行的最小单位
 - 也就是一组容器，运行了具体的应用
 - 但是通常情况下，一个Pod中值运行一个容器
 - 因为是最小单位，所以k8s主要就是管理这些Pod
 - 所以，大多数的操作都是为了更好的管理和控制这些Pod
 
-### 配置：ConfigMap/Secret
+### 3.5. 配置：ConfigMap/Secret
 - 用户记录一些简单的配置或者配置文件
 - 可以分发这些配置文件到具体的Pod中，实现配置的动态更新
 - 也就是一个配置中心的概念
 
-### 持久卷：PV/PVC
+### 3.6. 持久卷：PV/PVC
 - 也就是提供了一个持久存储的存储卷，能够给容器进行挂载
 - 方便存储持久化的数据
 
-### 域名解析，CoreDNS
+### 3.7. 域名解析，CoreDNS
 - 主要的作用就是将每个Service都转换为一个DNS路由规则
 - 使得能够通过Service服务名访问到这个Service
 - 也就是说，k8s内部实现微服务之间的访问，通过DNS就行
@@ -214,9 +214,9 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - 所以，如果直接在宿主机上使用服务名访问
 - 是访问不到的，除非进行了一些额外的配置
 
-### 流量路径
+### 3.8. 流量路径
 
-#### 南北流量/纵向流量
+#### 3.8.1. 南北流量/纵向流量
 
 - 用户
 - Ingress网关
@@ -225,7 +225,7 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - KubeProxy代理
 - Pod容器
 
-#### 东西流量/横向流量
+#### 3.8.2. 东西流量/横向流量
 
 - 微服务A
 - Service服务B
@@ -234,7 +234,7 @@ https://www.bilibili.com/video/BV1MT411x7GH/?p=39&share_source=copy_web&vd_sourc
 - Pod容器B
 - 微服务B
 
-#### 流量IP地址/DNS
+#### 3.8.3. 流量IP地址/DNS
 
 - k8s中，因为动态编排的原因
 - IP地址就变得不可靠了
@@ -287,9 +287,9 @@ http://app-gateway:8080
 - 其实是一样的
 - 都不用关系具体的地址，而是直接通过服务名访问即可
 
-## k8s 基础命令
+## 4. k8s 基础命令
 
-### 常用参数
+### 4.1. 常用参数
 
 - 指定命名空间
 
@@ -315,19 +315,19 @@ http://app-gateway:8080
 -c app-gateway
 ```
 
-### 查看版本
+### 4.2. 查看版本
 
 ```shell
 kubectl version
 ```
 
-### 查看集群信息
+### 4.3. 查看集群信息
 
 ```shell
 kubectl cluster-info
 ```
 
-### 查看资源
+### 4.4. 查看资源
 
 ```shell
 kubectl get 资源类型 -n 命名空间
@@ -384,7 +384,7 @@ kubectl get cm -n mysql
 kubectl get po
 ```
 
-### 进入pod容器
+### 4.5. 进入pod容器
 
 - 这个和docker的exec基本是一样的用法
 - 格式
@@ -409,7 +409,7 @@ kubectl get po
 kubectl exec -it 得到的名称 --bash
 ```
 
-### 查看Pod日志
+### 4.6. 查看Pod日志
 
 - 格式
 
@@ -436,7 +436,7 @@ kubectl logs nacos -c nacos-server -n nacos-ns
 kubectl logs -f --tail=300 nacos 
 ```
 
-### 查看Pod描述信息
+### 4.7. 查看Pod描述信息
 
 - 当Pod启动出现异常时，可以查看描述信息
 - 判断是在启动的哪个阶段出现的问题
@@ -459,7 +459,7 @@ kubectl describe po mysql-0
 kebuctl describe pods/mysql-0
 ```
 
-### 创建资源
+### 4.8. 创建资源
 
 - 格式
 
@@ -473,7 +473,7 @@ kubectl create -f 资源配置文件.yaml
 kubectl create -f app.yaml
 ```
 
-### 应用资源/更新资源/创建资源
+### 4.9. 应用资源/更新资源/创建资源
 
 - 这个和create的区别在于自动创建或者更新
 - 也就是存在则更新
@@ -498,7 +498,7 @@ kubectl apply -f app.yaml
 kubectl apply -f .
 ```
 
-### 删除资源
+### 4.10. 删除资源
 
 - 格式
 
@@ -513,7 +513,7 @@ kubectl delete po redis
 kubectl delete po redis -n redis-ns
 ```
 
-## k8s 资源管理（应用管理，服务管理，持久卷管理）
+## 5. k8s 资源管理（应用管理，服务管理，持久卷管理）
 
 - k8s 的资源管理都是通过RESTful风格的HTTP接口进行管理的
 - 也就是在 k8s 的 master 节点中的 api-server 进行处理
@@ -531,7 +531,7 @@ kubectl apply -f app.yaml
 - 因为万物皆资源，而 yaml 就是管理资源的配置文件
 - 所以，说运维 yaml 也没太大问题
 
-## k8s 资源管理的解耦核心（label标签与selector选择器）
+## 6. k8s 资源管理的解耦核心（label标签与selector选择器）
 - label标签和selector是k8s进行资源关联的核心
 - 是为了解决资源关系复杂性而提出来的一种解耦的思想
 - 通过给资源添加label标签进行属性划分
@@ -540,7 +540,7 @@ kubectl apply -f app.yaml
 - 这个思想在进行资源配置的时候进行了广泛的使用
 - 因此，很有必要了解这个规则
 
-### 引出原因
+### 6.1. 引出原因
 - 因为k8s中的资源很多，但是主要的资源是Pod
 - 但是这么多种类的资源，极大可能都和Pod相关
 - 因此，如果每个资源都像数据库一样，使用外键这种方式关联到Pod
@@ -556,7 +556,7 @@ kubectl apply -f app.yaml
 - Pod是不稳定的，可能随时发生变化
 - 这样的情况下，维护这个关系，就非常复杂
 
-### 解决方案
+### 6.2. 解决方案
 - 既然维护这个图关系非常复杂
 - 那就不维护这个关系了
 - 转而为每种资源提供标签属性(label)
@@ -574,12 +574,12 @@ kubectl apply -f app.yaml
 - 同样，这也适用于Deployment找到管理的Pod
 - ReplicaSet找到管理的Pod
 
-## Pod的探针(Probe) 与 生命周期(Lifecycle)
+## 7. Pod的探针(Probe) 与 生命周期(Lifecycle)
 - Pod 提供了启动探针(startupProbe)、就绪探针(readinessProbe)、存活探针(livenessProbe)
 - 提供了初始化容器(initContainer)、容器启动钩子(postStart)、容器关闭钩子(preStop)
 - 关于具体的使用，请查看 Deployment/Pod 资源编写章节
 
-### 探针(Probe)
+### 7.1. 探针(Probe)
 - 可以通过执行命令或者发送HTTP请求的方式
 - 确认容器运行的状态
 - 启动探针(startupProbe)
@@ -616,7 +616,7 @@ kubectl apply -f app.yaml
   - 同样，在一个探测周期中
   - 探测结果，成功继续运行，失败重新启动一个新的Pod运行
 
-### 生命周期(Lifecycle)
+### 7.2. 生命周期(Lifecycle)
 - 初始化容器(initContainer)
   - 在 kind=Deployment 的 spec.template.spec.initContainers 属性中配置
   - 或者 kind=Pod 的 spec.initContainers 属性中配置
@@ -646,7 +646,7 @@ kubectl apply -f app.yaml
   - 默认是 30s
   - 实际上也是异步的并行执行这些钩子
 
-## k8s 资源配置 Yaml 文件编写
+## 8. k8s 资源配置 Yaml 文件编写
 
 - 配置文件就是一个Yaml格式的文件
 - 所以也就要求满足Yaml语法格式
@@ -711,7 +711,7 @@ spec:
 - 都写到一份Yaml中进行描述
 - 例如，常见的：Service和Deployment一般就放在一起定义
 
-### Namespace 资源（命名空间配置）
+### 8.1. Namespace 资源（命名空间配置）
 
 - 命名空间是用来做环境隔离的
 - 比如，按照项目隔离，按照环境隔离等
@@ -729,7 +729,7 @@ metadata:
   name: env-dev-ns 
 ```
 
-### Secret 资源（配置私有镜像仓库登录信息）
+### 8.2. Secret 资源（配置私有镜像仓库登录信息）
 
 - 主要用于配置私有镜像仓库的登录信息
 - 用于能够从私有仓库拉取镜像
@@ -764,7 +764,7 @@ stringData:
   password: "harbor12345"
 ```
 
-### Ingress 资源（南北流量/纵向流量/外部到内部访问）
+### 8.3. Ingress 资源（南北流量/纵向流量/外部到内部访问）
 
 - 前面说了，Ingress资源使用于外部用户/系统访问到集群内部资源
 - 提供了南北流量（纵向流量）的控制和转发
@@ -825,7 +825,7 @@ spec:
                   number: 8080
 ```
 
-### Service 资源（东西流量/横向流量/内部访问）
+### 8.4. Service 资源（东西流量/横向流量/内部访问）
 
 - 前面说了，Service资源使用于集群内部服务之间相互访问的
 - 提供了东西流量（横向流量）的控制和转发
@@ -950,7 +950,7 @@ endpoints:
       ready: true
 ```
 
-### Deployment 资源（部署管理Pod容器）
+### 8.5. Deployment 资源（部署管理Pod容器）
 
 - 前面介绍过，Deployment使用于管理Pod容器的
 - 提供了容器的部署，升级等操作
@@ -1168,7 +1168,7 @@ spec:
 ```
 
 
-### Pod 资源（管理Pod容器）
+### 8.6. Pod 资源（管理Pod容器）
 
 - 前面介绍过，Deployment使用于管理Pod容器的
 - 但是，我们也可以直接管理Pod资源
@@ -1232,11 +1232,11 @@ spec:
       restartPolicy: OnFailure
 ```
 
-## spring-cloud 微服务部署到k8s
+## 9. spring-cloud 微服务部署到k8s
 - 想要spring-cloud项目部署到k8s中
 - 就需要了解基础的对应关系以及需要修改的点
 
-### 体系对照
+### 9.1. 体系对照
 - Spring Gateway/Nginx 与 K8s Ingress
   - 都是作为流量入口
   - 都实现了负载均衡
@@ -1282,7 +1282,7 @@ spec:
     - 提供了服务名与Pod实例的对应关系
     - 基于此能够实现基于负载均衡的服务间调用
 
-### 对应关系
+### 9.2. 对应关系
 - 一个微服务，就对应了k8s中的一个 Service 资源 和 一个 Deployment 资源
   - Deployment 负责部署微服务
   - Service 负责暴露内部调用的网络端点
@@ -1303,7 +1303,7 @@ spec:
   - 因为这些基本上都是有状态的应用
   - 硬要部署也是可以的
 
-### 修改点
+### 9.3. 修改点
 - 服务之间的调用地址的确定
   - 如果，在使用了例如 Euraka/Nacos 等这样的注册中心的情况下
   - 那么这些调用时可以不变的
@@ -1351,7 +1351,7 @@ spec:
       - http://nginx:8080/
       - 这样的，通过k8s的服务名，也就是k8s的DNS访问的
       
-## Istio 服务网格（ServiceMesh）承担的角色及作用
+## 10. Istio 服务网格（ServiceMesh）承担的角色及作用
 - istio 是一个服务网格的实现
 - 基于 Envoy 代理实现注入 Sidecar 代理服务的进出口流量
 - 具体来说，Sidecar 模式下，istio将会自动在每个运行的Pod中注入一个 Envoy 代理
@@ -1370,7 +1370,7 @@ spec:
 - 它实际上可以脱离k8s独立使用
 - 也具有自己的数据平面和控制平面
 
-### 在k8s中的作用
+### 10.1. 在k8s中的作用
 - 在k8s中，模式是使用Kube-Proxy完成流量到容器内部的代理的
 - 控制粒度比较粗，支持的协议也有限
 - istio进入之后，Envoy代理就替代了Kube-Proxy的作用
@@ -1383,7 +1383,7 @@ spec:
 - 但是因为都要经过istio的代理，整个流量调用经过的节点就变多了
 - 也就会带来一部分的网络传输开销
 
-### 在k8s中使用istio
+### 10.2. 在k8s中使用istio
 - 可以查看这篇讲解
 - [k8s-istio.md](k8s-istio.md)
 ```shell
@@ -1391,7 +1391,7 @@ k8s-istio.md
 ```
 
 
-## DevOps 体系中的应用
+## 11. DevOps 体系中的应用
 - 此章节，请查看如下文件
 - [devops.md](devops.md)
 ```shell

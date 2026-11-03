@@ -1,13 +1,13 @@
 # redis 入门
 
-## 简介
+## 1. 简介
 - redis是一个高效的缓存中间件
 
-## 依赖环境
+## 2. 依赖环境
 - 无
 
 ---
-## 环境搭建
+## 3. 环境搭建
 - 下载
 ```shell script
 wget -c https://download.redis.io/releases/redis-6.2.1.tar.gz
@@ -28,7 +28,7 @@ make
 ```shell script
 vi redis.conf
 ```
-### 配置
+### 3.1. 配置
 - 新增或修改项，主要是添加访问密码与后台运行
     - 密码为：12315
 ```shell script
@@ -66,12 +66,12 @@ echo done.
 chmod a+x *.sh
 ```
 
-## 启动服务
+## 4. 启动服务
 ```shell script
 ./start.sh
 ```
 
-## 验证
+## 5. 验证
 ```shell script
 redis-cli -h [主机] -a [密码]
 

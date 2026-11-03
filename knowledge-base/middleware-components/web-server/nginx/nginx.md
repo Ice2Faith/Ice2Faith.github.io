@@ -1,4 +1,4 @@
-## 安装 nginx
+## 1.1. 安装 nginx
 - 安装依赖环境
 ```shell script
 yum install gcc-c++
@@ -240,7 +240,7 @@ http {
     - 编辑完配置之后，最好先验证配置没有问题verify.sh
     - 再重载配置使得配置生效reload.sh
 	
-## 反向代理
+## 1.2. 反向代理
 ```shell script
 http {
     ...
@@ -288,7 +288,7 @@ http {
 }
 ```
 
-## 负载均衡
+## 1.3. 负载均衡
 ```shell script
 http {
     ...
@@ -344,7 +344,7 @@ http {
 }
 ```
 
-## 前端部署
+## 1.4. 前端部署
 ```shell script
 http {
     ...
@@ -390,7 +390,7 @@ http {
 }
 ```
 
-## 常见配置
+## 1.5. 常见配置
 - 文件上传大小限制
 ```shell script
 http{
@@ -500,7 +500,7 @@ sub_filter '192.168.x.101/' '192.168.x.102/';
 sub_filter '192.168.x.101' '192.168.x.102';
 ```
 
-## 漏洞解析
+## 1.6. 漏洞解析
 - $uri 引发的CRLF漏洞
 ```shell script
 解析：

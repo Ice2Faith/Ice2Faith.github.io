@@ -1,6 +1,6 @@
 # doris 实时分析MPP框架
 
-## 简介
+## 1. 简介
 - doris 这里指 apache-doris
     - 而不是dorisdb(StarRocks)数据库
 - doris 是一个MPP分布式集群实时分析框架
@@ -50,7 +50,7 @@ https://doris.apache.org/zh-CN/
         - 利用 DBT Doris Adapter，可以很容易的在 Doris 中完成数据转化
 
 --------------------------------------------------------------------
-## 架构
+## 2. 架构
 - 组成
     - fe(frontend) 前端
         - 负责接受用户输入，负责进行调度后端进行数据处理
@@ -78,7 +78,7 @@ https://doris.apache.org/zh-CN/
     - blocker三个
 
 --------------------------------------------------------------------
-## 部署
+## 3. 部署
 - 官网快速开始向导
 ```bash
 https://doris.apache.org/zh-CN/docs/dev/get-starting/
@@ -102,7 +102,7 @@ apache-doris-be-1.2.3-bin-x86_64.tar.xz
 apache-doris-fe-1.2.3-bin-x86_64.tar.xz
 apache-doris-dependencies-1.2.3-bin-x86_64.tar.xz
 ```
-### 单机部署
+### 3.1. 单机部署
 - 创建目录
 ```shell script
 mkdir doris-1.2.3
@@ -141,7 +141,7 @@ ifconfig
 例如: 192.168.1.5
 复制这个地址，后面配置要用
 ```
-#### 部署fe
+#### 3.1.1. 部署fe
 - 配置fe
 ```shell script
 cd doris-fe
@@ -193,7 +193,7 @@ mysql -uroot -P9030 -h127.0.0.1
 ```bash
 http://[IP]:8030
 ```
-#### 部署be
+#### 3.1.2. 部署be
 - 配置be
 ```shell script
 cd doris-be
@@ -239,7 +239,7 @@ cp ../doris-de/java-udf-jar-with-dependencies.jar ./lib/
 ```shell script
 ./bin/start_be.sh --deamon
 ```
-#### 将be添加到fe中
+#### 3.1.3. 将be添加到fe中
 - 使用MySQL客户端连接
 ```shell script
 mysql -uroot -P9030 -h127.0.0.1
@@ -267,7 +267,7 @@ alter system dropp backend "192.168.1.5:9050";
 ```bash
 http://[IP]:8030
 ```
-#### 更改访问密码
+#### 3.1.4. 更改访问密码
 - 默认情况下，是没有密码的
 - 实际情况中，不允许这样的情况出现
 - 因此，更改密码也是一个常用操作
@@ -288,7 +288,7 @@ mysql -uroot -P9030 -h127.0.0.1 -p
 ```bash
 http://[IP]:8030
 ```
-### 集群部署
+### 3.2. 集群部署
 - 环境简介
 --------------------------------
 | 主机 |  101 | 102 | 103 |
@@ -335,7 +335,7 @@ ALTER SYSTEM ADD BACKEND "192.168.1.103:9050";
 show backends\G
 ```
 
-## 简单使用
+## 4. 简单使用
 - 使用客户端连接
 ```shell script
 mysql -uroot -P9030 -h127.0.0.1 -p

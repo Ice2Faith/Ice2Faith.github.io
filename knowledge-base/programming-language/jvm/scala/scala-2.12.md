@@ -1,15 +1,15 @@
 # scala-2.12 环境安装
 
-## 简介
+## 1. 简介
 - scala是运行于jvm之上的一门与java互操作的语言
 - 其拓展和简化了java的开发
 - 大量应用于计算领域和大数据领域
 - 例如：flink/spark
 
-## 依赖环境
+## 2. 依赖环境
 - java
 
-## 安装
+## 3. 安装
 - 下载
 ```shell script
 wget -c https://downloads.lightbend.com/scala/2.12.17/scala-2.12.17.tgz

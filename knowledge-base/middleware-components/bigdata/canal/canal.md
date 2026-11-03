@@ -8,7 +8,7 @@
 - 可以实现将字典实时同步到Redis中进行缓存
 - 也可以用于跨库数据同步
 
-## MySQL主从概念
+## 1. MySQL主从概念
 
 - 因为canal是作为一个从库客户端，因此就需要MySQL开启binlog
 - 由于MySQL的binlog格式有以下三种
@@ -25,7 +25,7 @@
         - 优点是，能够同时兼具尽量少的binlog大小
         - 缺点是，并不能保证数据的一致性，因为MySQL也有不能识别到的例外情况，导致一些数据不一致性
 
-## canal工作原理
+## 2. canal工作原理
 
 - 现在已知MySQL的binlog的格式有三种
 - 因此，使用于canal的场景，就应该是row格式
@@ -34,7 +34,7 @@
 - canal作为从库客户端从MySQL中读取binlog记录到本地
 - canal同时也作为服务端，向其他的canal客户端提供数据读取的能力
 
-## canal客户端数据读取流程
+## 3. canal客户端数据读取流程
 
 - 为了减少网络IO的开销
 - canal客户端每次允许读取最大一个batchSize的变更记录封装到Message对象中
@@ -42,7 +42,7 @@
 - 包含了变更类型（update/delete/insert...）以及影响的数据行rowDatasList
 - 因此，在客户端中需要做的就是根据自己的需求，根据变更类型来处理rowDatasList中的每一个rowData
 
-## 开启MySQL的binlog
+## 4. 开启MySQL的binlog
 
 - 编辑MySQL配置文件
     - MySQL的配置文件，一般名为
@@ -184,7 +184,7 @@ privileges;
 exit
 ```
 
-## 安装
+## 5. 安装
 
 - 官网
 
@@ -292,7 +292,7 @@ cd bin
 ./startup.sh
 ```
 
-## java连接canal读取数据
+## 6. java连接canal读取数据
 
 - 创建一个maven项目
 - 添加如下客户端依赖

@@ -1,6 +1,6 @@
 # rocket 入门
 
-## 简介
+## 1. 简介
 
 - rocketmq 是一个高性能金融级别保障的消息队列
 - 主要用来提供金融级别的一致性保障
@@ -8,13 +8,13 @@
 - 并且能够保证消息的一致性、不丢失性
 - 能够用于金融级别对账、支付等高一致性场景
 
-## 依赖环境
+## 2. 依赖环境
 
 - java
 
 ---
 
-## 环境搭建
+## 3. 环境搭建
 
 - 下载地址
 
@@ -172,7 +172,7 @@ tools.cmd org.apache.rocketmq.example.quickstart.Producer
 tools.cmd org.apache.rocketmq.example.quickstart.Consumer
 ```
 
-## 安装dashboard面板
+## 4. 安装dashboard面板
 
 - 这个是可选的，提供一个可视化的界面
 - 可以用来查看一些统计信息

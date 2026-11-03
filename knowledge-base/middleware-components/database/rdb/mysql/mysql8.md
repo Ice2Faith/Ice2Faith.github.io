@@ -393,7 +393,7 @@ innodb_log_buffer_size = 64M
 docker -ps
 ```
 
-# 主从配置
+# 1. 主从配置
 - 主从，实际上就是一台主库+N个从库的配置
 - 同时从库也可以作为其他从库的主库，实现链式复制
 - 工作原理
@@ -401,7 +401,7 @@ docker -ps
     - 从库指向主库，使用iothread从主库拉取binlog保存到本地的relaylog
     - 从库使用SQLthread从relaylog执行日志，从而实现同步
 - 现在101作为主库，102作为从库
-## 主库配置
+## 1.1. 主库配置
 - 修改配置文件
     - 在[mysqld]节点下添加
 ```shell script
@@ -451,7 +451,7 @@ show master status\G
         - file: binlog.00001
         - position: 500
 
-## 从库配置
+## 1.2. 从库配置
 - 修改配置文件
     - 在[mysqld]节点下添加
 ```shell script
@@ -497,7 +497,7 @@ show slave status;
 ```
 - 确认状态为YES即可
 
-## 从库同步失败处理方法
+## 1.3. 从库同步失败处理方法
 - 查询从库状态
 ```sql
 show replica status;
@@ -534,7 +534,7 @@ select * from performance_schema.replication_applier_status_by_worker;
 	- 跳过事务：错误比较少，直接跳过这个错误
 	- 重建主从：丢失了大量数据，或者错误很多，数据也很重要，就只能重建主从
 	- 忽略错误：错误较多，数据丢失一些没关系，不追求数据的强一致性
-### 跳过事务
+### 1.3.1. 跳过事务
 - 适用场景
 	- 错误比较少，直接跳过这个错误
 	- 实际上跳过的是一个事务，而不是一条语句
@@ -557,7 +557,7 @@ start replica;
 - 这时，重新检查从库状态
 - 反复进行验证和跳过，直到从库恢复正常状态为止
 
-### 重建主从
+### 1.3.2. 重建主从
 - 使用场景
 	- 丢失了大量数据，或者错误很多，数据也很重要，就只能重建主从
 	- 这个操作，实际上就是属于停机运维
@@ -605,7 +605,7 @@ unlock tables;
 - 并且重新建立主从关系
 - 一般来说，从库是没有任何为题的
 
-### 忽略错误
+### 1.3.3. 忽略错误
 - 适用场景
 	- 错误较多，数据丢失一些没关系，不追求数据的强一致性
 	- 这种方式，需要更改从库配置文件，重启从库
@@ -638,13 +638,13 @@ systemctl start mysqld
 - 从库即可正常工作
 
 
-# keepalived+mysql主从实现HA
+# 2. keepalived+mysql主从实现HA
 - 实现目标
     - 当主库宕机之后，自动切换为从库提供服务
     - 所以关键步骤如下
     - 两台都开启binlog
     - 当主库宕机后，设置从库为新的主库
-## 两台都配置
+## 2.1. 两台都配置
 - 修改配置文件
     - 在[mysqld]节点下添加
 ```shell script
@@ -694,7 +694,7 @@ show master status\G
     - 假设值分别为：
         - file: binlog.00001
         - position: 500
-## 两台互相配置为从库
+## 2.2. 两台互相配置为从库
 - 登录客户端
 ```shell script
 mysql -uroot -p
@@ -729,7 +729,7 @@ show slave status;
 ```
 - 确认状态为YES即可
 
-## 配置keepalived
+## 2.3. 配置keepalived
 - 配置mysql的命令行免密验证
 ```shell script
 mysql_config_editor set --login-path=local --user=root --port=3306 --password
@@ -1029,6 +1029,6 @@ vrrp_instance VI_1 {
 ```
 
 
-## 常见问题
+## 2.4. 常见问题
 - 复制的mysql应用
 - 复制的mysql,必须删除${datadir}/auto.cnf 重新生成

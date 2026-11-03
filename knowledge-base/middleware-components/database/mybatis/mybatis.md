@@ -1,12 +1,12 @@
 # Mybatis 常用的XML语法
 
-## 简介
+## 1. 简介
 - mybatis作为目前经典的SSM(spring-springMvc+mybatis)体系中的一员
 - 是在java开发中及其常见的，尤其是javaweb开发
 - 现今，springboot将SS拆分成为springboot-starter，spring-boot-starter-web
 - mybatis也有了自己的starter，就是mybatis-spring-boot-starter
 
-## springboot+mybatis
+## 2. springboot+mybatis
 - web开发经典三个依赖，构建SSM环境
 - 配置pom.xml依赖
 - springboot-starter
@@ -62,7 +62,7 @@ spring.datasource.password=xxx
 ```
 - 后续编写相应的mapper接口和mapper文件，启动项目即可
 
-## mybatis的XML文件结构
+## 3. mybatis的XML文件结构
 - 和常规的XML文件一样
 - 第一行，包含XML的版本声明，字符编码声明
 ```xml
@@ -108,7 +108,7 @@ public interface SysUserMapper{
 ```
 - 特别注意，转义之后的大于等于之间是没有空格的
 
-## 节点的规范
+## 4. 节点的规范
 - 向常规的XML规范一样
 - 一个节点允许具有，属性和节点体
 - Mybatis中，最常见的属性就是id
@@ -119,7 +119,7 @@ public interface SysUserMapper{
 </[节点名]>
 ```
 
-## 节点的ID
+## 5. 节点的ID
 - 同一个namespace中，ID属性是具有唯一性的
 - 因此，ID属性是不能够重复的
 - 注意，这里说得是同一个namespace，而不是同一个mapper文件
@@ -130,7 +130,7 @@ public interface SysUserMapper{
 - 同时，对于ID还有一个特别的点，那就是可能对应了接口中的方法名
 - 也就是说，接口中的方法不能重载，否则ID将会发生重复
 
-## 与JAVA的取值
+## 6. 与JAVA的取值
 - xml文件中，一般都是取用java传过来的bean的值
 - 因此，就需要一种取值方式
 - 在mybatis中，取值方式有两种，即${}方式和#{}方式
@@ -155,7 +155,7 @@ public interface SysUserMapper{
 #{webVo.keyword}
 ```
 
-## 最常见的基本节点
+## 7. 最常见的基本节点
 - 当然是增删改查（CRUD[Create,Read,Update,Delete]）
 - 假设定义的接口如下
 ```java
@@ -183,7 +183,7 @@ public class SysUser{
 }
 ```
 - 他们四种操作，对应的节点属性ID就对应了接口中的方法名
-### 增加 insert
+### 7.1. 增加 insert
 ```xml
 <insert id="insertOne">
     insert into sys_user
@@ -242,7 +242,7 @@ values
 (#{username},#{password},#{roleId},now())
 ```
 
-### 更新 update
+### 7.2. 更新 update
 - java接口
 ```java
 int updateById(SysUser user);
@@ -261,7 +261,7 @@ where id=#{id}
 - 在看过上面的insert部分的讲解之后
 - 相信这部分应该很好理解
 
-### 删除 delete
+### 7.3. 删除 delete
 - java接口
 ```java
 int deleteById(Long id);
@@ -274,7 +274,7 @@ where id=#{id}
 </delete>
 ```
 
-### 查询 select
+### 7.4. 查询 select
 - 查询比其他的更新类操作要复杂一些
 - 节点的属性，需要指定返回的类型resultType
 - 也就是，最终查询的结果，怎么保存成为java实体bean
@@ -304,7 +304,7 @@ where id=#{id}
     - 但是，支持使用resultMap的方式，一次map编写，多次使用
     - 下面进行介绍
     
-### 批量查询 select
+### 7.5. 批量查询 select
 - 其实，批量查询，xml部分是一样的，不用变化
 - 而是接口需要发生变化
 - 下面给一个例子，根据用户名模糊查询，加角色ID查询的例子
@@ -331,7 +331,7 @@ and role_id = #{roleId}
 - 返回值是SysUser类型的一个List
 - 但是xml中，resultType的值是SysUser,并不是List，这个是需要也别注意的
     
-### 结果映射 resultMap
+### 7.6. 结果映射 resultMap
 - 前面说了，数据库的下划线和java实体的驼峰之间，需要每次都进行别名转换
 - 非常的让人闹心
 - 现在使用resultMap的方式改善一下
@@ -359,7 +359,7 @@ where id=#{id}
 </select>
 ```
 
-## 动态SQL
+## 8. 动态SQL
 - 动态SQL是最常用的，也是最实用的开发技能
 - 因为，常见的开发中，一般一条SQL不是固定的几个参数
 - 而是根据实际需要，使用不同的参数，构建出不同的SQL执行
@@ -371,7 +371,7 @@ where id=#{id}
 - trim,where,set
 - sql,include
 
-### if 节点
+### 8.1. if 节点
 - if节点，改节点具有一个test属性，当test属性的结果为真的时候，if节点中的节点体才会拼接到SQL中
 - 下面是定义
 ```xml
@@ -409,7 +409,7 @@ where 1=1
 - 那就是where之后的1=1不能少
 - 改进方式就是使用where标签
 
-### where 节点
+### 8.2. where 节点
 - 前面说了，where之后1=1这种方式非常的不好
 - 那么where节点的作用就是
 - 自动的将where之后多余的and和or去掉
@@ -431,7 +431,7 @@ from sys_user
 - where之后也不需要使用1=1来保证SQL不发生错误
 - 这里提前说一下，实际上where是trim节点的一个特例
 
-### choose 节点
+### 8.3. choose 节点
 - if 几点虽然已经够用了
 - 但是某些情况下，需要if-else这样的多分支判定的支持
 - 因此choose节点就是这样的一个结构
@@ -473,7 +473,7 @@ from sys_user
 </where>
 ```
 
-### foreach 节点
+### 8.4. foreach 节点
 - 在开发中，常常会遇到，根据一些列的某个值，构造SQL的情况
 - 比如，用户多选了某些角色ID，你要进行一个in查询的情况
 - 亦或者，要进行批量插入的情况
@@ -519,7 +519,7 @@ insert into sys_user(username,password,role_id)
 </foreach>
 ```
 
-### set 节点
+### 8.5. set 节点
 - set，这个词，在SQL中，也就是应用在update...set环境中的
 - 实际上，set节点也是应用在update语句的set中
 - 作用和where节点类似
@@ -538,7 +538,7 @@ where id=#{id}
 - set标签的作用之一就是去除多余的逗号
 - 实际上，这也是trim标签的一种特例
 
-### trim 节点
+### 8.6. trim 节点
 - 前面提到了where和set标签
 - 都说是trim标签的特例
 - 那么trim标签的作用是什么？
@@ -567,7 +567,7 @@ where id=#{id}
 - 一般的应用场景中
 - 多倾向于去除前缀后者后缀
 
-### sql/include 标签
+### 8.7. sql/include 标签
 - sql标签是为了增加SQL复用性而添加的
 - 例如一段SQL会被重复使用到时，重复的复制一段SQL
 - 对于需要进行升级改造语句的时候，往往得修改多出SQL
@@ -618,7 +618,7 @@ where id=#{id}
 - 包含了查询出的列和查询使用到的表
 - 这样，从xml层面来看，仅需要编写一份代码，就实现了根据ID查询和常规的列表查询两个功能
 
-## 规范化xml
+## 9. 规范化xml
 - 什么是规范化？
 - 规范化的目的是什么？
 - 规范化的目的是为了无脑开发
@@ -629,7 +629,7 @@ where id=#{id}
 - 规范其实就是一个抽象过程
 - 将明确的过程抽象化，归一化的过程
 
-### 规范化接口
+### 9.1. 规范化接口
 - 一般基础操作定义
 - 这里还是以SysUser为例
 - 一般项目中，还会有例如Vo,Dto等DDD模式下的java实体类
@@ -681,7 +681,7 @@ SysUserVo queryByKey(Long id);
 - 就已经能够满足绝大多数的需求了
 - 下面，分别来说一下，这些接口对应的xml的实现
 
-### 规范化XML实现
+### 9.2. 规范化XML实现
 
 - 直接插入接口
     - 直接无论是否为空都插入
@@ -882,9 +882,9 @@ SysUserVo queryByKey(Long id);
 - 避免了复杂的命名，导致记忆力不够不能直接想到接口名称
 - 避免了明确的类型限定，知道某些场景下，不能直接调用接口
 
-## 其他的Mybatis使用技巧
+## 10. 其他的Mybatis使用技巧
 
-### like 语法的跨数据库
+### 10.1. like 语法的跨数据库
 - 尽量使用夸数据库支持的语法
 - 避免因为迁移数据库带来大量的修改操作
 - 例如：concat函数，在mysql中支持多个参数，在oracle中只支持两个参数
@@ -904,7 +904,7 @@ username like concat('%',concat(#{username},'%'))
 instr(username,#{username}) > 0
 ```
 
-### insert 批量插入的夸数据库
+### 10.2. insert 批量插入的夸数据库
 - 批量插入的差异
 - mysql中，直接使用values之后，接多个行即可
 - oracle中，需要借助insert all 语法
@@ -916,7 +916,7 @@ unoin all
 select select [列] from dual
 ```
 
-### 查询结果为 Map
+### 10.3. 查询结果为 Map
 - 直接查询成为一个Map，不要使用实体
 - 这种一般适用于直接查询给页面，不需要再进行处理的的场景
 - 也就是只读的场景
@@ -932,7 +932,7 @@ List<Map<String,Object>> queryReport(@Param("post")SysUserVo post);
 </select>
 ```
 
-### 获取插入的主键
+### 10.4. 获取插入的主键
 - 核心selectKey标签
 - 其实就是一个类似AOP的作用
 - 用在insert标签内

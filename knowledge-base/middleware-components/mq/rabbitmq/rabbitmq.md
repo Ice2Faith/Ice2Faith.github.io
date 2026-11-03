@@ -11,9 +11,9 @@
 https://www.rabbitmq.com/docs/which-erlang
 ```
 
-## windows安装
+## 1. windows安装
 
-### 安装erlang
+### 1.1. 安装erlang
 
 - 前面说了，因为是使用erlang编写的
 - 所以，需要先安装erlang环境
@@ -56,7 +56,7 @@ Path
 erl -version
 ```
 
-### 安装rabbitmq
+### 1.2. 安装rabbitmq
 
 - 官网
 
@@ -118,9 +118,9 @@ guest
 guest
 ```
 
-## Linux安装
+## 2. Linux安装
 
-### 安装erlang
+### 2.1. 安装erlang
 
 - 前面说了，因为是使用erlang编写的
 - 所以，需要先安装erlang环境
@@ -168,7 +168,7 @@ yum install ncurses-devel
 erl -version
 ```
 
-### 安装rabbitmq
+### 2.2. 安装rabbitmq
 
 - 官网
 

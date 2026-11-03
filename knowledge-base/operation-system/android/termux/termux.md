@@ -3,7 +3,7 @@
 - termux，服务于 android 的 linux 系统应用程序
 - 本质上是实现的一个运行了类似alpine的linux内核虚拟程序
 
-## 安装
+## 1. 安装
 
 - 官方地址
 
@@ -23,7 +23,7 @@ wget https://github.com/termux/termux-app/releases/download/v0.118.3/termux-app_
 - 如果经常使用或者作为一个小型服务器使用
 - 可以基于自动启动、后台防杀白名单
 
-## 基础概念
+## 2. 基础概念
 
 - 用户
     - 用户是安装之后，android 自动分配的，非 root 用户
@@ -48,14 +48,14 @@ wget https://github.com/termux/termux-app/releases/download/v0.118.3/termux-app_
     - 因此，使用 `pkg install` 来进行安装
     - 使用 `pkg search` 来查找软件包
 
-## 配置
+## 3. 配置
 
 - 直接打开 App 即可进入终端
 - 只有一个用户，这个用户是非 root 用户
 - 而且也修改不了用户，是自动生成的
 - 下面开始基础配置
 
-### 配置 ll 别名
+### 3.1. 配置 ll 别名
 
 - 默认是没有 ll 命令别名的
 - 用起来比较别扭，所以我们先添加一个别名
@@ -70,7 +70,7 @@ echo "alias ll='ls -alh'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### 存储目录挂载
+### 3.2. 存储目录挂载
 
 - 初始化存储挂载
 - 直接输入以下命令
@@ -92,7 +92,7 @@ cd ~
 ln -s /mnt/sdcard $(pwd)/sdcard
 ```
 
-### 更换国内镜像源
+### 3.3. 更换国内镜像源
 
 - 执行命令后，选择中国的镜像源即可
 
@@ -100,7 +100,7 @@ ln -s /mnt/sdcard $(pwd)/sdcard
 termux-change-repo
 ```
 
-### 后台保活
+### 3.4. 后台保活
 
 - 防止息屏的时候进程被杀
 - 导致部署在其中的服务中断
@@ -110,7 +110,7 @@ termux-change-repo
 termux-wake-lock
 ```
 
-### 确认架构
+### 3.5. 确认架构
 
 - 如果你要编译自己的软件包到这个环境运行
 - 那么，你需要先确定自己手机的架构类型
@@ -131,7 +131,7 @@ uname -a
 getprop ro.product.cpu.abi
 ```
 
-## 安装常用软件包
+## 4. 安装常用软件包
 
 - 更新源
 
@@ -150,7 +150,7 @@ pkg install openssh -y
 pkg install build-essential pkg-config cmake binutils libtool -y
 ```
 
-### 安装 java (可选)
+### 4.1. 安装 java (可选)
 
 ```shell
 pkg install openjdk-17
@@ -163,7 +163,7 @@ java -version
 javac -version
 ```
 
-### 安装 python (可选)
+### 4.2. 安装 python (可选)
 
 ```shell
 pkg install python
@@ -183,7 +183,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn
 ```
 
-### 安装 ffmpeg (可选)
+### 4.3. 安装 ffmpeg (可选)
 
 ```shell
 pkg install ffmpeg -y
@@ -195,7 +195,7 @@ pkg install ffmpeg -y
 ffmpeg -version
 ```
 
-### 安装 pandoc (可选)
+### 4.4. 安装 pandoc (可选)
 
 ```shell
 pkg install pandoc -y
@@ -207,7 +207,7 @@ pkg install pandoc -y
 pandoc --version
 ```
 
-## 运行自己的程序
+## 5. 运行自己的程序
 
 - 前面说了，android 的 sdcard 下面都是 no-exec 的
 - 也就是说，如果你的软件放在 sdcard 下面
@@ -236,7 +236,7 @@ mkdir -p ~/apps
 mkdir -p ~/env
 ```
 
-### 运行java程序
+### 5.1. 运行java程序
 
 - 我们为每个应用，创建单独的目录，方便管理
 
@@ -267,7 +267,7 @@ cd ~/apps/java-app
 java -jar app.jar
 ```
 
-### 运行可执行程序
+### 5.2. 运行可执行程序
 
 - 我们为每个应用，创建单独的目录，方便管理
 
@@ -308,7 +308,7 @@ chmod +x app.elf
 ./app.elf
 ```
 
-## 拓展
+## 6. 拓展
 
 - 如果你需要使用一些 Android 原生的功能
 - 但是又不想自己编写 App 调用原生接口
@@ -321,7 +321,7 @@ chmod +x app.elf
 - 工作原理：是通过系统通知方式、唤起服务实现的
 - 而不是什么rpc/http方式
 
-### Termux:Api 软件安装
+### 6.1. Termux:Api 软件安装
 
 - 官方地址
 
@@ -340,7 +340,7 @@ wget https://github.com/termux/termux-api/releases/download/v0.53.0/termux-api-a
 - 因此，他的权限申请时非常多的
 - 根据自己的实际情况基于权限即可
 
-### termux-api 软件包安装
+### 6.2. termux-api 软件包安装
 
 - 进入 termux 终端
 - 输入下面的命令，进行安装即可
@@ -349,7 +349,7 @@ wget https://github.com/termux/termux-api/releases/download/v0.53.0/termux-api-a
 pkg install termux-api
 ```
 
-### 验证
+### 6.3. 验证
 
 - 执行下面的命令，手机应该震动
 

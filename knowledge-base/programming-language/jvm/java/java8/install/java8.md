@@ -1,12 +1,12 @@
 # java8 环境安装
 
-## 简介
+## 1. 简介
 - java8是目前使用最多的jdk版本
 
-## 依赖环境
+## 2. 依赖环境
 - 无
 
-## 安装
+## 3. 安装
 - 检查yum
 ```shell script
 yum list java*
@@ -20,7 +20,7 @@ yum -y install java-1.8.0-openjdk*
 java -version
 ```
 
-## 方式二
+## 4. 方式二
 - 下载
 ```shell script
 wget https://download.java.net/openjdk/jdk8u42/ri/openjdk-8u42-b03-linux-x64-14_jul_2022.tar.gz
@@ -57,7 +57,7 @@ source /etc/profile
 java -version
 ```
 
-## windows 安装
+## 5. windows 安装
 - 下载
   - 选择8u201版本
   - 这个版本及之前是商业免费的，避免版权纠纷

@@ -2,7 +2,7 @@
 
 ---
 
-## 安装（windows）
+## 1. 安装（windows）
 - 下载
 ```shell script
 https://nodejs.cn/download/
@@ -28,7 +28,7 @@ npm -v
 ```
 - 能够显示版本信息即可
 
-## 配置
+## 2. 配置
 - 进入安装路径
 ```shell script
 cd D:\nodejs
@@ -89,7 +89,7 @@ cnpm -v
 npm config list
 ```
 
-## 测试
+## 3. 测试
 - 其实上面安装cnpm没问题就已经OK了
 - 但是还是再安装一个吧
 - 安装express
@@ -97,7 +97,7 @@ npm config list
 npm install express -g
 ```
 
-## 可选命令安装
+## 4. 可选命令安装
 - 安装vite
 ```shell script
 npm install -g vite

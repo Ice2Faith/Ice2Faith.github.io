@@ -6,7 +6,7 @@
     - 借助MySQL提供的mysqldump+任务计划程序 进行定期的关键表备份
 
 ---
-## 脚本路径
+## 1. 脚本路径
 - 案例
     - 放在Windows下进行dump
         - 路径为： G:\mysql8-backup-suit
@@ -16,7 +16,7 @@
         - dump的数据路径：/home/db_backup
 
 ---
-## 使用方式
+## 2. 使用方式
 - 解压本压缩包
 - 你将会得到如下文件树
 ```shell script
@@ -91,7 +91,7 @@ mysql8-backup-suit
 - 如果需要进行一组表的操作
 - 建议使用批量执行模板
 
-## 批量执行模板
+## 3. 批量执行模板
 - 一般来说，都不是单表备份
 - 因此，提供一个批量备份的模板
 - 根据模板编写自己的备份脚本即可
@@ -100,7 +100,7 @@ backups.bat
 backups.sh
 ```
 
-## 注意事项
+## 4. 注意事项
 - 命令中的转义字符
     - windows环境
         - 符号%是需要转义的，使用%%表示
@@ -120,8 +120,8 @@ backups.sh
         - 在linux下，配置的密码应为：admin%123
 
 ---
-## mysqldump 使用简介
-### 备份数据库
+## 5. mysqldump 使用简介
+### 5.1. 备份数据库
 ```shell script
 mysqldump [-u 用户名] [-p 密码] 数据库名 [... 表名] > 文件名
 ```
@@ -168,7 +168,7 @@ mysqldump [-u 用户名] [-p 密码] --single-transaction --quick 数据库名 [
 ```
 
 ---
-### 恢复数据库
+### 5.2. 恢复数据库
 ```shell script
 mysql [-u 用户名] [-p 密码] 数据库名 < 文件名
 ```

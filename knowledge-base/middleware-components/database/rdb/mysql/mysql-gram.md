@@ -1,6 +1,6 @@
 # MySQL 语法集锦
 ---
-## 日期
+## 1. 日期
 - 当前时间
 ```sql
 select 
@@ -90,7 +90,7 @@ union all
 select 14,'wang' from dual;
 ```
 ---
-## DDL
+## 2. DDL
 - 创建表
 ```sql
 create table tb_user
@@ -260,7 +260,7 @@ SELECT * FROM information_schema.INNODB_TRX ;
 kill ${trx_mysql_thread_id}
 ```
 
-## geo地理位置查询
+## 3. geo地理位置查询
 - 查询最近的距离(米查询)
 - 直接计算两点间距离来实现，需要大量计算量
 - 在数据集大量的时候，不适用

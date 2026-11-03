@@ -2,7 +2,7 @@
 
 ---
 
-## 简介
+## 1. 简介
 - 这是一个能够在windows环境中使用linux命令的工具
 - 这样，对于习惯使用linux命令的群体来说
 - 在windows环境中，也能够熟悉的使用linux命令进行操作
@@ -10,7 +10,7 @@
 - 毕竟这是模拟命令
 - 不是真实的linux系统
 
-## 安装
+## 2. 安装
 - 下载
     - 选择 setup-x86_64.exe 下载即可
 ```shell script
@@ -64,7 +64,7 @@ wget,tar,zip,unzip,curl,gawk,bzip2
 ```
 - 安装完成
 
-## 添加环境变量
+## 3. 添加环境变量
 - 添加家变量
 ```shell script
 CYGWIN_HOME
@@ -82,7 +82,7 @@ Path
 %CYGWIN_HOME%\usr\local\bin
 ```
 
-## 测试
+## 4. 测试
 - 打开CMD
 - 测试基本命令是否可用
 ```shell script
@@ -90,7 +90,7 @@ ls -al
 ```
 - 基本安装完毕
 
-## 配置软件包下载
+## 5. 配置软件包下载
 - 不管是在linux中使用yum还是apt-get
 - 都习惯了直接安装
 - 而不是在windows中，再次使用安装向导 setup-x86_64.exe 进行添加需要的软件包

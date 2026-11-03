@@ -2,19 +2,19 @@
 
 ---
 
-## 简介
+## 1. 简介
 - maven是作为java项目的一个依赖管理器
 - 或者说是包管理器
 - 由于其配置简单，上手速度快，易操作
 - 插件丰富等特点
 - 被广泛使用在java项目中
 
-## 前提
+## 2. 前提
 - 需要java环境
 - 如果未安装java
 - 请先安装jdk
 
-## 安装
+## 3. 安装
 - 下载
 ```shell script
 https://maven.apache.org/download.cgi
@@ -126,7 +126,7 @@ mvn -v
 mvn help:system
 ```
 
-## 在IDEA中使用
+## 4. 在IDEA中使用
 - 打开一个maven项目
 - 这时候，idea会自动识别maven项目
 - 并开始自动导入import
@@ -137,7 +137,7 @@ mvn help:system
 - 辅助本地仓库路径，也用我们自己的
 - 重新运行import导入包即可
 
-## 在命令行中使用
+## 5. 在命令行中使用
 - 注意，以下操作，需要在当前目录中存在 pom.xml 文件
 - 也就是maven项目中，存在子模块的，只要存在这个文件即可
 - 不过一般建议在父工程中执行命令，防止在子模块中出现找不到依赖的情况
@@ -187,7 +187,7 @@ mvn deploy:deploy-file -DgroupId=${groupId}  -DartifactId=${artifactId}  -Dversi
 mvn deploy:deploy-file -DgroupId=com.antherd  -DartifactId=sm-crypto  -Dversion=0.3.2  -Dpackaging=jar  -Dfile=.\sm-crypto-0.3.2.jar -Durl=http://10.1.4.161:8085/repository/dep_release/  -DrepositoryId=dep_release
 ```
 
-## maven项目中 pom.xml 的编写
+## 6. maven项目中 pom.xml 的编写
 
 - 详情查看
 

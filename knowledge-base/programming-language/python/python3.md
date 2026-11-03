@@ -1,13 +1,13 @@
 # python3 环境安装
 
-## 简介
+## 1. 简介
 - python3 是python的第三个版本，类似于java8
 - 但是python3和python2并不是向下兼容的
 
-## 依赖环境
+## 2. 依赖环境
 - 无
 
-## 安装
+## 3. 安装
 - 更新yum
 ```shell script
 yum update -y

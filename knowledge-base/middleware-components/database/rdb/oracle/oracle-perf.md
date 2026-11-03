@@ -1,6 +1,6 @@
 # oracle 执行分析
 
-## 分析过程
+## 1. 分析过程
 - 执行解析计划
 - 语法
 ```sql
@@ -19,7 +19,7 @@ FROM table(dbms_xplan.display)
 ```
 
 
-## 查询锁
+## 2. 查询锁
 - 查询所有锁
 ```sql
 SELECT  

@@ -2,7 +2,7 @@
 
 ---
 
-## intro
+## 1. intro
 - docker 依赖于Linux内核，因此要运行docker就必须要有一个Linux内核
 - 什么是Linux内核？和常说的Linux系统什么关系？
 - Linux kernel(linux内核)是Linux系统的核心
@@ -18,7 +18,7 @@
 - 一般的第二次就是一个Linux发行版
 - 下面依次叠加更高的层
 
-## docker的分层
+## 2. docker的分层
 - 首选举个例子来看一下
 - 0.linux内核层（操作系统提供，docker共享内核）
 - 1.centos发行版（docker提供，借助共享的内核）
@@ -32,7 +32,7 @@
 - 所以，就算docker镜像看起来那么大，但是实际上，重复的层是复用的
 - 实际占用空间并没有那么大
 
-## 固件层和读写层
+## 3. 固件层和读写层
 - 上面的例子中，是一个典型的场景，每一层都依赖于上一层的基础运行
 - 其中0-3层可以是一个固定的镜像层，不需要进行改动
 - 而，第4层则是用户自己进行交互的层
@@ -45,13 +45,13 @@
 
 ---
 
-## docker的基本操作
+## 4. docker的基本操作
 
-### 安装docker
+### 4.1. 安装docker
 - 这部分比较简单，如果是centos7,提供了一份脚本，在./install/centos7/docker-install.sh
 - 按照脚本执行即可
 
-### docker的运行原理
+### 4.2. docker的运行原理
 - 可以参考git的使用原理
 - 在dockerhub中search需要的镜像
 
@@ -191,7 +191,7 @@ docker load -i 加载的镜像文件名称
 - 同时，你也可以在dockerhub上注册自己的账号，将自己创建的镜像，提交到远程
 - 这里不给出
 
-### 普通用户使用docker
+### 4.3. 普通用户使用docker
 
 - 默认情况下，docker是运行在docker组的
 - 使用root用户访问是正常的
@@ -203,7 +203,7 @@ docker load -i 加载的镜像文件名称
 usermod -aG docker app
 ```
 
-### 容器的开机自启动
+### 4.4. 容器的开机自启动
 
 - 配置单个容器
 
@@ -256,7 +256,7 @@ vi /etc/docker/daemon.json
 systemctl restart docker
 ```
 
-### 清理docker空间
+### 4.5. 清理docker空间
 
 - 使用命令进行一键清除未使用的镜像，容器，缓存
 
@@ -272,7 +272,7 @@ docker system prune
 docker system prune -a
 ```
 
-### Dockerfile 自定义镜像
+### 4.6. Dockerfile 自定义镜像
 - 上面说了，可以使用commit+save+load方式实现自定义镜像
 - 但是这种操作可能还是比较麻烦
 - 因此，借助Dockerfile就能够生成一个镜像
@@ -376,18 +376,18 @@ docker image history --no-trunc --format json [镜像名]
 docker image history --no-trunc --format json redis
 ```
 
-## 完结
+## 5. 完结
 - 基础的docker使用和Dockerfile的编写及构建，就已经结束了
 - 部分基础参考在jar8env文件夹下面给出
 - 剩下的就可以自行探索更高级的使用方式
 - 基于docker构建集群，结合k8s做容器编排
 
-## 在maven中使用插件操作docker
+## 6. 在maven中使用插件操作docker
 
 - 在maven中使用插件操作docker
 - 能够实现 镜像生成、推送仓库、运行容器
 
-### 配置Docker远程管理
+### 6.1. 配置Docker远程管理
 
 - 镜像生成，推送这些操作都是需要Docker环境的
 - 一般的情况下，我们都是使用自己的电脑开发
@@ -478,7 +478,7 @@ vi /etc/docker/daemon.json
 }
 ```
 
-### 配置maven插件
+### 6.2. 配置maven插件
 
 - 详细配置
   - Java 端： ./maven/java
@@ -707,13 +707,13 @@ mvn docker:push
 mvn clean package docker:build docker:push
 ```
 
-## 安装docker镜像私服
+## 7. 安装docker镜像私服
 
 - 安装私服，需要更改docker的配置指向私服
 - 然后需要重启docker，为了避免多次重启docker
 - 我们先配置好docker，再安装私服
 
-### 配置docker指向私服
+### 7.1. 配置docker指向私服
 
 - 下面使用后registry2进行演示
 - 编辑docker配置，添加私有仓库
@@ -771,7 +771,7 @@ systemctl daemon-reload
 systemctl restart docker
 ```
 
-### 安装registry2私服
+### 7.2. 安装registry2私服
 
 - 拉取镜像
 
@@ -790,7 +790,7 @@ docker run -p 5000:5000 --name registry2
 	-d registry:2
 ```
 
-### 安装registry-ui私服的UI界面
+### 7.3. 安装registry-ui私服的UI界面
 
 - 现在只有一个仓库的服务，没有UI界面，比较不方便
 - 下面开始安装UI界面
@@ -822,7 +822,7 @@ docker run -p 8280:80 --name registry-ui
 http://192.168.x.x:8280/
 ```
 
-### 验证私服
+### 7.4. 验证私服
 
 - 现在，你看到的页面里面应该是没有任何的镜像的
 - 现在，我们尝试推送一个测试镜像到私有仓库中
@@ -867,7 +867,7 @@ docker login 192.168.1.101:80 -u admin -p harbor12345
 docker logout 192.168.1.101:80
 ```
 
-### 打包自己的镜像并推送
+### 7.5. 打包自己的镜像并推送
 
 - 下面，我们进行一个简单的案例
 - 来说明，手动打包并推送到私服的流程
@@ -934,7 +934,7 @@ docker push 192.168.x.x:5000/web-app:v1.0
 - 在浏览器中，刷新私服的UI
 - 就能够看到镜像了
 
-## nginx 转发私服配置
+## 8. nginx 转发私服配置
 
 - 添加nginx转发配置
 - 这里假定代理这台nginx的IP为 192.168.1.102

@@ -1,7 +1,7 @@
 # Gzip 压缩配置
 
 --- 
-## tomcat 篇
+## 1. tomcat 篇
 - 配置文件 {TOMCAT_HOME}/conf/server.xml
 - 更改节点： Server/Service/Connector
 - 添加如下配置
@@ -42,7 +42,7 @@ compressableMimeType="text/html,text/xml,text/plain,text/css,text/javascript,app
   
   
 ---  
-## nginx 篇
+## 2. nginx 篇
 - 配置文件： {NGINX_HOME}/conf/nginx.conf
 - 配置节点： server
 - 添加如下配置：
@@ -99,7 +99,7 @@ server {
     - gzip_disable 禁用gzip的浏览器代理
 
 ---
-## springboot 篇
+## 3. springboot 篇
 - 直接在配置文件中配置即可
 ```yaml
 server:

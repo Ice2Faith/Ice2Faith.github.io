@@ -5,9 +5,9 @@
 https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 ```
 
-## 基础概念
+## 1. 基础概念
 
-### 服务网格（ServiceMesh）是什么
+### 1.1. 服务网格（ServiceMesh）是什么
 
 - 服务网格是一个理念
 - 这个理念描述了为支撑复杂的云原生应用服务自己拿的网络通信的基础设施层
@@ -17,7 +17,7 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 - 代理服务通常与应用服务部署在一起，代理应用服务的流量，对应用服务来说是无感知的，透明的
 - 因此，是一个用来专门处理网络流量转发的基础设施
 
-### istio是什么
+### 1.2. istio是什么
 
 - istio 是目前服务网格理念的代表作
 - 也就是说，实现了服务网关理念的功能
@@ -33,7 +33,7 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 - 而应用服务只和路由器通信
 - 实际上的工作流程也基本如此
 
-### 在k8s中的工作原理
+### 1.3. 在k8s中的工作原理
 
 - 实际上是在容器中注入了启动容器，在服务的容器启动之前，调整了转发规则
 - 使得流量都转发给Envoy代理容器
@@ -43,9 +43,9 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 - 修改的是主机中的转发规则，对应用程序来说也是无感知的
 - 所以整体上，是无感知的，透明的
 
-## 组成部分
+## 2. 组成部分
 
-### 控制平面
+### 2.1. 控制平面
 
 - 主要包括Mixer,Pilot,Citadel等组件
 - 控制平面不直接解析数据包
@@ -53,7 +53,7 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 - 另外还负责对网络行为的可视化
 - 提供了 istioctl 等工具来控制配置信息
 
-### 数据平面
+### 2.2. 数据平面
 
 - 主要包括Envoy等组件
 - 主要按照无状态设计，因为实际上只是提供流量操作和控制
@@ -65,9 +65,9 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 - 主要是处理进出口数据包，进行转发、路由、负载、认证等网络方面的操作
 - 对应用服务来说是透明的，可以做到无感知
 
-## 流量路径
+## 3. 流量路径
 
-### 南北流量（纵向流量/外部流量）
+### 3.1. 南北流量（纵向流量/外部流量）
 
 - 用户
 - k8s Ingress 网关
@@ -79,7 +79,7 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 - istio Envoy 代理
 - Pod容器
 
-### 东西流量（横向流量/内部流量）
+### 3.2. 东西流量（横向流量/内部流量）
 
 - 微服务A
 - k8s Service服务B
@@ -91,9 +91,9 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 - Pod容器 B
 - 微服务B
 
-## 组件介绍
+## 4. 组件介绍
 
-### Envoy 代理
+### 4.1. Envoy 代理
 
 - Envoy代理实际上是一个独立的高性能代理服务
 - 也就是说，是istio将Envoy集成进来
@@ -105,13 +105,13 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
 - 提供诸如熔断、重试、负载、降级、故障转移等能力
 - 还有拓展的安全、认证、流控等方面的能力
 
-### Istiod 控制器
+### 4.2. Istiod 控制器
 
 - istiod 控制器将Pilot，Galley，Citadel等功能统一封装在一起
 - 负责将控制平面的流量控制规则转发给Envoy代理
 - 从而使得流控规则的实时生效
 
-### Gateway 进出口网关
+### 4.3. Gateway 进出口网关
 
 - 在安装istio的时候
 - 就会安装 istio-ingressgateway(进口网关)
@@ -151,7 +151,7 @@ https://www.cnblogs.com/vitochen/p/18934987#_lab2_1_1
          - test.sample.com
 ```
 
-### VirtualService 虚拟服务（DestinationRule 转发规则）
+### 4.4. VirtualService 虚拟服务（DestinationRule 转发规则）
 
 - VirtualService 和 DestinationRule 是两个重要的配置资源
 - 定义了服务间的通信规则和路由转发规则
@@ -200,7 +200,7 @@ spec:
         version: v2
 ```
 
-### ServiceEntry 服务入口
+### 4.5. ServiceEntry 服务入口
 
 - 实际功能和k8s中的Service类似
 - 不同的是，ServiceEntry 可以指向外部地址

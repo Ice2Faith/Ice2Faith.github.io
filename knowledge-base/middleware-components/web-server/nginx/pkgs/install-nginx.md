@@ -125,7 +125,7 @@ cp ./objs/nginx /usr/local/nginx/sbin/
 cd /usr/local/nginx
 ```
 
-# nginx 配置一个任意网址的跨域转发
+# 1. nginx 配置一个任意网址的跨域转发
 server {
 	listen 12345;
 	server_name localhost;

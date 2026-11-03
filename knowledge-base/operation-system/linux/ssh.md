@@ -1,24 +1,24 @@
 # ssh 免密登录
 ---
 
-## 简介
+## 1. 简介
 - 其实也就是在目标主机的目标用户给定本机的授权key
 - 这样就是认证了本机的登录
 - 因此本机可以免密登录
 
-## 配置
+## 2. 配置
 - 安装openssh
 ```shell script
 yum install -y openssh
 yum -y install openssh-clients
 ```
-## 配置免密
+## 3. 配置免密
 - 免密登录
 - 其实就是将自己的密码发送给别人
 - 别人有了你的秘钥，就可以实现免密登录你的主机
 - 因此，要实现免密，就需要得到对方的秘钥
 - 双向免密就需要双方互换秘钥
-### 生成RSA秘钥
+### 3.1. 生成RSA秘钥
 - 本机创建RSA秘钥
 ```shell script
 ssh-keygen -t rsa
@@ -26,7 +26,7 @@ ssh-keygen -t rsa
 - 一路回车即可，不要设置密码
 - 否则免密登录时需要输入RSA的密码
 
-### 方式一：自行拷贝
+### 3.2. 方式一：自行拷贝
 - 复制刚创建的秘钥公钥
 ```shell script
 cat ~/.ssh/id_rsa.pub
@@ -39,7 +39,7 @@ vi ~/.ssh/authorized_keys
 - 注意如果之前已经有内容了
 - 需要先换行，起一个新行
 
-### 方式二：使用命令
+### 3.3. 方式二：使用命令
 - 将自己的密码发送到指定的主机指定的用户
 ```shell script
 ssh-copy-id 用户@主机
@@ -60,7 +60,7 @@ cat ~/.ssh/id_*.pub|ssh 用户@主机 'cat >> .ssh/authorized_keys'
 ```shell script
 cat ~/.ssh/id_*.pub|ssh root@127.0.0.1 -p 2022 'cat >> .ssh/authorized_keys'
 ```
-### 免密登录案例
+### 3.4. 免密登录案例
 - 以下操作，都使用 root 用户操作
 - 其他用户，请带上用户操作，主要是ssh-copy-id时
 - 主机列表
@@ -103,7 +103,7 @@ exit
 ```
 
 
-## 使用
+## 4. 使用
 - 远程复制
 ```shell script
 scp [本机路径] [目标主机免密用户]@[远程主机]:[远程主机路径] 
@@ -111,8 +111,8 @@ scp [本机路径] [目标主机免密用户]@[远程主机]:[远程主机路径
 scp /root/apps/app.jar root@192.168.1.100:/root/apps/
 ```
 
-## 多台主机同步操作
-### 同步文件
+## 5. 多台主机同步操作
+### 5.1. 同步文件
 - 编写脚本
 ```shell script
 vi xsync
@@ -160,7 +160,7 @@ rsync -rvl -e 'ssh -p 2022' $pdir/$fname $user@$host:$pdir
 yum install rsync -y
 ```
 
-### 同时执行命令
+### 5.2. 同时执行命令
 - 编写脚本
 ```shell script
 vi xcall

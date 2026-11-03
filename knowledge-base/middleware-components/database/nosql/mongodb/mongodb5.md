@@ -95,7 +95,7 @@ chmod a+x *.sh
 ## 数据库的dump和restore
 - 本章节内容同mongodb6部分
 
-# 副本集配置
+# 1. 副本集配置
 - 副本集，是副本集群
 - 每一个节点都拥有完整的数据
 - 三种集群模式
@@ -119,7 +119,7 @@ chmod a+x *.sh
 - 因此，最低起步3台主机
 - 这里以101,102,103三台主机配置副本集为例
 - 其中101作为master，102和103作为replicate副本
-## 所有节点配置
+## 1.1. 所有节点配置
 - 配置文件
 ```shell script
 vi mongo.conf
@@ -145,7 +145,7 @@ keyFile=/home/env/mongodb-5.0.9/conf/mongo.key
 ```
 - 重启mongodb
 
-## 主节点配置
+## 1.2. 主节点配置
 - 登录客户端
 ```shell script
 ./mongo
@@ -175,7 +175,7 @@ rs.add("192.168.1.104:27017")
 
 rs.remove("192.168.1.104:27017")
 ```
-## 副节点配置
+## 1.3. 副节点配置
 - 登录客户端
 ```shell script
 ./mongo

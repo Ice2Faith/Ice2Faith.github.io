@@ -1,11 +1,11 @@
 # gitlab-ce 入门
 
-## 简介
+## 1. 简介
 - gitlab 是一个使用git的仓库管理工具
 - 常常用于搭建私有仓库
 - 使用上和GitHub类似
 
-## 安装
+## 2. 安装
 - 需要centos7环境
 - 需要至少4G内存，否则运行起来也是500报错页面
 
@@ -50,7 +50,7 @@ gitlab-ctl restart
 http://...
 ```
 
-## 服务管理
+## 3. 服务管理
 - 启动
 ```shell script
 gitlab-ctl start
@@ -68,7 +68,7 @@ gitlab-ctl restart
 gitlab-ctl status
 ```
 
-## docker构建centos7环境
+## 4. docker构建centos7环境
 ```shell script
 - 这里使用docker提供该环境
 ```shell script

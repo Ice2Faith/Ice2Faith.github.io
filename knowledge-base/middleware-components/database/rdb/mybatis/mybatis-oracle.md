@@ -1,7 +1,7 @@
 # Mybatis for Oracle
 ---
 
-# insert selectKey
+# 1. insert selectKey
 - 在执行插入之前获取序列号作为ID
 ```xml
 <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.string">

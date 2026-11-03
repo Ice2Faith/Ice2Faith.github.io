@@ -1,6 +1,6 @@
 # Mybatis-Plus 常用语法
 
-## 简介
+## 1. 简介
 - Mybatis-Plus是基于Mybatis之上开发包装的快速应用开发的ORM层
 - 其原则是只做增强不做变更
 - 因此Mybatis中能用的Mybatis-Plus都一样的能用
@@ -9,7 +9,7 @@
 - 就不再这里讲解了
 - 主要讲解Mybatis-Plus中的wrapper方法
 
-## springboot+mybatis-plus
+## 2. springboot+mybatis-plus
 - 和mybatis的使用一样，只不过把mybatis的依赖替换为mybatis-plus的依赖即可
 - 添加依赖pom.xml
 ```xml
@@ -53,7 +53,7 @@ public class MybatisPlusConfig{
 }
 ```
 
-## mybatis-plus 代码组织形式
+## 3. mybatis-plus 代码组织形式
 - 在常规的开发场景中，都需要编写几乎相同的代码
 - 做着重复的事情，也就是换一张表，换一些字段
 - 对于这样的操作，mybatis-plus提供了简化的操作
@@ -61,7 +61,7 @@ public class MybatisPlusConfig{
 - 实现了常见的增删改查操作
 - 因此，部分类就发生了变化
 
-### bean实体类
+### 3.1. bean实体类
 - 前面说了，他实现了bean和实体的相关联
 - 怎么实现相关联的，那就是在bean实体类的基础上
 - 增加注解，使得实体类具有数据库的部分信息
@@ -100,7 +100,7 @@ public class SysUser {
 - 前面的配置中，已经配置了自动驼峰下划线转换，因此没有指定TableField的属性
 - 自动按照转下划线与数据库列匹配
 
-### service类
+### 3.2. service类
 - mybatis-plus提供了泛型基类，提供了常见的数据库操作能力
 - 因此自己的service类继承接口即可，第一个泛型是实体bean
 ```java
@@ -116,7 +116,7 @@ public interface ISysUserService extends IService<SysUser> {
 }
 ```
 
-### service-impl类
+### 3.3. service-impl类
 - 实现类也做相应的变更
     - 继承ServiceImpl，第一个泛型是对应的Mapper，第二个泛型是实体bean
     - 实现自己的接口
@@ -137,7 +137,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper,SysUser> imple
 }
 ```
 
-### mapper类
+### 3.4. mapper类
 - mapper接口也做响应的变更
     - 继承BaseMapper，第一个泛型是实体bean
 ```java
@@ -153,7 +153,7 @@ public interface SysUserMapper extends BaseMapper<SysUser>{
 }
 ```
 
-### mapper-xml文件是可选的
+### 3.5. mapper-xml文件是可选的
 - 也就是说，可以不用xml文件里
 - 如果Mybatis-Plus提供的基础方法够用
 - 或者能用wrapper解决的情况下
@@ -161,7 +161,7 @@ public interface SysUserMapper extends BaseMapper<SysUser>{
 - 要也可以，和mybatis的一样使用即可
 
 
-## wrapper 包装器
+## 4. wrapper 包装器
 - 由于很多操作，可能只是进行简单的操作
 - 并不需要复杂的SQL就能完成
 - 这部分操作单独去写一个Mapper文件，又没有什么必要
@@ -173,7 +173,7 @@ public interface SysUserMapper extends BaseMapper<SysUser>{
 - serviceImpl中使用baseMapper获取到mapper接口对象
 - 使用其带有的方法即可
 
-### lambda-wrapper 包装器
+### 4.1. lambda-wrapper 包装器
 - lambda-wrapper包装器是在wrapper的基础上形成的
 - 目的是使用lambda的方法引用，得到列名
 - 从而避免由于直接写列名字符串导致的列名错误等问题
@@ -182,7 +182,7 @@ public interface SysUserMapper extends BaseMapper<SysUser>{
 - 下面的例子中，将会同时使用三种模式进行比对讲解
 - 分别是wrapper模式，lambda-wrapper模式，SQL模式
 
-### insert 插入
+### 4.2. insert 插入
 - 直接操作
 ```java
 SysUser user=new SysUser();
@@ -203,7 +203,7 @@ values ('admin');
 - 没有wrapper的插入包装器
 
 
-### update 更新
+### 4.3. update 更新
 ```java
 SysUser user=new SysUser();
 user.setId(101);
@@ -268,7 +268,7 @@ this.baseMapper.update(null,
 - 因为，更推荐这种方式，这种方式避免了列名错写的问题
 - 还有当重命名列的时候，能够即时发现语法问题
 
-### delete 删除
+### 4.4. delete 删除
 - 根据ID删除
 ```java
 this.baseMapper.removeById(101);
@@ -293,7 +293,7 @@ this.baseMapper.delete(wrapper);
 - 条件语句在查询的时候，查询也包含了条件语句
 - 因此这里通用包含了
 
-## select 查询
+## 5. select 查询
 - 根据ID查询
 ```java
 SysUser user=this.baseMapper.getById(101);
@@ -326,7 +326,7 @@ and role_id in (1,2,3)
 - 但是前面说到了一个，Mybatis的分页插件，至今还没用
 - 怎么用呢？下面讲解
 
-## 分页插件
+## 6. 分页插件
 - 这里说得分页插件，是指Mybatis-Plus自带的分页插件
 - 而不是第三方的插件
 - 使用方式

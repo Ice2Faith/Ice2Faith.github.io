@@ -1,17 +1,17 @@
 # flink-1.13.5 环境安装
 
-## 简介
+## 1. 简介
 - flink 是一个提供了实时流计算能力的引擎
 - 对于大数据量，时间语义，窗口语义的处理非常有力
 - 基于集群的分布式计算能力，让实时处理能力提升数倍
 - 处理速度由于 spark hadoop
 
 
-## 依赖环境
+## 2. 依赖环境
 - java
 - scala
 
-## 安装
+## 3. 安装
 - 下载
 ```shell script
 wget -c https://archive.apache.org/dist/flink/flink-1.13.5/flink-1.13.5-bin-scala_2.12.tgz
@@ -44,7 +44,7 @@ jps
 ./bin/stop-cluster.sh
 ```
 
-## 配置项
+## 4. 配置项
 - flink配置
 ```shell script
 ll conf
@@ -84,8 +84,8 @@ web.submit.enable: true
 
 
 
-## 运行模式
-### local 模式
+## 5. 运行模式
+### 5.1. local 模式
 - 本地模式，只有一个flink进程
 - 是一个单体flink模型
 - 实际上flink自身模拟了一个集群环境
@@ -109,7 +109,7 @@ cd flink-1.13.5
 ```
 
 
-### standalone 模式
+### 5.2. standalone 模式
 - 独立运行模式
 - 由flink自身管理集群和资源
 - 由flink的多个节点自身组成集群
@@ -168,7 +168,7 @@ vi ./conf/workers
 ```
 
 
-### standalone-HA 模式
+### 5.3. standalone-HA 模式
 - 是standalone的高可用模式
 - 原因是standalone模式中，只有一个主节点，
 - 当主节点挂了之后，整个集群就挂了
@@ -260,7 +260,7 @@ jobmanager.rpc.address: 192.168.1.99
 ./bin/flink run app.jar
 ```
 
-### yarn 模式
+### 5.4. yarn 模式
 - 资源的管理由yarn负责管理
 - yarn作为Hadoop成员的一部分
 - 此模式需要yarn集群的支持
@@ -282,7 +282,7 @@ vi hadoop/yarn-site.xml
 </property>
 ```
 - 将修改后的配置应用到其他yarn集群机器
-#### yarn session 模式提交
+#### 5.4.1. yarn session 模式提交
 - 此模式，使用session预先向yarn申请资源
 - session期间资源固定
 - 启用session
@@ -306,7 +306,7 @@ yarn application -kill [application_id]
 ./bin/flink run app.jar
 ```
 
-#### yarn per-job 分离模式
+#### 5.4.2. yarn per-job 分离模式
 - 分离模式，每次提交任务都单独申请资源
 - 任务之间隔离，相互独立
 - 提交任务

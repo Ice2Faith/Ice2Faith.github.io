@@ -1,16 +1,16 @@
 # zookeeper 入门
 
-## 简介
+## 1. 简介
 - zookeeper是一个资源管理框架
 - 资源以树的形式管理
 - 因此就像是一个文件管理系统一样
 - 负责其他组件的协调工作
 
-## 依赖环境
+## 2. 依赖环境
 - java
 
 ---
-## 环境搭建
+## 3. 环境搭建
 - 下载zk: https://www.apache.org/dyn/closer.cgi/zookeeper/
 - 解压zk:
 ```shell script
@@ -28,14 +28,14 @@ cp zoo_sample.cfg zoo.cfg
 ```shell script
 vi zoo.cfg
 ```
-### 单机配置
+### 3.1. 单机配置
 - 修改或添加一下配置，主要是指定数据文件和日志文件的存放位置
 - 这样的配置下，数据文件将会被存放在：/zookeeper-3.4.10/datas目录下
 ```shell script
 dataDir=../datas/data
 dataLogDir=../datas/logs
 ```
-### 集群配置
+### 3.2. 集群配置
 - 基于单机的配置
 - 需要新增集群中zk服务的识别
 - 下面假设有.11，.12，.13三台及其
@@ -48,7 +48,7 @@ server.3=192.168.1.13:2888:3888
 - 另外，上面已经写了服务ID了，因此还要指定他们的服务ID
 - 在指定的{dataDir}/myid中填写对应的服务ID
 - 注意，上面示例给出了3台，则3台都要有各自的myid
-### 启动服务
+### 3.3. 启动服务
 ```shell script
 cd ./zookeeper-3.4.10/bin
 ```
@@ -60,13 +60,13 @@ cd ./zookeeper-3.4.10/bin
 ```shell script
 ./zkServer.sh start-foreground
 ```
-### 停止服务
+### 3.4. 停止服务
 ```shell script
 ./zkServer.sh stop
 ```
-### 集群下的启停
+### 3.5. 集群下的启停
 - 需要分别把集群中的每个zk服务进行启停
-### 连接与测试
+### 3.6. 连接与测试
 ```shell script
 cd ./zookeeper-3.4.10/bin
 ```

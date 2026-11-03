@@ -1,14 +1,14 @@
 # tomcat 入门
 
-## 简介
+## 1. 简介
 - tomcat是一个java的web应用服务器
 - 用于提供java-web站点的构建
 
-## 依赖环境
+## 2. 依赖环境
 - java
 
 ---
-## 环境搭建
+## 3. 环境搭建
 - 下载
 ```shell script
 wget https://mirror.bit.edu.cn/apache/tomcat/tomcat-9/v9.0.44/bin/apache-tomcat-9.0.44.tar.gz
@@ -29,7 +29,7 @@ chmod a+x ./bin/*.sh
 ```shell script
 vi ./conf/server.xml
 ```
-### 配置
+### 3.1. 配置
 - 其实没什么内容需要修改，这里给上一个启用8080端口的gzip为例
 ```shell script
 <Connector port="8080" protocol="HTTP/1.1"
@@ -80,12 +80,12 @@ vi reboot.sh
 ./start.sh
 ```
 
-## 启动服务
+## 4. 启动服务
 ```shell script
 ./start.sh
 ```
 
-## 部署war包
+## 5. 部署war包
 - 上传war包
 ```shell script
 app.war
@@ -108,7 +108,7 @@ http://[IP]:8080/app
 <Context path="" docBase="myproject" reloadable="true" />
 ```
 
-## 部署静态web（vue）
+## 6. 部署静态web（vue）
 - 上传dist.zip
 - 将dist放到webapps/ROOT下面
 ```shell script

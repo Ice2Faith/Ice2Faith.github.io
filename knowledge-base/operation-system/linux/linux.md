@@ -1,6 +1,6 @@
 # linux 常用命令
 ---
-## 重启无法启动
+## 1. 重启无法启动
 - 慎用命令
     - 可能导致主机无法启动
 ```shell script
@@ -37,7 +37,7 @@ yum upgrade -y
 ```
 
 ---
-## 目录
+## 2. 目录
 - 列出目录
 ```shell script
 -h 人类可读
@@ -106,7 +106,7 @@ rm -rf ./test
 ```
 
 ---
-## 文件
+## 3. 文件
 - 创建文件
 ```shell script
 touch [文件名]
@@ -151,7 +151,7 @@ vi app.conf
 ```
 
 ---
-## 行规则编辑
+## 4. 行规则编辑
 - sed 是一个基于行扫描匹配编辑的工具
 - 适用于脚本中修改指定的配置内容
 - 而不用借助vi等工具导致的人工干预过程
@@ -237,7 +237,7 @@ sed -n '/number 3/p' test.txt
 
 
 ---
-## 进程
+## 5. 进程
 - 查询进程
 ```shell script
 ps -ef
@@ -299,7 +299,7 @@ nohup java -jar app.jar 2>&1 > /dev/null &
 ```
 
 ---
-## 查找
+## 6. 查找
 - 查找文件
 ```shell script
 find [目录] -name [名称]
@@ -313,7 +313,7 @@ whereis mysql
 ```
 
 ---
-## 过滤结果
+## 7. 过滤结果
 - 排除
 ```shell script
 grep -v [关键字]
@@ -356,7 +356,7 @@ ps -ef | grep -v grep | grep app.jar | awk '{print $2}'
 ```
 
 ---
-## 网络
+## 8. 网络
 - 显示端口占用
 ```shell script
 netstat -ano
@@ -439,7 +439,7 @@ curl -X POST -H "content-type: application/json" -d '{"username":"admin","age":2
 curl -o ./baidu-index.html http://www.baidu.com
 ```
 
-## 服务
+## 9. 服务
 - 查看状态
 ```shell script
 systemctl status [服务名]
@@ -465,7 +465,7 @@ systemctl enable [服务名]
 systemctl disable [服务名]
 ```
 
-## 防火墙 firewalld
+## 10. 防火墙 firewalld
 - 查看防火墙状态
 ```shell script
 systemctl status firewalld
@@ -579,7 +579,7 @@ firewall-cmd --reload
 
 
 ---
-## 防火墙 iptables
+## 11. 防火墙 iptables
 - iptables 是一个包过滤防火墙
 - 使用前可能需要关闭 firewalld
 - 并且安装iptables
@@ -724,7 +724,7 @@ service iptables save
 ```
 
 ---
-## 磁盘
+## 12. 磁盘
 - 查看磁盘挂载
 ```shell script
 df -h
@@ -783,7 +783,7 @@ unmount -df /mnt/hdc2
 unmount -df /root/disk3
 ```
 
-## 新磁盘初始化及挂载
+## 13. 新磁盘初始化及挂载
 - 查看所有磁盘
 ```shell script
 lsblk
@@ -928,7 +928,7 @@ echo '/dev/vdb1 /opt/disk ext4 defaults 0 2' >> /etc/fstab
 ```
 
 ---
-## 归档
+## 14. 归档
 - tar解包(.tar)
 ```shell script
 tar -xvf [tar包名]
@@ -995,7 +995,7 @@ tar xvJf app.tart.xz
 ```
 
 ---
-## 权限
+## 15. 权限
 - 更改权限
 ```shell script
 chmod == change modifier
@@ -1027,7 +1027,7 @@ chown -R root:root /app
 ```
 
 
-## 环境变量
+## 16. 环境变量
 - 配置环境变量
 - 以JAVA_HOME为例
 - 环境变量，在linux配置中
@@ -1075,7 +1075,7 @@ done
 - 因此可以这样做
 
 
-## 用户
+## 17. 用户
 - 查看所有用户
 ```shell script
 cat /etc/passwd | cut -d : -f 1
@@ -1166,7 +1166,7 @@ ln -sf [源路径] [目标路径]
 ln -sf /home/web/apps /opt/apps
 ```
 
-## 组
+## 18. 组
 - 添加组
 ```shell script
 groupadd [组名]
@@ -1186,7 +1186,7 @@ groupmod -n [旧组名] [新组名]
 groupmod -n test dev
 ```
 
-## 杂项
+## 19. 杂项
 - 修改主机名
 ```shell script
 vim /etc/hostname
@@ -1282,7 +1282,7 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 ```
 
-## too many open files (打开的文件数过多)
+## 20. too many open files (打开的文件数过多)
 - 检查打开文件数限制
 ```shell script
 ulimit -a
@@ -1312,7 +1312,7 @@ vi /etc/security/limits.conf
 - 也是用临时修改方式修改一下
 - 重新查看文件限制即可
 
-## 性能监控
+## 21. 性能监控
 - 推荐工具安装(iostat,vmstat)
 ```shell script
 yum -y install sysstat
@@ -1374,7 +1374,7 @@ time dd if=/opt/test/test.dbf bs=8k count=300000 of=/dev/null
 ll /dev/mapper/
 ```
 
-## 定时任务
+## 22. 定时任务
 - crontab
 - 是linux中以cron管理的定时调度
 - 在运维中，可以是用来做进程的存活性检测
@@ -1476,7 +1476,7 @@ $WResult
 done
 ```
 
-## 安装字体
+## 23. 安装字体
 - 在Linux中，通常只有拉丁字体
 - 没有中文字体和特殊符号字体
 - 因此在Linux中使用GDI进行显示文字
@@ -1532,7 +1532,7 @@ fc-list
 yum install -y fontconfig
 ```
 
-## 安装阿里国内yum镜像源
+## 24. 安装阿里国内yum镜像源
 - 进入yum源路径
 ```shell script
 cd /etc/yum.repos.d/
@@ -1586,7 +1586,7 @@ yum makecache
 yum upgrade -y
 ```
 
-## 编写服务-开机启动
+## 25. 编写服务-开机启动
 - 创建服务文件
 ```shell script
 vi /etc/systemd/system/my-boot.service
@@ -1656,7 +1656,7 @@ systemctl enable my-boot.service
 - 其实就和正常服务一样使用即可
 - 其他服务管理就不再赘述
 
-## yum 离线安装
+## 26. yum 离线安装
 - 找一台同构的联网的机器
 - 也就是操作系统相同（都是centos），系统版本相差不大，处理器架构相同（都是x86）
 - 安装包下载工具

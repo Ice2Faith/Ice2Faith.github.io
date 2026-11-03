@@ -1,6 +1,6 @@
 # nginx 配置 rtmp 服务器
 
-## 前提介绍
+## 1. 前提介绍
 - 已经安装nginx
 - 如果没有安装，提前安装
 - 建议安装版本为1.20+及以上版本的nginx
@@ -18,7 +18,7 @@ wget -c https://codeload.github.com/arut/nginx-rtmp-module/tar.gz/refs/tags/v1.2
 mv v1.2.2 nginx-rtmp-module-1.2.2.tar.gz
 ```
 
-## 配置
+## 2. 配置
 - 进入路径
 ```shell script
 cd /root/env
@@ -109,7 +109,7 @@ cd conf/
 cp nginx.conf nginx.conf.bak
 ```
 
-## 配置rtmp配置
+## 3. 配置rtmp配置
 - 编辑nginx配置
 ```shell script
 vi nginx.conf
@@ -204,13 +204,13 @@ chmod -R a+rwx /root/rtmp/
 - 启动nginx
 - 这里直接启动的原因是，前面已经说了，需要停止nginx
 
-## 使用rtmp
+## 4. 使用rtmp
 - 浏览器查看服务器状态
     - 看到页面有内容即可
 ```shell script
 http://[IP]:11934/stat
 ```
-### 点播测试
+### 4.1. 点播测试
 - 前面有建立一个文件目录
 ```shell script
 /root/rtmp/vod/flvs
@@ -238,7 +238,7 @@ rtmp://[IP]:11935/vod/test.flv
 ```shell script
 ffplay "rtmp://[IP]:11935/vod/test.flv"
 ```
-### 直播测试
+### 4.2. 直播测试
 - 前面有建立一个文件目录
 ```shell script
 /root/rtmp/live/hls
@@ -280,9 +280,9 @@ http://[IP]:11934/hls/test/index.m3u8
 hls_cleanup off;
 ```
 
-## 推流实现直播
+## 5. 推流实现直播
 
-### 直接使用rtmp协议进行推流和拉流
+### 5.1. 直接使用rtmp协议进行推流和拉流
 - 这种方式优点是延迟较低
 - 缺点是需要flash的支持
 - 也就是说只能在web端开启flash支持才行
@@ -306,7 +306,7 @@ ffmpeg.exe -re -i test.mp4 -f flv rtmp://[IP]:11935/live/hello
 rtmp://[IP]:11935/live/hello
 ```
 
-### 使用hls协议进行推流和拉流
+### 5.2. 使用hls协议进行推流和拉流
 - 这种方式的优点是支持浏览器直接访问
 - 浏览器使用hls.js,video.js,flv.js等即可直接播放
 - 不依赖flash
@@ -335,7 +335,7 @@ ffmpeg.exe -re -i test.mp4 -f flv rtmp://[IP]:11935/hls/hello
 http://[IP]:11934/hls/hello/index.m3u8
 ```
 
-## 直接使用工具进行直播
+## 6. 直接使用工具进行直播
 - 推流工具
     - 选用：OBS Studio
     - 下载地址：https://obsproject.com/
@@ -382,7 +382,7 @@ http://[IP]:11934/hls/hello/index.m3u8
         - 因此，hls协议下，推流和拉流的地址是不一样的，用的协议和端口也不一样
         - 由于是http协议，因此如果需要鉴权，就需要自己实现鉴权逻辑
 
-## 直接将本地的摄像头和麦克风采集并推流
+## 7. 直接将本地的摄像头和麦克风采集并推流
 - 这里，需要知道两个参数
 - 一个是摄像头名称
 - 另一个是麦克风名称
@@ -404,7 +404,7 @@ ffmpeg -f dshow -i video="[Camera]" audio="[MIC]" -vcodec libx264 -s 720*480 -r 
 ffmpeg -f dshow -i video="BisonCam,NB Pro" -vcodec libx264 -s 200*200 -r 5 -preset:v ultrafast -tune:v zerolatency -f flv rtmp://[IP]:11935/live/aaa
 ```
 
-## 采集桌面
+## 8. 采集桌面
 - 使用 -f gdigrab 仅采集桌面图像
 - 不采集声音
 - 如果需要采集声音
@@ -413,7 +413,7 @@ ffmpeg -f dshow -i video="BisonCam,NB Pro" -vcodec libx264 -s 200*200 -r 5 -pres
 ffmpeg -f gdigrab -i desktop -vcodec libx264 -s 720*480 -r 30 -preset:v ultrafast -tune:v zerolatency -f flv rtmp://[IP]:11935/live/desktop
 ```
 
-## 采集桌面+音频
+## 9. 采集桌面+音频
 - 方法1，采用gdigrab和dshow结合，实现推送音视频
 ```shell script
 ffmpeg -f gdigrab -i desktop -f dshow -i audio="[MIC]" -vcodec libx264 -s 720*480 -r 25 -bufsize 1000000k -preset:v ultrafast -tune:v zerolatency -f flv rtmp://[IP]:11935/live/cam
@@ -430,7 +430,7 @@ https://sourceforge.net/projects/screencapturer/files/
 ffmpeg -f dshow -i video="screen-capture-recorder" -f dshow -i audio="virtual-audio-capturer" -vcodec libx264 -s 480*320 -r 30 -acodec aac -ar 44100 -b:a 18000 -preset:v ultrafast -tune:v zerolatency -f flv rtmp://[IP]:11935/live/cam
 ```
 
-## 采集默认摄像头
+## 10. 采集默认摄像头
 - 置顶摄像头名称
 - 在命令行中不太好用
 - 因此可以使用默认摄像头
@@ -438,7 +438,7 @@ ffmpeg -f dshow -i video="screen-capture-recorder" -f dshow -i audio="virtual-au
 ffmpeg -f vfwcap -i 0  -vcodec libx264 -s 480*320 -r 30 -preset:v ultrafast -tune:v zerolatency -f flv rtmp://[IP]:11935/live/cam
 ```
 
-## ffmpeg的简单使用
+## 11. ffmpeg的简单使用
 - 下载ffmpeg
 ```shell script
 https://ffmpeg.org/download.html
@@ -486,7 +486,7 @@ ffplay test.flv
 ffplay test.m3u8
 ```
 
-## 使用ffmpeg获取摄像头和麦克风设备名
+## 12. 使用ffmpeg获取摄像头和麦克风设备名
 - 查看电脑设备
 ```shell script
 ffmpeg -list_devices true -f dshow -i dummy
@@ -507,7 +507,7 @@ ffmpeg -list_devices true -f dshow -i dummy
 ffplay -f dshow -i video="BisonCam,NB Pro"
 ```
 
-## 综合搭建直播平台核心
+## 13. 综合搭建直播平台核心
 - 直播部分
     - 使用ffmpeg或者OBS Studio推流到stmp服务器
     - 使用流媒体播放器播放视频流，比如VLC或者ffplay
@@ -516,17 +516,17 @@ ffplay -f dshow -i video="BisonCam,NB Pro"
     - 使用ffmepg重新转码为flv或者m3u8视频
     - 使用流媒体播放器播放视频流，比如VLC或者ffplay
 
-## 更多内容参考
+## 14. 更多内容参考
 ```shell script
 https://www.cnblogs.com/zhangmingda/p/12638985.html
 ```
 
-## 添加鉴权机制
+## 15. 添加鉴权机制
 - 为了防止被滥用，需要添加鉴权功能
 - 原理是使用nginx-rtmp模块提供的回调能力
 - 在推流时和在播放时，进行鉴权，鉴权通过之后，才进行推流或者播放
 
-### 实现
+### 15.1. 实现
 - 更改nginx的rtmp配置
     - 也就是添加 on_publish 和 on_play 回调
     - 在 live 和 hls 两个节点下，都添加了鉴权的服务定向

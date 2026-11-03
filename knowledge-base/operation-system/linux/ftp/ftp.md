@@ -1,13 +1,13 @@
 # ftp(vsftpd) 环境安装
 
-## 简介
+## 1. 简介
 - 服务器的安装部署，尝尝会用到ftp工具
 - 因此，vsftpd基本上是每个linux服务器都需要的服务
 
-## 依赖环境
+## 2. 依赖环境
 - 无
 
-## 安装
+## 3. 安装
 - 安装
 ```shell script
 yum install -y vsftpd

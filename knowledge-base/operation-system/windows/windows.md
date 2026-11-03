@@ -7,7 +7,7 @@ help 查看指定命令的帮助
 ```
 
 ---
-## 网络
+## 1. 网络
 - 查看已连接的WIFI列表
 ```shell script
 netsh wlan show profiles

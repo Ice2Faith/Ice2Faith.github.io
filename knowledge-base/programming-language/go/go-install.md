@@ -1,6 +1,6 @@
 # golang 安装和配置
 
-## 简介
+## 1. 简介
 - golang 也称为 go 语言
 - go 因为简介的语法，和面向过程的编程
 - 还有在并发领域的流畅性和易开发性
@@ -11,7 +11,7 @@
 - 已经在云原生和微服务领域中，有着一席之地
 - 不少公司选择go作为web开发后端的首选语言
 
-## 安装
+## 2. 安装
 - 下载
 - 官方下载地址
 ```shell script
@@ -51,7 +51,7 @@ Path
 go version
 ```
 
-## 配置国内镜像
+## 3. 配置国内镜像
 - 打开命令行
 - 配置镜像
 ```shell script
@@ -69,7 +69,7 @@ go env
 - 看到刚才配置的值没错
 - 那就OK了
 
-## 编写第一个go程序
+## 4. 编写第一个go程序
 - 新建文本文件 hello.go
 - 写入以下内容
 ```go
@@ -97,12 +97,12 @@ go build hello.go
 hello.exe
 ```
 
-## go的开发IDE
+## 5. go的开发IDE
 - Goland (Jetbrains)
 - Visual Studio Code (Microsoft)
 - liteide (open source)
 
-## 配置VSCode
+## 6. 配置VSCode
 - 这里以VSCode作为Go的开发IDE
 - 下载VSCode
 - 官网地址
@@ -135,7 +135,7 @@ Go Doc
 - 等待插件全部安装完毕（Successed）
 - 接下来正常开发即可
 
-## linux 下安装GO环境
+## 7. linux 下安装GO环境
 - 下载安装包
 ```shell script
 wget https://golang.google.cn/dl/go1.19.linux-amd64.tar.gz

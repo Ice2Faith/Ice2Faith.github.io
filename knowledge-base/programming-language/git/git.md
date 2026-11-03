@@ -1,6 +1,6 @@
 # Git 使用
 
-## 配置安装
+## 1. 配置安装
 
 - 常规配置
 ```shell
@@ -33,7 +33,7 @@ cat ~/.ssh/id_rsa.pub
 - 将这个公钥配置到 github/gitlab/gitee 等代码仓库中即可
 
 
-## Git 仓库瘦身
+## 2. Git 仓库瘦身
 
 - 下载 BFG
 ```shell

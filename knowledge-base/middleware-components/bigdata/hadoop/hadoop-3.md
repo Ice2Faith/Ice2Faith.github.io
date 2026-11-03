@@ -1,13 +1,13 @@
 # hadoop3 环境安装
 
-## 简介
+## 1. 简介
 - hadoop3 版本虽然向下兼容
 - 但是其他的依赖于hadoop3的组件，有的存在版本依赖
 
-## 依赖环境
+## 2. 依赖环境
 - java
 
-## 安装
+## 3. 安装
 - 下载
 ```shell script
 wget -c https://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-3.2.3/hadoop-3.2.3.tar.gz
@@ -49,7 +49,7 @@ source /etc/profile
 hadoop version
 ```
 
-## 单机部署
+## 4. 单机部署
 - 进入hadoop路径
 ```shell script
 cd hadoop-3.2.3
@@ -155,7 +155,7 @@ SecondaryNameNode
 
 
 
-## 配置集群
+## 5. 配置集群
 - 环境准备
     - 准备三台主机
     - 分别为01,02,03
@@ -283,7 +283,7 @@ hadoop-03
 - 将本机的hadoop整个复制到其他两台主机
 - 也就是说，三台的配置都一样
 
-## 启动
+## 6. 启动
 - 启动namenode
 - 在hadoop-01上执行
 ```shell script
@@ -317,7 +317,7 @@ jps
 
 
 
-## 调优
+## 7. 调优
 - CPU使用情况
     - 命令：nmon,dstat,top
     - CPU利用率低于30%
@@ -339,7 +339,7 @@ jps
         - NUMA绑核
         - 聚合中断
         
-## HBase调优
+## 8. HBase调优
 - 简介
     - 基于HDFS的列存储数据库管理系统
 - 任务下发

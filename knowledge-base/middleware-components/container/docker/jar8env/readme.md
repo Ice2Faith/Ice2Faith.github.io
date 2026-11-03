@@ -1,8 +1,8 @@
 # jar8env docker 使用指南
 ---
-## 作用
+## 1. 作用
 - 对给定的jar文件构建一个基于openjdk8的docker镜像
-## 使用方式
+## 2. 使用方式
 - 将jar文件存放到这两个文件所在路径，例如test.jar
 
 ```shell

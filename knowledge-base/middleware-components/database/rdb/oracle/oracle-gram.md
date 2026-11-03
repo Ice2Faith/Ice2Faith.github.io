@@ -1,6 +1,6 @@
 # Oracle 语法集锦
 ---
-## 日期
+## 1. 日期
 - 当前时间
 ```sql
 select 
@@ -146,7 +146,7 @@ WHEN NOT MATCHED THEN
 ```
 
 ---
-## DDL
+## 2. DDL
 - 创建表
 ```sql
 create table tb_user
@@ -233,7 +233,7 @@ drop column col_fav;
 
 ---
 
-## 杂项
+## 3. 杂项
 
 - oracle的varchar2类型
 - 具体分为：varchar2(10 byte) 表示使用字节计算长度，表示10字节长度

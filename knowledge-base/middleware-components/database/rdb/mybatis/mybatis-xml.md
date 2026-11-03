@@ -1,7 +1,7 @@
 # Mybatis 语法集锦
 ---
 
-# 查询
+# 1. 查询
 - where 语句
 ```xml
 <where>

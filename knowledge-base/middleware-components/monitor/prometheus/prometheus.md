@@ -11,7 +11,7 @@
 
 ----------------------------------------------------------------------------
 
-## 安装
+## 1. 安装
 
 - 官网
 
@@ -165,7 +165,7 @@ http://localhost:9090/
 
 ----------------------------------------------------------------------------
 
-## 插件安装
+## 2. 插件安装
 
 - 地址
 
@@ -247,7 +247,7 @@ scrape_configs:
 ```
 ----------------------------------------------------------------------------
 
-### 服务器监控(node_exporter)
+### 2.1. 服务器监控(node_exporter)
 
 - 需要部署在被检测的主机上
 - 可以观测内存、CPU、网络、磁盘等资源情况
@@ -379,7 +379,7 @@ node_exporter/Node-xxx.json
 
 ----------------------------------------------------------------------------
 
-### Redis监控(redis_exporter)
+### 2.2. Redis监控(redis_exporter)
 
 - 需要配置被监控的Redis的连接信息
 - 可以统计Redis的状态信息
@@ -514,7 +514,7 @@ redis_exporter/Redis-xxx.json
 
 ----------------------------------------------------------------------------
 
-### MySQL监控(mysqld_exporter)
+### 2.3. MySQL监控(mysqld_exporter)
 
 - 需要配置被监控的数据库的连接信息
 - 可以统计数据库的状态信息
@@ -690,7 +690,7 @@ mysqld_exporter/MySQL-xxx.json
 
 ----------------------------------------------------------------------------
 
-### Oracle监控(oracledb_exporter)
+### 2.4. Oracle监控(oracledb_exporter)
 
 - 需要配置被监控的Oracle的连接信息
 - 可以统计Oracle的状态信息
@@ -825,7 +825,7 @@ oracledb_exporter/Oracledb-xxx.json
 
 ----------------------------------------------------------------------------
 
-### Java进程监控(jmx_prometheus_javaagent)
+### 2.5. Java进程监控(jmx_prometheus_javaagent)
 
 - 以javaagent探针的方式实现jmx监控
 - 因此以agent探针方式启动或者挂载探针都可以
@@ -937,7 +937,7 @@ jmx_prometheus_javaagent/JMX-xxx.json
 
 ----------------------------------------------------------------------------
 
-### Nginx监控(nginx-prometheus-exporter)
+### 2.6. Nginx监控(nginx-prometheus-exporter)
 
 - 需要配置被监控的Nginx的连接信息
 - 可以统计Nginx的状态信息
@@ -1137,7 +1137,7 @@ nginx-prometheus-exporter/Nginx-xxx.json
 
 ----------------------------------------------------------------------------
 
-### MongoDB监控(mongodb_exporter)
+### 2.7. MongoDB监控(mongodb_exporter)
 
 - 需要配置被监控的MongoDB的连接信息
 - 可以统计MongoDB的状态信息
@@ -1175,7 +1175,7 @@ export MONGODB_PASSWORD=xxx
 
 ----------------------------------------------------------------------------
 
-### 黑盒网络监控(blackbox_exporter)
+### 2.8. 黑盒网络监控(blackbox_exporter)
 
 - 可以配置在任意主体上，针对目标主体的网络状态进行检测
 - 主要统计网络状态信息
@@ -1205,7 +1205,7 @@ mv blackbox_exporter-0.25.0.linux-amd64 blackbox_exporter-0.25.0
 
 ----------------------------------------------------------------------------
 
-### ElasticSearch监控(elasticsearch_exporter)
+### 2.9. ElasticSearch监控(elasticsearch_exporter)
 
 - 需要配置被监控的ElasticSearch的连接信息
 - 可以统计ElasticSearch的状态信息
@@ -1241,7 +1241,7 @@ mv elasticsearch_exporter-1.8.0.freebsd-amd64 elasticsearch_exporter-1.8.0
 
 ----------------------------------------------------------------------------
 
-### RabbitMQ监控(rabbitmq_exporter)
+### 2.10. RabbitMQ监控(rabbitmq_exporter)
 
 - 需要配置被监控的RabbitMQ的连接信息
 - 可以统计RabbitMQ的状态信息
@@ -1280,7 +1280,7 @@ export RABBIT_PASSWORD=guest
 
 ----------------------------------------------------------------------------
 
-### Kafka监控(rabbitmq_exporter)
+### 2.11. Kafka监控(rabbitmq_exporter)
 
 - 需要配置被监控的Kafka的连接信息
 - 可以统计Kafka的状态信息
@@ -1316,7 +1316,7 @@ mv kafka_exporter-1.8.0.freebsd-amd64 kafka_exporter-1.8.0
 
 ----------------------------------------------------------------------------
 
-### Postgres监控(postgres_exporter)
+### 2.12. Postgres监控(postgres_exporter)
 
 - 需要配置被监控的Postgres的连接信息
 - 可以统计Postgres的状态信息

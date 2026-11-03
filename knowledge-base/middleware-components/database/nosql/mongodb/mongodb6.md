@@ -1,14 +1,14 @@
 # mongodb6 入门
 
-## 简介
+## 1. 简介
 - mongodb是一个NoSql数据库
 - 基于bson存储json文档
 
-## 依赖环境
+## 2. 依赖环境
 - 无
 
 ---
-## 环境搭建
+## 3. 环境搭建
 - 下载
 ```shell script
 wget -c https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel80-6.0.3.tgz
@@ -27,7 +27,7 @@ cd mongodb-6.0.3
 mkdir conf
 vi ./conf/mongo.conf
 ```
-### 配置
+### 3.1. 配置
 - 主要指定日志目录，数据文件目录，fork守护进程
 - 如果启动失败，将fork设置为false查看错误日志
 ```shell script
@@ -79,18 +79,18 @@ vi stop.sh
 chmod a+x *.sh
 ```
 
-## 启动服务
+## 4. 启动服务
 ```shell script
 ./start.sh
 ```
 
-## 验证
+## 5. 验证
 - 有信息输出即可
 ```shell script
 ./mongod
 ```
 
-## mongodb6 客户端安装
+## 6. mongodb6 客户端安装
 - mongodb6 之后，没有自带mongo命令
 - 而是变成了mongosh命令
 - 并且独立为单独的包
@@ -118,7 +118,7 @@ cd bin
 ./mongosh
 ```
 
-## 配置认证
+## 7. 配置认证
 - 进入客户端
 ```shell script
 ./mongosh
@@ -175,7 +175,7 @@ use admin
 db.auth("root","root")
 ```
 
-## 数据库的dump和restore
+## 8. 数据库的dump和restore
 - mongodb6之后，这部分也是独立的包
 - 安装路径也是无所谓
 - 下载

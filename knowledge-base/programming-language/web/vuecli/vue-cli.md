@@ -2,11 +2,11 @@
 
 ---
 
-## 前提依赖
+## 1. 前提依赖
 - 请先安装 nodejs
 - 参考：../nodejs/nodejs.md
 
-## 安装
+## 2. 安装
 - 官方教程
 ```shell script
 https://cli.vuejs.org/zh/guide/installation.html
@@ -25,7 +25,7 @@ npm install -g @vue/cli
 vue -v
 ```
 
-## 创建vue项目
+## 3. 创建vue项目
 - 初始化vue项目
 ```shell script
 vue create hello
@@ -111,7 +111,7 @@ proceed)
 ```
 - 等待下载依赖完成
 
-## 运行vue项目
+## 4. 运行vue项目
 - 进入项目
 ```shell script
 cd hello

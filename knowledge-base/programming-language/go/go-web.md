@@ -7,7 +7,7 @@
 https://gin-gonic.com/
 ```
 
-## 准备工作
+## 1. 准备工作
 - 使用go-mod创建一个项目
 - 项目名假如为hello
 - 则文件结构如下
@@ -57,12 +57,12 @@ http://localhost:8080/
 hello gin
 ```
 
-## 快速入门
+## 2. 快速入门
 - 遇事不决，上官网示例
 ```shell script
 https://gin-gonic.com/zh-cn/docs/examples/
 ```
-### 基础部分
+### 2.1. 基础部分
 - 实例化引擎
 - 也被称作路由
 ```go
@@ -86,7 +86,7 @@ func main() {
 	engine.Run()
 }
 ```
-### 路由部分
+### 2.2. 路由部分
 - 路由，也就是处理URL请求
 - 给请求分配处理函数
 - 原生上支持RESTful风格接口
@@ -164,7 +164,7 @@ func main() {
 
 ```
 
-## 分组路由
+## 3. 分组路由
 - 分组路由，实际上是一种垂直划分方式
 - 将路由按照模块划分
 - 每个模块有自己的固定基础前缀路径
@@ -192,13 +192,13 @@ apiRouters := engine.Group("/api")
 }
 ```
 
-## 参数获取
+## 4. 参数获取
 - 在web请求中
 - 获取请求参数是一个必须的过程
 - 这一部分指的是，手动获取参数
 - 自动绑定到结构上的方式，在下一点【参数绑定】中给出
 - 
-### 获取URL参数
+### 4.1. 获取URL参数
 - 这个一般是在GET请求等不含有请求体的情况下，常用的方式
 - URL参数也叫做QueryString
 - 在gin中，也就是使用Query方法来获取参数
@@ -217,7 +217,7 @@ engine.GET("/getUserInfo", func(c *gin.Context) {
 })
 ```
 
-### 获取表单参数
+### 4.2. 获取表单参数
 - 表单参数，也就是常说的form参数
 - 一般通过POST或PUT提交
 - 也就是Content-Type为以下两种的表单
@@ -240,7 +240,7 @@ engine.POST("/addUser", func(c *gin.Context) {
 })
 ```
 
-### 获取路径变量
+### 4.3. 获取路径变量
 - 路径变量，也就是作为URL路径中的一部分出现的变量
 - 例如：/deleteUser/1001
 - 这里，这是一个路径，并不带有请求参数
@@ -280,7 +280,7 @@ engine.GET("/fileExists/*filePath", func(c *gin.Context) {
 })
 ```
 
-### JSON/XML请求
+### 4.4. JSON/XML请求
 - 对于这种方式，gin没有直接获取参数的方式
 - 更推荐直接使用【参数绑定】到结构体的方式来获取
 - 当然，这里还是会讲解自己手动获取JSON/XML的方式
@@ -316,7 +316,7 @@ engine.POST("/raw", func(c *gin.Context) {
 })
 ```
 
-### 文件上传
+### 4.5. 文件上传
 - 文件上传，其实也是走PostForm方式
 - 但是由于是文件，因此获取文件的方式有一点差异
 - 在实际使用之前，首先说一下，常用的配置
@@ -384,7 +384,7 @@ engine.POST("/upload", func(c *gin.Context) {
 })
 ```
 
-## 参数绑定
+## 5. 参数绑定
 - 将请求参数绑定到结构上
 - 是开发中常用的手段
 - 因为结构在开发中更方便使用
@@ -472,12 +472,12 @@ func main() {
 
 ```
 
-## 响应数据
+## 6. 响应数据
 - 响应数据，在当下，最流行的就是JSON格式
 - 但是gin还是保留了拓展
 - 主要分为三种：JSON，String，Html
 - 响应数据，还是基于 gin.Context 结构
-### 响应JSON数据
+### 6.1. 响应JSON数据
 ```go
 engine.POST("/user/add", func(c *gin.Context) {
 	c.JSON(200, gin.H{
@@ -532,7 +532,7 @@ func main() {
 	engine.Run()
 }
 ```
-### 响应String数据
+### 6.2. 响应String数据
 - 也就是直接响应TEXT文本
 - 这种目前的使用比较少
 - 部分还是有使用到
@@ -550,7 +550,7 @@ engine.GET("/", func(c *gin.Context) {
 - 第二个参数，是字符串或格式化模板字符串
 - 第三个参数，是变长参数，用于给参数二作为格式化参数
 
-### 响应HTML渲染页面
+### 6.3. 响应HTML渲染页面
 - 这里，响应的HTML页面
 - 不是存粹的WEB页面
 - 而是后端渲染的模板页面
@@ -641,7 +641,7 @@ engine.SetFuncMap(template.FuncMap{
 - 一般建议，映射的名称和实际的名称一致
 
 
-### 响应文件
+### 6.4. 响应文件
 - 响应文件，也就是文件下载
 - 在gin中，文件下载通过File方法实现
 - 另外，更常见的应该是作为附件下载，附件需要指定附件名称
@@ -658,7 +658,7 @@ engine.GET("/download/*filePath", func(c *gin.Context) {
 })
 ```
 
-## cookie 操作
+## 7. cookie 操作
 - cookie在当前的无状态token盛行的时代
 - 虽然已经没什么用了
 - 但是，如果还有使用cookie的场景
@@ -686,7 +686,7 @@ engine.POST("/cookie/set", func(c *gin.Context) {
 })
 ```
 
-## session 操作
+## 8. session 操作
 - 同样，对于session，在当前的无状态token盛行的时代
 - session的使用范围已经大幅度降低了
 - 但是，还是有部分还是使用session的
@@ -756,7 +756,7 @@ store, err := redis.NewStore(0, "tcp", "127.0.0.1:6379", "123456", []byte("12345
 	engine.Use(sessions.Sessions("gin-session", store))
 ```
 
-## 热加载
+## 9. 热加载
 - 热加载需要借助第三方工具
 - 并且要求自己的项目入口文件为 main.go
 - 工具使用 fresh

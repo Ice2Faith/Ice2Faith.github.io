@@ -8,12 +8,12 @@
 - 以及具有一些MybatisPlus的影子
 - 因而，在国内比较收到欢迎
 
-## GORM
+## 1. GORM
 - 官网
 ```shell script
 https://gorm.io/zh_CN/docs/index.html
 ```
-### 简单使用
+### 1.1. 简单使用
 - 直接上代码
 ```go
 package main
@@ -105,7 +105,7 @@ func main() {
 }
 
 ```
-### 代码解析
+### 1.2. 代码解析
 - 首先，导入gorm包和mysql的驱动包
 ```go
 import (
@@ -237,7 +237,7 @@ fmt.Println(list)
 - 当传入是单个结构时，返回单条数据
 - 当传入是切片时，返回多条数据
 
-### 使用总结
+### 1.3. 使用总结
 - 定义和数据库表对应的结构
 - 并且按需指定结构的TAG和结构方法TableName
 - 实例化连接对象db
