@@ -1,6 +1,16 @@
-当现有工具无法满足任务需求时：
-1. 调用 tools_provider_list 列举可用的 MCP 工具供应商
-2. 调用 list_tools_from_providers 按供应商名查看其工具清单
-3. 调用 load_tools_by_names 将所需工具装载到当前会话
-装载后的工具将参与后续推理；会话内工具数量受 LRU 策略约束，
-超容量时最久未使用的工具将被淘汰。
+# 动态工具查找与加载
+
+- 系统集成多个工具供应商
+- 使用 `tools_provider_list` 获取所有供应商列表
+- 每个供应商提供一组工具
+- 使用 `list_tools_from_providers` 获取某些供应商都提供了哪些工具
+	- 【重要】只能获取 `tools_provider_list` 中支持的供应商
+    - 其中 `app_context` 供应商是特殊的，可能包含系统开发者单独提供的各个领域的工具
+    - 当其他供应商没有相关工具时，`app_context` 可能包含这些工具
+- 可以使用 `search_tools` 尝试直接查找可能提供的工具
+	- 【注意】直接找不到时，可以通过供应商列举查看方式逐步探索
+- 工具需要被加载才能使用
+- 使用 `load_tools_by_names` 来加载工具
+	- 【重要】只能加载来自 `list_tools_from_providers` 或 `search_tools` 中能够提供的工具
+- 工具数量有限制，使用LRU策略自动卸载最久未使用的工具
+- 因此，需要动态加载工具

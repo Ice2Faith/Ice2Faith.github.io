@@ -1,6 +1,9 @@
 <template>
     <div>
-        <LeadText>消息是框架的第一公民。标准层定义 4 种角色消息，Ops 层通过 <code>OpenAiMessageVo</code> 多态载体与 <code>OpsOpenAiConsts</code> 扩展出 16 种<b>回显消息</b>——每个类型独占一个字段，让前端不仅能看到对话，还能看到"系统为模型做了什么"（提示词注入 / 工具调用 / 事实变迁）。</LeadText>
+      <LeadText>消息是框架的第一公民。标准层定义 4 种角色消息，Ops 层通过 <code>OpsOpenAiConsts</code> 的 17 个类型常量扩展出
+        17 种<b>回显消息</b>——每个类型以 <code>type</code> 标记 + 序列化载荷承载（高频类型在 <code>OpenAiMessageVo</code>
+        中拥有独占字段），让前端不仅能看到对话，还能看到"系统为模型做了什么"（提示词注入 / 工具调用 / 事实变迁 / 插话入列）。
+      </LeadText>
 
         <TwoCol>
             <template slot="left">
@@ -22,14 +25,20 @@
             </template>
         </TwoCol>
 
-        <PanelTitle title="OpenAiMessageVo.java — 多态消息载体（type + 每类型独立字段）" />
+      <PanelTitle title="OpenAiMessageVo.java — 多态消息载体（高频回显类型占独立字段）"/>
         <CodeBlock lang="java" :code="messageVoCode" />
 
         <Callout color="#862e9c" title="Truth 三元组 — echo_truth 的一分为三">
             <p>原单一 <code>echo_truth</code> 细化为三个独立事件，对应事实生命周期的三个时刻：请求开始注入「# 关键事实」内容时发 <code>echo_truth_content</code>；注入事实使用方式指引时发 <code>echo_truth_prompt</code>；工具执行完毕（模型可能刚调用 <code>store_truth</code> 改写了事实）再以 <code>echo_truth_sync</code> 回显最新事实。前端倒序查找 <code>echo_truth_content</code> / <code>echo_truth_sync</code> 取最新值作为下一轮 <code>truthContent</code>——事实的「注入 → 使用 → 同步」全程可见、可追溯。</p>
         </Callout>
 
-        <PanelTitle title="OpenAiOperateDto.java — 一次请求即一份&quot;功能开关清单&quot;" />
+      <Callout color="#0b7285" title="插话与动作类型 — 一轮请求的语义标记">
+        <p><code>OpenAiOperateDto.interject</code> 携带待插入的插话消息，<code>action</code>
+          则标记本轮请求的<b>轮次语义</b>。当前约定的动作值只有 <code>summary-history</code>（会话总结轮）：该轮独占一次请求，插话等附加消息一律<b>搁置到下一轮</b>再插入，避免总结上下文被人工输入打断。插话是否真正入列由服务端判定，只有成功加入消息列表时才发
+          <code>echo_interject</code> 回显，保证前端看到的就是模型实际读到的内容。</p>
+      </Callout>
+
+      <PanelTitle title="OpenAiOperateDto.java — 一次请求即一份&quot;功能开关清单&quot;" />
         <CodeBlock lang="java" :code="operateDtoCode" />
     </div>
 </template>
@@ -61,7 +70,7 @@
                     ['<code>echo_tool</code>', 'EchoOpenAiToolMessage', '回显工具执行结果与调用参数'],
                     ['<code>request_tool</code>', 'RequestOpenAiToolMessage', '回显工具调用请求'],
                     ['<code>echo_skill</code>', '技能系统提示词', '回显注入的技能声明提示词（SKILL.md 聚合）'],
-                    ['<code>echo_dynamic_tool</code>', 'MCP 动态工具提示词', '回显注入的 MCP 三步发现指引（列举供应商 → 列举工具 → 装载工具）'],
+                  ['<code>echo_dynamic_tool</code>', 'MCP 动态工具提示词', '回显注入的 MCP 动态装载指引（列举供应商 → 列举 / 正则检索工具 → 按名装载）'],
                     ['<code>echo_loop_engineering</code>', '循环工程提示词', '回显注入的五步工程化工作流提示词（进度恢复 → 需求 → 方案 → 待办 → 实施）'],
                     ['<code>echo_truth_prompt</code>', '事实使用方式提示词', '回显注入的 TruthStoreTools 事实读写指引（如何用 <code>store_truth</code>）'],
                     ['<code>echo_truth_content</code>', '事实内容系统消息', '回显注入的「# 关键事实」内容（置于 messages[0]）'],
@@ -72,7 +81,8 @@
                     ['<code>echo_session_records_map</code>', '循环工程会话记录 Map', '流结束前回显 request / plan / checklist / agent 四类记录，前端持久化接力'],
                     ['<code>echo_async_tasks</code>', '异步任务列表', '回显工具产生的异步任务（如文生图），前端渲染状态标签并提供刷新查询'],
                     ['<code>echo_attach_files</code>', '附件文件列表', '回显工具执行产生的附件文件（供用户查看/下载）'],
-                    ['<code>echo_progress</code>', '进度提示文本', '回显处理进度提示（如"请求处理中..."、"工具调用中..."等）']
+                  ['<code>echo_progress</code>', '进度提示文本', '回显处理进度提示（如"请求处理中..."、"工具调用中..."等）'],
+                  ['<code>echo_interject</code>', '插话消息对象', '回显服务端在<b>安全临界点</b>真正插入的插话（用户/系统/助手/工具消息），前端据此在助手占位气泡前插入']
                 ]
             };
         },

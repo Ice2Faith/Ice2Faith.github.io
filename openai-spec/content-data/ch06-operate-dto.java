@@ -2,6 +2,8 @@ public class OpenAiOperateDto {
     protected OpenAiMeta meta; // baseUrl · apiKey
     protected OpenAiCompletionVo completion; // model · messages · stream
     protected List<OpenAiToolApprovalDto> toolApprovalList; // HITL 审批决定
+    protected OpenAiMessageVo interject; // 插话：在安全临界点插入本轮消息列表
+    protected String action; // 轮次语义，如 summary-history（会话总结轮独占）
 
     protected boolean encryptOutput; // 输出是否 SM4 加密
     protected boolean enableTools; // Function Calling 开关
@@ -11,6 +13,11 @@ public class OpenAiOperateDto {
     protected boolean enableToolRecommendByIntentRecognize; // 意图识别辅助工具推荐（依赖 enableLruTools）
     protected boolean enableEchoRequestPayload; // 请求报文回显
     protected boolean enableMergedSystemMsg; // 系统重排：合并系统消息至首条
+    protected boolean enableFullAccess; // 全权限模式（前端免反复审批）
+    protected boolean enableAgentsMarkdown; // 注入 ./AGENTS.md 项目约定
+    protected boolean enableRecycleToolMessage; // 工具消息回收（历史 tool 结果占位化）
+    protected Integer recycleToolLastKeepCount; // 保留最近 N 条工具消息，默认 10
+    protected Integer recycleToolMessageMinLength; // 仅回收超过此长度的内容，默认 512
     protected boolean enableTruth; // 事实注入开关
     protected boolean enableMemories; // 记忆系统开关
     protected String memoryBucket; // 记忆桶（用户级隔离）

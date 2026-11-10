@@ -27,5 +27,17 @@
   "enableVisionImage": false,
   "enableLoopEngineering": true,
   "sessionRecordsMap": { },
-  "toolApprovalList": [ ]
+  "toolApprovalList": [],
+  "interject": {
+    "type": "user",
+    "user": {
+      "role": "user",
+      "content": "补充一句：优先用 CSV 输出"
+    }
+  },
+  "action": "",
+  "enableAgentsMarkdown": true,
+  "enableRecycleToolMessage": true,
+  "recycleToolLastKeepCount": 10,
+  "recycleToolMessageMinLength": 512
 }

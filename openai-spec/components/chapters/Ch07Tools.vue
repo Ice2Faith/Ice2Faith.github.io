@@ -13,7 +13,11 @@
             <template slot="right">
                 <PanelTitle title="ToolManager — 工具池统一抽象" />
                 <CodeBlock lang="java" :code="toolManagerCode" />
-                <BodyText size="13px">实现双轨：<code>ContextAppToolManager</code> 扫描容器内 @Tool Bean；<code>ContextMcpToolGatewayManager</code> 经 MCP 网关聚合外部工具，二者经 <code>@ConditionalOnMissingBean</code> 互斥装配。</BodyText>
+              <BodyText size="13px">实现双轨：<code>ContextAppToolManager</code> 扫描容器内 @Tool Bean；<code>ContextMcpToolGatewayManager</code>
+                经 MCP 网关聚合外部工具，二者经 <code>@ConditionalOnMissingBean</code> 互斥装配。统一契约为 <code>ToolManagerContract</code>：<code>listTools()</code>
+                / <code>support()</code> / <code>callTool()</code>——刻意避开 <code>getTools()</code> 这类 Lombok getter
+                命名，防止字段与方法意外冲突。
+              </BodyText>
             </template>
         </TwoCol>
 
@@ -35,13 +39,18 @@
             </tr>
         </SpecTable>
 
-        <PanelTitle title="内置工具清单 — ops 层 16 类 + 脚本 / 委托 4 类 + 条件装配 6 类" />
+      <PanelTitle title="内置工具清单 — 24 个 @Tools 类 + 2 个 MCP 服务桥接提供者"/>
         <SpecTable :headers="['工具类', '代表工具', '能力', '关键标签']">
             <tr v-for="row in toolRows" :key="row[0]">
                 <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td><td v-html="row[3]"></td>
             </tr>
         </SpecTable>
-        <BodyText size="12.5px">※ 条件装配：随 <code>ai.skills.enable</code> / <code>ai.rags.enable</code> / <code>ai.rags.memory.enable</code> / <code>ai.tools.session-record.enable</code> / <code>ai.tools.loop-engineering.enable</code> / <code>ai.tools.groovy.enable</code> 开关注入；脚本 / 委托类装配策略：Webjs 默认开启，PowerShell（仅 Windows）/ Node.js / Python 默认关闭且需探测到可用运行环境——详见下文与第 13 章。</BodyText>
+      <BodyText size="12.5px">※ 条件装配：随 <code>ai.skills.enable</code> / <code>ai.rags.enable</code> / <code>ai.rags.memory.enable</code>
+        / <code>ai.tools.session-record.enable</code> / <code>ai.tools.groovy.enable</code> / <code>ai.tools.skill-manage.enable</code>
+        / <code>ai.mcp-server.api.enable</code> 开关注入；<code>LoopEngineeringTools</code> 不是 @Tool
+        Bean，而是静态提示词提供者（由请求字段 <code>enableLoopEngineering</code> 控制注入）；脚本类装配策略：Webjs
+        默认开启，PowerShell（仅 Windows）/ Node.js / Python 默认关闭且需探测到可用运行环境——详见下文与第 13 章。
+      </BodyText>
 
         <PanelTitle title="BS 架构下的工具委托链 — 执行环境解耦" />
         <BodyText size="13.5px">并非所有工具都该在服务端执行：有一类工具的本质是<b>向浏览器用户提问</b>——单选、多选表单等，真正的执行环境在浏览器。框架为此设计了一条<b>工具委托（Tool Delegation）链</b>：服务端只做<b>声明式占位</b>，浏览器化身「第二执行后端」完成实际执行，两端以 <code>tool_call_id</code> 精确对号，<b>模型全程无感知</b>。</BodyText>
@@ -84,13 +93,19 @@
         <PanelTitle title="AiTags — 工具的「危险品标签」体系" />
         <BodyText size="13.5px">每个工具可携带多维标签，供前端审批策略与后端过滤决策使用：</BodyText>
         <TagCloud>
+          <span class="tc"><b>执行控制</b>：RETRYABLE</span>
             <span class="tc"><b>行为</b>：READONLY · WRITABLE · EXECUTABLE · COMMAND</span>
             <span class="tc"><b>审批</b>：AUTO · SANDBOX · HUMAN</span>
             <span class="tc"><b>网络</b>：PUBLIC_NET · PRIVATE_NET · INTRANET_ONLY</span>
             <span class="tc"><b>敏感</b>：SENSIBLE · AUTH · SECRET</span>
             <span class="tc"><b>成本</b>：HIGH_COST · SLOW_EXEC · RATE_LIMITED</span>
-            <span class="tc"><b>领域</b>：SKILL · RAG</span>
+          <span class="tc"><b>领域</b>：SKILL · RAG · MCP · skill_manage</span>
         </TagCloud>
+      <Callout color="#0b7285" title="RETRYABLE — 给可重试的工具一次续命机会">
+        <p><code>AiTags.RETRYABLE</code> 是「执行控制」类标签：远程 MCP 客户端（<code>HttpSimpleMcpClientToolProvider</code>）在
+          <code>callTool</code> 时读取该标签，命中则最多尝试 <b>3 次</b>（初始退避 300ms，每次
+          +1200ms），未命中则只尝试一次——把「网络抖动可重试」与「业务上不允许重复执行」明确区分开。</p>
+      </Callout>
 
         <PanelTitle title="ToolCallContextHolder — 请求级上下文线程传递" />
         <BodyText size="13.5px">工具执行时需要访问请求级数据（如 <code>OpenAiOperateDto</code>、用户信息、会话配置等）。<code>ToolCallContextHolder</code> 基于 <code>InheritableThreadLocal&lt;Map&lt;String, Object&gt;&gt;</code> 实现，提供线程安全的请求上下文存取，并在 MCP 跨服务调用时<b>自动序列化传递</b>——远程工具与本地工具使用完全相同的上下文读取方式。</BodyText>
@@ -160,7 +175,7 @@
                     ['<code>appMcpToolProvider</code>', '<code>ContextAppMcpToolProvider</code>', '<code>ai.tools.mcp.app.enable</code>', '将 Spring 容器中所有 @Tool/@Tools Bean 包装为名为 app_context 的工具提供者'],
                     ['<code>mcpToolGatewayManager</code>', '<code>ContextMcpToolGatewayManager</code>', '<code>ai.tools.mcp.manager.enable</code>', '聚合所有 McpToolProvider Bean（本地 + 远程），实现统一工具路由'],
                     ['<code>appToolManager</code>', '<code>ContextAppToolManager</code>', '<code>ai.tools.app.manager.enable</code>', '直接管理 @Tool/@Tools Bean，不经过 MCP 聚合层，与网关互斥'],
-                    ['<code>mcpProviderTools</code>', '<code>McpProviderTools</code>', '<code>ai.tools.mcp-gateway.enable</code>', '提供 3 个动态工具发现与加载的元工具']
+                  ['<code>mcpProviderTools</code>', '<code>McpProviderTools</code>', '<code>ai.tools.mcp-gateway.enable</code>', '提供 4 个动态工具发现 / 检索 / 加载的元工具']
                 ],
                 schemaRows: [
                     ['<code>String / char</code>', '<span class="tag t-t">string</span>', '直接映射'],
@@ -168,17 +183,18 @@
                     ['<code>Double / Float / BigDecimal</code>', '<span class="tag t-t">number</span>', '浮点族统一'],
                     ['<code>Boolean</code>', '<span class="tag t-t">boolean</span>', '直接映射'],
                     ['<code>List / Set / 数组</code>', '<span class="tag t-t">array</span>', '<code>items</code> 递归推导泛型'],
-                    ['<code>Map / POJO</code>', '<span class="tag t-t">object</span>', '<code>properties</code> 递归展开字段'],
+                  ['<code>Map / POJO</code>', '<span class="tag t-t">object</span>', '<code>properties</code> 递归展开字段；<code>Map</code> 类型额外输出 <code>additionalProperties</code>（值类型为 <code>Object</code> 时置 <code>true</code> 允许任意值，否则递归生成该值类型的 schema）'],
                     ['<code>Enum</code>', '<span class="tag t-t">string + enum</span>', '枚举值列为候选约束']
                 ],
                 toolRows: [
                     ['<code>DatabaseQueryTools</code>', '<code>sql_query_datasource</code>', 'SQL 数据查询，双重安全校验', '<span class="tag t-g">READONLY</span>'],
+                  ['<code>DatabaseUpdateTools</code>', '<code>sql_update_datasource</code>', 'SQL 变更执行（同样经 AST + 正则双重校验，且需人工审批）', '<span class="tag t-o">WRITABLE</span><span class="tag t-o">HUMAN</span>'],
                     ['<code>DatabaseMetadataTools</code>', '元数据查询', '表结构 / 索引 / 字段信息', '<span class="tag t-g">READONLY</span>'],
                     ['<code>CommandTools</code>', 'shell 执行', '本地命令行执行', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>'],
                     ['<code>LocalFileTools</code>', '文件读写', '本地文件列举 / 读取 / 写入', '<span class="tag t-o">WRITABLE</span>'],
                     ['<code>TmpFileTools</code>', '临时文件', '上传 / 下载临时文件管理', '<span class="tag t-g">READONLY</span>'],
                     ['<code>TruthStoreTools</code>', '<code>store_truth</code>', '存储关键事实，注入后续对话', '<span class="tag t-o">WRITABLE</span>'],
-                    ['<code>McpProviderTools</code>', '元工具 ×3', 'MCP 供应商发现与动态装载', '<span class="tag t-g">READONLY</span>'],
+                  ['<code>McpProviderTools</code>', '元工具 ×4', 'MCP 供应商发现 / 关键字检索 / 按名装载', '<span class="tag t-g">READONLY</span>'],
                     ['<code>AgentTools</code> (a2a)', '<code>safe_sql_detect</code>', 'Agent 调 Agent 的 SQL 安全检测', '<span class="tag t-b">A2A</span>'],
                     ['<code>CodecTools</code>', '编解码', 'Base64 / URL / Unicode 转换', '<span class="tag t-g">READONLY</span>'],
                     ['<code>JceTools</code>', '加密哈希', '摘要 / 加解密计算', '<span class="tag t-g">READONLY</span>'],
@@ -188,16 +204,19 @@
                     ['<code>RandomTools</code>', '随机采样', '随机数 / 抽样', '<span class="tag t-g">READONLY</span>'],
                     ['<code>WebDownloadTools</code>', '网络下载', '下载网络资源到本地', '<span class="tag t-b">PUBLIC_NET</span>'],
                     ['<code>FileToolUtils</code>', '文件工具', '文件处理辅助能力', '—'],
-                    ['<code>SkillsTools</code> ※', '技能三件套', '技能文档 / 资源 / 脚本执行', '<span class="tag t-t">SKILL</span>'],
-                    ['<code>RagTools</code> ※', '<code>rag_search</code>', '知识库相似度检索', '<span class="tag t-t">RAG</span>'],
+                  ['<code>SkillsTools</code> ※', '技能四件套', '技能检索 / 文档 / 资源 / 脚本执行', '<span class="tag t-t">SKILL</span>'],
+                  ['<code>RagTools</code> ※', '<code>rag_search / rag_nearby</code>', '知识库相似度检索 + 命中文档的邻近分片回溯', '<span class="tag t-t">RAG</span>'],
                     ['<code>MemoryTools</code> ※', '<code>memory_search / save / delete</code>', '用户级记忆检索 / 保存 / 删除', '<span class="tag t-t">RAG</span>'],
                     ['<code>SessionRecordTools</code> ※', '<code>session_record_read / session_record_update</code>', '循环工程会话记录读写（request / plan / checklist / agent）', '<span class="tag t-g">AUTO</span>'],
-                    ['<code>LoopEngineeringTools</code> ※', '循环工程提示词', '注入五步工程化工作流提示词（进度恢复 → 需求 → 方案 → 待办 → 实施）', '<span class="tag t-g">AUTO</span>'],
+                  ['<code>LoopEngineeringTools</code> ※', '静态提示词（非 @Tool）', '注入五步工程化工作流提示词（进度恢复 → 需求 → 方案 → 待办 → 实施），由 <code>enableLoopEngineering</code> 控制', '<span class="tag t-g">AUTO</span>'],
                     ['<code>GroovyTools</code> ※', '<code>groovy_run_script</code>', 'Groovy 脚本动态执行（GroovyShell）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span><span class="tag t-t">SCRIPT</span>'],
                     ['<code>WebjsTools</code>', '<code>webjs_form_radio / webjs_form_checkbox</code>', 'BS 工具委托：浏览器弹窗收集人类输入，结果经 <code>webjsToolResults</code> 回传（默认开启）', '<span class="tag t-g">AUTO</span><span class="tag t-b">WEBJS</span>'],
                     ['<code>PowershellTools</code> ※', '<code>run_powershell_command / run_powershell_script</code>', 'PowerShell 命令 / 脚本执行（仅 Windows，环境探测）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>'],
                     ['<code>NodejsTools</code> ※', '<code>run_nodejs_script</code>', 'Node.js 脚本临时托管执行（探测 node 环境）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>'],
-                    ['<code>PythonTools</code> ※', '<code>run_python_script</code>', 'Python 脚本临时托管执行（探测 python / python3 环境）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>']
+                  ['<code>PythonTools</code> ※', '<code>run_python_script</code>', 'Python 脚本临时托管执行（探测 python / python3 环境）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>'],
+                  ['<code>SkillManageTools</code>', '<code>skill_install / skill_uninstall / skill_extract</code>', '技能安装（校验目录含 <code>SKILL.md</code>）/ 卸载（移入回收站）/ 导出到本地', '<span class="tag t-o">WRITABLE</span><span class="tag t-t">skill_manage</span>'],
+                  ['<code>OpsMcpServerAdditionalToolProvider</code>', '<code>ops.upload_local_file / ops.store_url_file_to_local / ops.query_async_task_status_by_url</code>', 'MCP 服务桥接工具：本地文件转 <code>upload://</code> 临时凭证、凭证落盘、按 <code>task://</code> 签名 URL 查询异步任务', '<span class="tag t-g">READONLY</span><span class="tag t-o">WRITABLE</span>'],
+                  ['<code>OpsMcpServerApiToolProvider</code>', '<code>ops.get_server_guide / ops.mcp_api_token</code>', '向外部 MCP 客户端下发使用向导与接入令牌，并暴露 <code>/mcp/api/*</code> 文件上传下载端点', '<span class="tag t-g">READONLY</span>']
                 ],
                 scriptRows: [
                     ['<code>PowershellTools</code>', '<code>ai.tools.powershell.enable</code> + <b>仅 Windows 平台</b>（WindowsFormCondition）', '<code>run_powershell_command</code> 直接执行命令；<code>run_powershell_script</code> 写临时 ps1 以 <code>-File</code> 模式执行，规避命令行字符集问题'],

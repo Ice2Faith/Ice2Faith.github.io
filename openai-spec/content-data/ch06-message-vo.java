@@ -1,5 +1,5 @@
 public class OpenAiMessageVo {
-    protected String type; // 消息类型（决定读取哪个字段）
+    protected String type; // 消息类型（决定读取哪个字段 / 或按 type 标记读取载荷）
 
     // ---- 标准四角色 ----
     protected OpenAiSystemMessage system;
@@ -21,12 +21,14 @@ public class OpenAiMessageVo {
     protected OpenAiSystemMessage echo_truth_content; // 事实内容
     protected OpenAiSystemMessage echo_truth_sync; // 事实同步（工具执行后）
 
-    // ---- 工具意图推荐 ----
+    // ---- 工具意图推荐 / 附件 / 异步任务 ----
     protected OpenAiSystemMessage echo_tool_intent_recommend; // 意图识别推理过程
-
-    protected List<TmpFileTools.UploadTmpFileMetadata> attachFiles; // 附件
-
-    // ---- 异步任务 ----
+    protected OpenAiSystemMessage echo_attach_files; // 附件回显
+    protected List<TmpFileTools.UploadTmpFileMetadata> attachFiles; // 附件元数据
     protected OpenAiSystemMessage echo_async_tasks; // 异步任务回显
     protected List<AsyncTaskItem> asyncTasks; // 异步任务列表
 }
+
+// 其余回显类型（echo_progress / echo_lru_tools / echo_request_payload /
+// echo_session_records_map / echo_interject）不占独立字段：
+// Controller 直接把载荷序列化进 OpsSecureReturn.data，用 withAttr("type", ...) 打标记。

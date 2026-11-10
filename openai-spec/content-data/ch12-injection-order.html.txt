@@ -1,10 +1,15 @@
-<span class="cm"># 后端组装报文时的注入顺序（每步均同步回显独立事件）</span>
-<span class="num">1.</span> 事实内容 (Truth) <span class="cm">→ messages[0] 系统消息 · echo_truth_content</span>
-<span class="num">2.</span> 事实使用方式 <span class="cm">→ TruthStoreTools 工具使用指引 · echo_truth_prompt</span>
-<span class="num">3.</span> 循环工程 <span class="cm">→ SessionRecordTools 五步工作流提示词 · echo_loop_engineering</span>
-<span class="num">4.</span> MCP 动态工具提示词 <span class="cm">→ messages[0] 系统消息 · echo_dynamic_tool</span>
-<span class="num">5.</span> 技能系统提示词 <span class="cm">→ messages[0] 系统消息 · echo_skill</span>
-<span class="num">6.</span> 角色 System Prompt <span class="cm">→ 用户手动添加的角色人设</span>
-<span class="num">7.</span> 用户消息 + 附件 <span class="cm">→ 消息列表末尾（&lt;upload_files&gt;）；若开启图片视觉，图片经压缩后以 base64 内嵌</span>
-<span class="num">8.</span> 系统重排 (可选) <span class="cm">→ 合并全部 system 为一条置于首位</span>
+<span class="cm"># 后端组装报文时的系统消息注入顺序（均为 add(0, ...)，故下方按“最终从前往后”列出）</span>
+<span class="num">1.</span> MCP 动态工具提示词 <span class="cm">→ McpProviderTools.SYSTEM_PROMPT · echo_dynamic_tool · 需 enableTools + enableLruTools</span>
+<span class="num">2.</span> 技能系统提示词 <span class="cm">→ SkillsHelper.convertSkillDefinitionsAsSystemPrompt · echo_skill</span>
+<span class="num">3.</span> 事实使用方式 <span class="cm">→ TruthStoreTools 工具使用指引 · echo_truth_prompt</span>
+<span class="num">4.</span> 循环工程 <span class="cm">→ LoopEngineeringTools 五步工作流 · echo_loop_engineering</span>
+<span class="num">5.</span> AGENTS.md <span class="cm">→ ./AGENTS.md 项目约定 · echo_loop_engineering（需 enableAgentsMarkdown）</span>
+<span class="num">6.</span> 事实内容 <span class="cm">→ 统一加「# 关键事实」前缀 · echo_truth_content · 不受 needInject 限制</span>
+<span class="num">7.</span> 会话记录 <span class="cm">→ SessionRecordTools.getSystemPrompt(sessionRecordsMap)（需 enableTools 且记录非空）</span>
+<span class="num">8.</span> 角色 System Prompt + 历史消息 <span class="cm">→ 前端维护的原始消息列表</span>
+<span class="num">9.</span> 用户消息 + 附件 <span class="cm">→ 消息列表末尾（&lt;upload_files&gt;）；开启图片视觉则图片压缩为 base64</span>
+<span class="num">10.</span> 工具定义 <span class="cm">→ completion.tools · definition_tool 回显（按开关过滤 Memory/Truth 工具）</span>
+<span class="cm"># 1~5 步均受 needInjectSystemPrompt 控制：末消息非 user/system 时按 30% 概率注入；第 6 步（事实内容）不受此限</span>
+<span class="cm"># 系统重排（可选）：enableMergedSystemMsg 将全部 system 包 &lt;system_scope&gt; 合并为一条置于首位</span>
+<span class="cm"># 工具消息回收（可选）：enableRecycleToolMessage 将旧 tool 结果替换为 [recycled] 占位</span>
 <span class="cm"># 工具执行后，事实可能被 store_truth 改写，再发 echo_truth_sync 同步最新事实</span>

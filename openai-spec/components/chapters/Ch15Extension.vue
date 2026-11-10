@@ -37,28 +37,49 @@
             <template slot="left">
                 <StepList>
                     <Step title="自定义 MCP Server 传输层">
-                        <p>参考 Netty 模式和 Spring Web MVC 模式的实现：创建新 AutoConfiguration 类，使用 <code>@ConditionalOnClass</code> 条件装配；实现请求处理器将 HTTP 请求转换为 <code>HttpSimpleMcpRequest</code>；调用 <code>HttpSimpleMcpServer.getTools()</code> 和 <code>callTool()</code> 完成业务逻辑；在 <code>META-INF/spring.factories</code> 中注册。</p>
+                      <p>参考现有实现：新建 AutoConfiguration 类并加 <code>@ConditionalOnClass</code> / <code>@ConditionalOnExpression</code>
+                        条件装配；将 HTTP 请求转为 <code>HttpSimpleMcpRequest</code>（或官方 JSON-RPC 请求）；调用 <code>McpServerProvider</code>
+                        取工具清单与执行；在 <code>META-INF/spring.factories</code> 注册。四种现有传输：simple 的 Web /
+                        Netty，官方的 <code>/v2024/mcp</code> / <code>/v2026/mcp</code>。</p>
+                    </Step>
+                  <Step title="自定义 MCP 工具可见面">
+                    <p>两种桥接方式：<b>裁剪</b>——自定义 <code>McpServerExposer</code> 实现
+                      <code>expose(ToolDefinition)</code>；<b>追加</b>——实现 <code>McpServerAdditionalToolProvider</code>（<code>listTools
+                        / support / callTool</code>）并注册为 Bean，由 <code>McpServerAdditionalToolManager</code>
+                      自动聚合，适合「只给 MCP 用、不进本机 Agent」的工具。</p>
                     </Step>
                     <Step title="自定义 MCP Client 传输">
                         <p>客户端 HTTP 通信基于 <code>IRestClient</code> 接口，默认使用 <code>SpringWebRestClient</code>（基于 RestTemplate）。可按需替换为 <code>OkHttpRestClient</code> 或其他实现，通过 <code>HttpSimpleMcpClientToolProvider.setRestClient()</code> 注入。</p>
                     </Step>
                     <Step title="接入远程 MCP 供应商">
-                        <p>在 <code>application.yml</code> 中配置 <code>i2f.springboot.ai.mcp.client.simple.instances</code> 列表，每个实例指定 name / base-url / app-id / app-key，启动时自动注册为 <code>McpToolProvider</code> Bean，被 <code>ContextMcpToolGatewayManager</code> 聚合。</p>
+                      <p>在 <code>application.yml</code> 中配置
+                        <code>i2f.springboot.ai.mcp.client.simple.instances</code> 列表，每个实例指定 name / base-url /
+                        app-id / app-key，启动时自动注册为 <code>McpToolProvider</code> Bean，被 <code>ContextMcpToolGatewayManager</code>
+                        聚合；也可用 <code>creator</code> 客户端直接读 <code>mcp.json</code>。</p>
                     </Step>
                 </StepList>
             </template>
             <template slot="right">
-                <Callout color="#0b7285" title="Server 端自动注册清单">
-                    <p>三个自动配置类注册在 <code>META-INF/spring.factories</code>：<br>
-                    <code>SpringAiMcpServerAutoConfiguration</code>（主配置）<br>
-                    <code>SpringAiNettyMcpServerAutoConfiguration</code>（Netty 模式）<br>
-                    <code>SpringAiSpringWebMcpServerAutoConfiguration</code>（Web MVC 模式）</p>
+              <Callout color="#0b7285" title="Server 端自动注册清单（六个自动配置类）">
+                <p><code>McpServerProviderAutoConfiguration</code>（ToolManager / Exposer / Provider 三段装配）<br>
+                  <code>SimpleMcpServerAutoConfiguration</code>（simple 协议核心 Bean）<br>
+                  <code>SimpleSpringWebMcpServerAutoConfiguration</code>（<code>/mcp/tool/list</code> · <code>/mcp/tool/call</code>）<br>
+                  <code>SimpleNettyMcpServerAutoConfiguration</code>（Netty 独立端口）<br>
+                  <code>StreamSpringWebMcpServerAutoConfiguration</code>（<code>/v2024/mcp</code>）<br>
+                  <code>StreamSpringWebMcpServerV2026AutoConfiguration</code>（<code>/v2026/mcp</code>）</p>
                 </Callout>
-                <Callout color="#e8590c" title="Client 端自动注册清单">
-                    <p><code>SpringAiMcpClientAutoConfiguration</code> 实现 <code>BeanDefinitionRegistryPostProcessor</code>，按配置动态注册 <code>McpToolProvider</code> Bean 到 Spring 容器。</p>
+              <Callout color="#e8590c" title="Client 端自动注册清单（五个自动配置类）">
+                <p><code>SimpleMcpClientAutoConfiguration</code>（simple 协议，实现 <code>BeanDefinitionRegistryPostProcessor</code>
+                  动态注册 <code>McpToolProvider</code>）<br>
+                  <code>StreamMcpClientAutoConfiguration</code>（官方 v2024 Streamable HTTP）<br>
+                  <code>SolonMcpClientAutoConfiguration</code>（Solon AI 客户端）<br>
+                  <code>StreamMcpClientV2026AutoConfiguration</code>（官方 v2026 无状态）<br>
+                  <code>McpClientCreatorAutoConfiguration</code>（读 <code>mcp.json</code>）</p>
                 </Callout>
-                <Callout color="#2b8a3e" title="双模式互斥与配置总览">
-                    <p>所有配置开关默认启用，按需关闭。MCP Server 的 Spring Web MVC 与 Netty 模式可并存（独立端口）；Client 端每个实例独立注册；ToolManager 单机模式与网关模式互斥装配。详见第 13 章自动装配配置表。</p>
+              <Callout color="#2b8a3e" title="多传输共存与配置总览">
+                <p>四种服务端传输可同时开启：simple 的 Web（共享主端口）与 Netty（独立端口）互不干扰，官方 v2024 / v2026
+                  各自挂在不同基础路径；Client 端每个实例独立注册；ToolManager 单机模式与网关模式互斥装配。详见第 13
+                  章自动装配配置表。</p>
                 </Callout>
             </template>
         </TwoCol>
@@ -96,7 +117,13 @@
                     </tr>
                 </SpecTable>
                 <Callout color="#c92a2a" title="部署红线" marginTop="14px">
-                    <p>命令行工具默认禁用（<code>ai.tools.command.enable=false</code>）需手动开启；Groovy 脚本工具默认禁用（<code>ai.tools.groovy.enable=false</code>）需手动开启；SQL 执行前经安全校验；文件路径规范化防穿越；加密输出拖慢模型输出速度、非必要不开启；工具调用需模型支持 Function-Calling（Qwen / DeepSeek / GPT 等）；技能依赖工具系统，需同时开启 <code>ai.tools.enable</code>；循环工程会话记录（<code>sessionRecordsMap</code>）由前端持久化到 localStorage 跨轮接力，服务端不落盘、无隐私残留；千问 TTS 按调用量计费（约 1.4 元/万字），依赖临时文件上传能力（<code>ai.tools.tmp-file.enable</code>）。</p>
+                  <p>命令行工具默认禁用（<code>ai.tools.command.enable=false</code>）需手动开启；Groovy
+                    脚本工具默认禁用（<code>ai.tools.groovy.enable=false</code>）需手动开启；<b>数据库写操作</b>默认禁用（<code>ai.tools.database.update.enable=false</code>）且带
+                    HUMAN+SENSIBLE 标签；SQL 执行前经安全校验；文件路径规范化防穿越；<code>/mcp/api</code> 接入令牌 30
+                    分钟未使用即失效，勿泄露 <code>X-MCP-TOKEN</code>；加密输出拖慢模型输出速度、非必要不开启；工具调用需模型支持
+                    Function-Calling（Qwen / DeepSeek / GPT 等）；技能依赖工具系统，需同时开启 <code>ai.tools.enable</code>；循环工程会话记录（<code>sessionRecordsMap</code>）由前端持久化到
+                    localStorage 跨轮接力，服务端不落盘、无隐私残留；千问 TTS 按调用量计费（约 1.4 元/万字），依赖临时文件上传能力（<code>ai.tools.tmp-file.enable</code>）。
+                  </p>
                 </Callout>
             </template>
         </TwoCol>
@@ -129,10 +156,13 @@
                 extRows: [
                     ['新增工具', '编写 <code>@Tool</code> 注解的 Spring Bean'],
                     ['新增异步任务工具', '实现 <code>AsyncTaskResolver</code> + <code>@Tool</code> 返回 <code>AsyncTaskMessage</code>，注册为 Spring Bean'],
-                    ['新增技能', '在 <code>skills/{name}/</code> 放置 <code>SKILL.md</code>，30 秒内生效'],
+                  ['新增技能', '在 <code>skills/{name}/</code> 放置 <code>SKILL.md</code>，30 秒内生效；也可让 Agent 调 <code>skill_install</code> 自己装'],
+                  ['新增技能脚本执行器', '实现 <code>SkillScriptRunner</code>（按后缀匹配），注册为 Bean 即可接管该类脚本'],
                     ['新增知识', '文档投放到 <code>docsPath</code> 目录，重启后自动向量化'],
                     ['新增角色', '编写 <code>roles/**/*.md</code> 并在 <code>role-config.json</code> 登记'],
                     ['自定义 ToolManager', '自实现 Bean，<code>@ConditionalOnMissingBean</code> 自动让渡'],
+                  ['控制工具是否对外暴露', '方法 / 类上标 <code>@McpServerExpose</code>，或配置 <code>server.provider.rules</code>'],
+                  ['桥接 MCP 专属工具', '实现 <code>McpServerAdditionalToolProvider</code> 并注册为 Bean'],
                     ['接入 MCP 供应商', '实现 <code>AbstractMcpToolGatewayManager</code> 生态的供应商'],
                     ['控制台菜单', '经 <code>IOpsProvider</code> 注册菜单项挂载入口']
                 ],

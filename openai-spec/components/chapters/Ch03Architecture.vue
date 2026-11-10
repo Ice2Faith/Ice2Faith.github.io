@@ -6,7 +6,7 @@
 
         <TwoCol>
             <template slot="left">
-                <PanelTitle title="子系统包结构（45 个 Java 文件）" />
+              <PanelTitle title="子系统包结构（66 个 Java 文件）"/>
                 <PkgTree v-html="pkgTreeHtml"></PkgTree>
             </template>
             <template slot="right">
@@ -38,9 +38,10 @@
             return {
                 pkgTreeHtml: '',
                 depRows: [
-                    ['<code>i2f-ai-std</code>', 'Agent / 工具 / 技能 / RAG / MCP 标准定义'],
-                    ['<code>i2f-ai-rest-openai</code>', 'OpenAI 兼容协议 REST 实现'],
-                    ['<code>i2f-extension-ai-rag-sqlite</code>', 'SQLite 向量存储'],
+                  ['<code>i2f-ai-std</code>', 'Agent / 工具 / 技能 / RAG / MCP 客户端与服务端标准定义'],
+                  ['<code>i2f-ai-rest-openai</code>', 'OpenAI 兼容协议 REST 实现 · MCP simple / official v2024 / v2026 协议'],
+                  ['<code>i2f-extension-ai-rag-sqlite</code>', 'SQLite 向量存储 + 文档分片存储（<code>SqliteRagDocumentsStore</code>）'],
+                  ['<code>i2f-extension-ai-embedding</code>', '内置 bge-small-zh ONNX 向量模型（可选，免外部 Embedding 服务）'],
                     ['<code>i2f-sm-crypto</code>', 'SM2/SM3/SM4 国密算法'],
                     ['<code>i2f-spring-core / i2f-spring-web</code>', 'SpringContext · RestTemplate 桥接'],
                     ['<code>i2f-jdbc-impl / i2f-rowset</code>', '数据库工具的 SQL 执行底座'],

@@ -16,7 +16,8 @@
                     <p>SseEmitter 5 分钟长连接，逐 chunk 中继 LLM 输出；支持 <code>reasoning_content</code> 思考过程独立渲染与流式打字机效果。</p>
                 </Card>
                 <Card color="#0b7285" idx="B" title="工具调用" tagline="Function Calling">
-                    <p>26 个内置工具类经 <code>@Tool</code> 注解自动生成 JSON Schema 注入对话；工具契约并行执行，HITL 人工审批把关危险操作，支持浏览器端工具委托。</p>
+                  <p>26 个内置工具类（含 2 个 MCP 服务桥接提供者）经 <code>@Tool</code> 注解自动生成 JSON Schema
+                    注入对话；工具契约并行执行，HITL 人工审批把关危险操作，支持浏览器端工具委托、异步任务与失败重试。</p>
                 </Card>
                 <Card color="#2b8a3e" idx="C" title="技能系统" tagline="Skills">
                     <p>基于文件系统的 <code>SKILL.md</code> 技能定义，30 秒热扫描；技能提示词与技能工具按需注入，支持脚本执行与资源读取。</p>
@@ -25,9 +26,15 @@
                     <p>Embedding 向量化 + SQLite 向量存储 + 递归文本分割；多格式文档读取器（Markitdown / EasyOCR / Pandoc），支持被动注入与主动检索。</p>
                 </Card>
                 <Card color="#e67700" idx="E" title="MCP 动态工具" tagline="Dynamic Loading">
-                    <p>不全量注入工具声明，模型经"列举供应商→列举工具→加载工具"三步自主发现，LRU 策略淘汰最久未用工具，节省 Token。</p>
+                  <p>不全量注入工具声明，模型经"列举供应商 → 列举 / 正则检索工具 → 按名加载"自主发现（四个元工具），LRU
+                    策略淘汰最久未用工具，节省 Token；配合意图识别前置过滤与 30% 概率重注入，长对话中工具引导不丢失。</p>
                 </Card>
-                <Card color="#c92a2a" idx="F" title="国密安全" tagline="SM2 · SM3 · SM4">
+              <Card color="#5c940d" idx="F" title="MCP 服务暴露" tagline="Server · v2024 / v2026">
+                <p>同一套工具池可反向暴露为 MCP 服务：<code>@McpServerExpose</code> + 规则过滤决定暴露面，支持私有 simple
+                  协议（HMAC 签名）与官方协议 v2024（有状态）/ v2026-07-28（无状态）双版本，另附文件上传下载 HTTP API 与接入令牌。
+                </p>
+              </Card>
+              <Card color="#c92a2a" idx="G" title="国密安全" tagline="SM2 · SM3 · SM4">
                     <p>请求报文 SM4 随机密钥加密 + SM2 密钥封装 + SM3 摘要 + SM2 签名，时间戳防重放；输出可选加密传输。</p>
                 </Card>
             </CardGrid>

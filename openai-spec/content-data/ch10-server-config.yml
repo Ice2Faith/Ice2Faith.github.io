@@ -3,17 +3,65 @@ i2f:
     ai:
       mcp:
         server:
-          enable: true
-          simple-server:
-            app-list:
-              - app-id: "ai-master"
-                app-key: "secret-key-1"
-          netty:
-            enable: false  # 使用 Spring Web MVC 模式
+          # 工具暴露：由 McpServerProvider 汇总工具池，经 Exposer 规则裁剪后对外暴露
+          provider:
+            enable: true
+            default-expose: true       # 未命中任何规则/注解时的兜底值
+            rules: # 按顺序匹配，首条命中即生效
+              - pattern: webjs_*       # ANT 表达式，规则内优先级最高
+                expose: false
+              - exclude-tags: [ human, high_cost ]
+                expose: false
+              - include-tags: [ auto, math ]
+                expose: true
+
+          # 私有 simple 协议（HMAC 签名）
+          simple:
+            enable: true
+            expire-window-minutes: 30  # 时间戳过期窗口
+            hmac-name: HmacSHA256
+            app-list: # 调用方凭据
+              - app-id: ai-master
+                app-key: secret-key-1
+            springweb:
+              enable: true             # 复用主 Web 端口：/mcp/tool/list · /mcp/tool/call
+            netty:
+              enable: false            # 独立 Netty 端口
+              port: 23745
+              max-content-length: 65536
+
+          # 官方协议 v2024（有状态，需 initialize 握手）
+          official:
+            v2024:
+              stream:
+                server-name: i2f-mcp-server
+                server-version: 1.0.0
+                springweb:
+                  enable: true         # /v2024/mcp
+                bearer-token:
+                  enable: true
+                  allow-tokens: [ xxx ]
+
+            # 官方协议 v2026-07-28（无状态，无 initialize，仅 server/discover + tools）
+            v2026:
+              stream:
+                server-name: i2f-mcp-server
+                server-version: 1.0.0
+                instructions: This server provides tool utilities.
+                springweb:
+                  enable: true         # /v2026/mcp
+                bearer-token:
+                  enable: true
+                  allow-tokens: [ xxx ]
+                tool-list: # tools/list 结果的缓存语义
+                  ttl-ms: 300000
+                  cache-scope: private
 
 ai:
   tools:
     enable: true
-    file:
-      enable: true
-      root-path: "/data/ai-files"
+    skill-manage:
+      enable: true                 # SkillManageTools：skill_install / skill_uninstall / skill_extract
+  mcp-server:
+    api:
+      enable: true                 # /mcp/api 文件上传下载 API + 接入令牌

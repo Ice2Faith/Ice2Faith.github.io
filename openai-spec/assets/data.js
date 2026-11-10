@@ -14,7 +14,7 @@ function getSpecData() {
             { id: 'ch07', no: '07', title: '工具体系' },
             { id: 'ch08', no: '08', title: '技能系统' },
             { id: 'ch09', no: '09', title: 'RAG · 记忆系统' },
-            { id: 'ch10', no: '10', title: 'MCP 动态工具 · 意图推荐' },
+            {id: 'ch10', no: '10', title: 'MCP 动态工具 · 服务暴露'},
             { id: 'ch11', no: '11', title: '安全体系' },
             { id: 'ch12', no: '12', title: '高级特性' },
             { id: 'ch13', no: '13', title: '自动装配' },
@@ -22,10 +22,10 @@ function getSpecData() {
             { id: 'ch15', no: '15', title: '扩展指南' }
         ],
         stats: [
-            { count: 49, label: 'Java 源文件', color: '#e8590c' },
+            {count: 66, label: 'Java 源文件', color: '#e8590c'},
             { count: 26, label: '内置工具类', color: '#0b7285' },
-            { count: 16, label: '回显消息类型', color: '#2b8a3e' },
-            { count: 8, label: 'REST 端点', color: '#1971c2' },
+            {count: 17, label: '回显消息类型', color: '#2b8a3e'},
+            {count: 12, label: 'REST 端点', color: '#1971c2'},
             { count: 22, label: '角色预设 (Role)', color: '#e67700' },
             { count: 4, label: 'AiModel 实现', color: '#c92a2a' }
         ],
@@ -39,7 +39,7 @@ function getSpecData() {
             { id: 'ch07', no: '07', en: 'Function Calling', title: '工具体系：注解驱动的能力池' },
             { id: 'ch08', no: '08', en: 'Skill System', title: '技能系统：懒加载的领域知识包' },
             { id: 'ch09', no: '09', en: 'RAG Pipeline & Memory', title: 'RAG 知识库 · 记忆系统：向量检索与三级记忆' },
-            { id: 'ch10', no: '10', en: 'MCP Dynamic Tools', title: 'MCP 动态工具：三步发现 + LRU 装载 + 意图推荐' },
+            {id: 'ch10', no: '10', en: 'MCP Dynamic Tools', title: 'MCP：动态工具装载 · 能力服务暴露 · 官方协议双版本'},
             { id: 'ch11', no: '11', en: 'SM Crypto Transfer', title: '安全体系：国密全链路传输' },
             { id: 'ch12', no: '12', en: 'Advanced Features', title: '高级特性：让对话长出记忆与手脚' },
             { id: 'ch13', no: '13', en: 'Auto Configuration', title: '自动装配：一个依赖即一个工作台' },

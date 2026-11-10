@@ -1,22 +1,33 @@
 <span class="dir">i2f.springboot.ops.openai</span>
 ├── <span class="pkg">controller</span>/
 │   ├── OpenAiOpsController <span class="cm"># 7 个 REST 端点 · SSE 编排核心</span>
-│   └── QwenTtsOpsController <span class="cm"># 千问语音合成代理</span>
+│   ├── QwenTtsOpsController / ServerSpeakTtsOpsController <span class="cm"># 语音合成代理</span>
+│   ├── HttpServletToolContextUtil <span class="cm"># 请求头/客户端 IP 写入 ToolCallContextHolder</span>
+│   └── OfficeFormatUtil <span class="cm"># Office 附件转换</span>
 ├── <span class="pkg">data</span>/
-│   ├── OpenAiOperateDto <span class="cm"># 操作请求：功能开关集合</span>
+│   ├── OpenAiOperateDto <span class="cm"># 操作请求：功能开关 + 插话 + 工具消息回收</span>
 │   ├── OpenAiCompletionVo / Dto <span class="cm"># 补全请求 VO/DTO</span>
 │   ├── OpenAiMessageVo <span class="cm"># 多态消息载体</span>
 │   ├── OpenAiMeta <span class="cm"># baseUrl · apiKey</span>
-│   ├── OpenAiToolApprovalDto <span class="cm"># 工具审批决定</span>
-│   └── <span class="pkg">message</span>/ OpsOpenAiConsts <span class="cm"># 12 种回显类型常量</span>
+│   ├── OpenAiToolApprovalDto / OpenAiToolDefinitionDto / OpenAiWebjsToolResult
+│   └── <span class="pkg">message</span>/ OpsOpenAiConsts <span class="cm"># 17 种回显类型 + summary-history 动作</span>
 ├── <span class="pkg">tool</span>/
-│   ├── SpringContextToolAutoConfiguration
-│   ├── <span class="pkg">impl</span>/ 17 个工具类 <span class="cm"># @Tool 注解驱动</span>
-│   │   ├── GroovyTools <span class="cm"># groovy_run_script（条件装配）</span>
-│   │   ├── LoopEngineeringTools <span class="cm"># 循环工程五步工作流提示词</span>
-│   └── SessionRecordTools <span class="cm"># 循环工程会话记录读写</span>
+│   ├── SpringContextToolAutoConfiguration <span class="cm"># 工具池 Bean 装配</span>
+│   ├── <span class="pkg">impl</span>/ 32 个 Java 文件（24 个 @Tools 类） <span class="cm"># @Tool 注解驱动</span>
+│   │   ├── DatabaseQueryTools / DatabaseUpdateTools <span class="cm"># SQL 查询 / 变更（双重校验）</span>
+│   │   ├── GroovyTools / PythonTools / NodejsTools / PowershellTools <span class="cm"># 脚本执行（条件装配）</span>
+│   │   ├── SkillManageTools <span class="cm"># skill_install / uninstall / extract</span>
+│   │   ├── LoopEngineeringTools / SessionRecordTools <span class="cm"># 循环工程五步工作流与会话记录</span>
+│   │   ├── OpsMcpServerAdditionalToolProvider <span class="cm"># MCP 服务桥接：上传/落盘/异步任务查询</span>
+│   │   ├── OpsMcpServerApiToolProvider <span class="cm"># /mcp/api 端点 + 令牌 + 使用向导工具</span>
+│   │   ├── UrlSigner <span class="cm"># URL 签名（task:// 协议防伪造）</span>
+│   │   └── <span class="pkg">a2a</span>/ AgentTools <span class="cm"># Agent 间调用</span>
 │   └── <span class="pkg">impl.sql</span>/ SQL 校验器 <span class="cm"># AST + 正则双校验</span>
-├── <span class="pkg">skill</span>/ SkillAutoConfiguration <span class="cm"># 30s 热扫描</span>
-├── <span class="pkg">rag</span>/ RagAutoConfiguration <span class="cm"># 向量化 + SQLite 存储</span>
-├── <span class="pkg">async</span>/ AsyncTaskDispatcher / AsyncTaskResolver <span class="cm"># 异步任务调度与状态轮询</span>
-└── <span class="pkg">tts</span>/ QwenAudioTtsWebSocket <span class="cm"># 千问语音合成 WebSocket 客户端</span>
+├── <span class="pkg">skill</span>/
+│   ├── SkillAutoConfiguration <span class="cm"># 30s 热扫描 + SkillsTools Bean</span>
+│   └── GroovySkillScriptRunner <span class="cm"># SkillScriptRunner SPI 实现</span>
+├── <span class="pkg">rag</span>/ RagAutoConfiguration / MemoryTools <span class="cm"># 向量化 + SQLite 向量与文档分片存储</span>
+├── <span class="pkg">async</span>/ AsyncTaskDispatcher / AsyncTaskHelper / AsyncTaskResolver <span class="cm"># 异步任务调度与 task:// 查询</span>
+├── <span class="pkg">properties</span>/ OpenAiOpsProperties <span class="cm"># 默认 / DashScope 端点与视觉参数</span>
+├── <span class="pkg">util</span>/ OpenAiOptionsUtil <span class="cm"># 端点就近取值</span>
+└── <span class="pkg">tts</span>/ QwenAudioTtsWebSocket · CommandTtsSpeaker <span class="cm"># 语音合成输出</span>

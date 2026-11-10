@@ -3,22 +3,72 @@ i2f:
     ai:
       mcp:
         client:
-          enable: true
+          # 官方 stream 客户端比较特殊：装配开关与 instances 前缀顺序不同
+          stream:
+            official:
+              v2024:
+                enable: true          # 装配 StreamMcpClientAutoConfiguration
+              v2026:
+                enable: true          # 装配 StreamMcpClientV2026AutoConfiguration
+
+          # 私有 simple 协议客户端：每个实例动态注册 {name}_McpToolProvider
           simple:
+            enable: true
             instances:
-              - name: "file_svr"
-                base-url: "http://file-service:8080"
-                app-id: "ai-master"
-                app-key: "secret-key-1"
-                description: "文件操作工具服务"
-              - name: "db_svr"
-                base-url: "http://db-service:8080"
-                app-id: "ai-master"
-                app-key: "secret-key-2"
-                description: "数据库查询工具服务"
+              - enable: true
+                name: file_svr           # Bean 名 {name}_McpToolProvider，同时是工具名前缀
+                description: 文件操作工具服务
+                base-url: http://file-service:8080
+                app-id: ai-master
+                app-key: secret-key-1
+                hmac-name: HmacSHA256
+              - enable: true
+                name: db_svr
+                description: 数据库查询工具服务
+                base-url: http://db-service:8080
+                app-id: ai-master
+                app-key: secret-key-2
+
+          # 官方协议客户端
+          official:
+            v2024:
+              stream: # 实例前缀，装配开关见上方 client.stream.official.v2024.enable
+                instances:
+                  - enable: true
+                    initial: false        # true 则启动即拉取工具清单
+                    name: demo
+                    description: a group utils tool
+                    url: http://localhost:9999/mcp
+                    bearer-token: xxx
+                    headers:
+                      X-Tenant: demo
+                    tag-rules:
+                      - pattern: "*web*"
+                        tags: [ auto, readonly ]
+              solon: # Solon AI MCP 客户端实现，开关与实例同前缀
+                enable: true
+                instances:
+                  - enable: true
+                    name: demo
+                    url: http://localhost:9999/mcp
+                    channel: STREAMABLE   # STDIO / SSE / STREAMABLE / STREAMABLE_STATELESS
+                    bearer-token: xxx
+            v2026:
+              stream: # 实例前缀，装配开关见上方 client.stream.official.v2026.enable
+                instances:
+                  - enable: true
+                    name: demo
+                    url: http://localhost:9999/mcp
+                    bearer-token: xxx
+
+          # 兼容 mcp.json（Claude Desktop 风格）的客户端创建器
+          creator:
+            enable: true
 
 ai:
   tools:
     enable: true
     mcp-gateway:
-      enable: true  # 启用 MCP 动态工具网关
+      enable: true                          # 启用 MCP 动态工具网关
+    url-signer:
+      sign-salt: abc123def456               # task:// 等签名 URL 的盐值
