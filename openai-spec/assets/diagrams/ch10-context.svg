@@ -23,5 +23,16 @@
 <text class="svg-lbl-sm" x="60" y="262" style="fill:#e8590c;">ToolCallContextHolder.replaceAs(ctx) ← 恢复上下文</text>
 <text class="svg-lbl-sm" x="40" y="282">④ finally: ToolCallContextHolder.clear() ← 防泄漏</text>
 <path class="svg-line-teal flow-anim" d="M440,225 L480,225" marker-end="url(#ctx-ah-t)"/>
-<text class="svg-lbl-sm" x="445" y="218" style="fill:#0b7285;">HMAC 签名含 context</text>
+    <rect class="svg-node svg-node-green" x="480" y="170" width="440" height="120" rx="3"/>
+    <text class="svg-lbl" x="700" y="198" text-anchor="middle">任一传输实现 — 上下文恢复 / 清理时序一致</text>
+    <text class="svg-lbl-sm" x="500" y="222"><tspan style="fill:#7b90a5;">Spring Web MVC：</tspan>
+        SpringHttpSimpleMcpController
+    </text>
+    <text class="svg-lbl-sm" x="500" y="242"><tspan style="fill:#7b90a5;">Netty：</tspan>HttpSimpleMcpInBoundHandler
+    </text>
+    <text class="svg-lbl-sm" x="500" y="262"><tspan style="fill:#7b90a5;">官方 v2024 / v2026：</tspan>
+        SpringHttpStreamMcpController · V2026Controller
+    </text>
+    <text class="svg-lbl-sm" x="500" y="282" style="fill:#2f9e44;">统一时序：replaceAs → callTool → finally clear()
+    </text>
 </svg>

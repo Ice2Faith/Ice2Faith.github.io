@@ -1,6 +1,8 @@
 <template>
     <div>
-        <LeadText>框架的扩展面刻意保持极小：加工具只需一个注解类，加技能只需一个 Markdown 文件，加知识只需把文档丢进目录。</LeadText>
+      <LeadText>框架的扩展面刻意保持极小：加工具只需一个注解类，加技能只需一个 Markdown 文件，加知识只需把文档丢进目录。迁移到
+        <code>i2f-springboot-ai-starter</code> 后，这些能力全部落在<b>四个 SPI</b> 上——本机与远程、注解与脚本、编译期与运行期，均不改装配代码。
+      </LeadText>
 
         <TwoCol>
             <template slot="left">
@@ -12,7 +14,8 @@
                         <p>如上：Spring 组件 + <code>@Tools</code> / <code>@Tool</code> / <code>@ToolParam</code> 注解。</p>
                     </Step>
                     <Step title="确认开关">
-                        <p><code>ai.tools.enable</code> 默认开启，<code>ContextAppToolManager</code> 启动时自动扫描收录。</p>
+                      <p><code>i2f.springboot.ai.tools.enable</code> 默认开启，<code>ContextAppToolManager</code>
+                        每次列工具都重新解析容器，注册即生效。</p>
                     </Step>
                     <Step title="前端验证">
                         <p>开启 <code>enableEchoRequestPayload</code>，在回显报文中确认工具定义已注入 <code>tools</code> 字段。</p>
@@ -32,7 +35,35 @@
             </template>
         </TwoCol>
 
-        <PanelTitle title="MCP 专属扩展 — 自定义传输层与客户端" />
+      <PanelTitle title="ai-starter 扩展点 — 四个 SPI，只加 Bean"/>
+      <BodyText size="13.5px">通用能力下沉之后，扩展面收敛为四个容器级契约。它们的共同点是：<b>不改一行装配代码，只注册一个
+        Bean</b>——装配类在运行期枚举容器，而不是在编译期列举实现。
+      </BodyText>
+      <SpecTable :headers="['SPI / 注解', '实现方式', '被谁消费', '生效时机']">
+        <tr v-for="row in spiRows" :key="row[0]">
+          <td v-html="row[0]"></td>
+          <td v-html="row[1]"></td>
+          <td v-html="row[2]"></td>
+          <td v-html="row[3]"></td>
+        </tr>
+      </SpecTable>
+      <TwoCol marginTop="14px">
+        <template slot="left">
+          <Callout color="#2b8a3e" title="工具自动注册 — 每次列工具都重新解析">
+            <p><code>ToolRawHelper.parseTools(resolver, context)</code> 遍历容器：实现
+              <code>ToolRawDefinitionsProvider</code> 的取 <code>getTools()</code>，其余用注解反射。因此 <code>ContextAppToolManager.listTools()</code>
+              天然感知运行期新增的工具——Groovy 脚本落盘 15 秒后即可被模型看见。</p>
+          </Callout>
+        </template>
+        <template slot="right">
+          <Callout color="#0b7285" title="文档读取器 — 异常与空结果自动跳过">
+            <p><code>ContextRagFileReader</code> 汇总容器内全部 <code>RagFileReader</code>，按 <code>support()</code>
+              依次尝试；某个实现抛异常或返回空串则静默跳到下一个，全部失败才回退纯文本直读。</p>
+          </Callout>
+        </template>
+      </TwoCol>
+
+      <PanelTitle title="MCP 专属扩展 — 自定义传输层与客户端" />
         <TwoCol>
             <template slot="left">
                 <StepList>
@@ -117,11 +148,11 @@
                     </tr>
                 </SpecTable>
                 <Callout color="#c92a2a" title="部署红线" marginTop="14px">
-                  <p>命令行工具默认禁用（<code>ai.tools.command.enable=false</code>）需手动开启；Groovy
+                  <p>AI 控制台对话端点默认关闭（<code>i2f.springboot.ops.open-ai.enable=false</code>）需显式开启；命令行工具默认禁用（<code>ai.tools.command.enable=false</code>）需手动开启；Groovy
                     脚本工具默认禁用（<code>ai.tools.groovy.enable=false</code>）需手动开启；<b>数据库写操作</b>默认禁用（<code>ai.tools.database.update.enable=false</code>）且带
                     HUMAN+SENSIBLE 标签；SQL 执行前经安全校验；文件路径规范化防穿越；<code>/mcp/api</code> 接入令牌 30
                     分钟未使用即失效，勿泄露 <code>X-MCP-TOKEN</code>；加密输出拖慢模型输出速度、非必要不开启；工具调用需模型支持
-                    Function-Calling（Qwen / DeepSeek / GPT 等）；技能依赖工具系统，需同时开启 <code>ai.tools.enable</code>；循环工程会话记录（<code>sessionRecordsMap</code>）由前端持久化到
+                    Function-Calling（Qwen / DeepSeek / GPT 等）；技能依赖工具系统，需同时开启 <code>i2f.springboot.ai.tools.enable</code>；循环工程会话记录（<code>sessionRecordsMap</code>）由前端持久化到
                     localStorage 跨轮接力，服务端不落盘、无隐私残留；千问 TTS 按调用量计费（约 1.4 元/万字），依赖临时文件上传能力（<code>ai.tools.tmp-file.enable</code>）。
                   </p>
                 </Callout>
@@ -139,6 +170,7 @@
         name: 'Ch15Extension',
         components: {
             LeadText: '../md/LeadText.vue',
+          BodyText: '../md/BodyText.vue',
             Callout: '../md/Callout.vue',
             PanelTitle: '../md/PanelTitle.vue',
             SpecTable: '../md/SpecTable.vue',
@@ -154,11 +186,15 @@
                 imageGenCode: '',
                 runtimeDirHtml: '',
                 extRows: [
-                    ['新增工具', '编写 <code>@Tool</code> 注解的 Spring Bean'],
+                  ['新增工具', '编写 <code>@Tool</code> 注解的 Spring Bean；<code>i2f.springboot.ai.tools.enable</code> 默认开启，<code>ContextAppToolManager</code> 实时扫描收录'],
+                  ['新增动态工具源', '实现 <code>ToolRawDefinitionsProvider</code>，<code>getTools()</code> 返回定义列表'],
+                  ['放置 Groovy 工具脚本', '把 <code>*.groovy</code> 丢进运行目录 <code>./tools</code>，15 秒内热载且可注入 Spring Bean'],
                     ['新增异步任务工具', '实现 <code>AsyncTaskResolver</code> + <code>@Tool</code> 返回 <code>AsyncTaskMessage</code>，注册为 Spring Bean'],
-                  ['新增技能', '在 <code>skills/{name}/</code> 放置 <code>SKILL.md</code>，30 秒内生效；也可让 Agent 调 <code>skill_install</code> 自己装'],
+                  ['新增技能', '在运行目录 <code>./skills/{name}/</code> 放置 <code>SKILL.md</code>，30 秒内生效；也可让 Agent 调 <code>skill_install</code> 自己装'],
                   ['新增技能脚本执行器', '实现 <code>SkillScriptRunner</code>（按后缀匹配），注册为 Bean 即可接管该类脚本'],
-                    ['新增知识', '文档投放到 <code>docsPath</code> 目录，重启后自动向量化'],
+                  ['新增知识', '文档投放到 <code>i2f.springboot.ai.rags.embedding.docs-path</code>（默认 <code>./rags</code>），重启后 3 秒自动向量化，完成后整目录归档到 <code>rags_history/</code>'],
+                  ['新增文档读取器', '实现 <code>RagFileReader</code>（support / read），<code>ContextRagFileReader</code> 自动汇总'],
+                  ['声明 AI 服务接口', '接口标 <code>@AiService</code>，由 <code>AiServiceDynamicProxyHandler</code> 生成代理，零实现类'],
                     ['新增角色', '编写 <code>roles/**/*.md</code> 并在 <code>role-config.json</code> 登记'],
                     ['自定义 ToolManager', '自实现 Bean，<code>@ConditionalOnMissingBean</code> 自动让渡'],
                   ['控制工具是否对外暴露', '方法 / 类上标 <code>@McpServerExpose</code>，或配置 <code>server.provider.rules</code>'],
@@ -166,6 +202,12 @@
                     ['接入 MCP 供应商', '实现 <code>AbstractMcpToolGatewayManager</code> 生态的供应商'],
                     ['控制台菜单', '经 <code>IOpsProvider</code> 注册菜单项挂载入口']
                 ],
+              spiRows: [
+                ['<code>ToolRawDefinitionsProvider</code>', '实现 <code>getTools()</code> 返回工具定义列表', '<code>ToolRawHelper.parseTools</code>（每次 <code>listTools()</code>）', '注册即生效，无需重启'],
+                ['<code>RagFileReader</code>', '实现 <code>support(File)</code> / <code>read(File)</code>', '<code>ContextRagFileReader</code>（增量入库时逐个尝试）', '下一次入库'],
+                ['<code>SkillScriptRunner</code>', '实现 <code>suffix()</code> + <code>run()</code>', '<code>SkillsTools</code> 按扩展名匹配，无匹配回退内置解释器表', '技能执行时'],
+                ['<code>@AiService</code>', '接口标注注解（扫描范围 <code>proxy.service-packages</code>）', '<code>AiServiceProxyInterfaceAutoConfiguration</code> + <code>AiServiceDynamicProxyHandler</code>', '启动期注册代理 Bean']
+              ],
                 monitorRows: [
                     ['SSE 流式响应时间', 'LLM 首 token 延迟与整体响应时间'],
                     ['Token 消耗', '每次对话的 prompt / completion / total 用量'],

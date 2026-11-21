@@ -1,7 +1,7 @@
 <template>
     <div>
       <LeadText>在「消息循环 + 工具池」的骨架之上，框架叠加了一组<b>正交增强</b>：事实记忆、Agent
-        协作、报文回显、多模态附件、中途插话、工具消息回收……每一项都由请求级开关独立控制，按需点亮。
+        协作、报文回显、多模态附件、中途插话、工具结果 / 参数回收……每一项都由请求级开关独立控制，按需点亮。
       </LeadText>
 
         <CardGrid>
@@ -17,8 +17,12 @@
             <Card color="#1971c2" idx="D" title="多模态附件" tagline="&lt;upload_files&gt;">
                 <p>附件经 <code>/tmp-file/upload</code> 上传并做 <b>MD5 完整性校验</b>，随后以 <code>&lt;upload_files&gt;</code> 块追加到消息尾部；下载侧提供 <code>/tmp-file/download</code>。默认经 OCR 文本提取提供非视觉模型的「准多模态」能力。</p>
             </Card>
-            <Card color="#e67700" idx="E" title="会话截断与总结" tagline="enableAutoSummary · 自动触发">
-                <p>长会话由前端按策略截断；开启<b>自动会话总结</b>后，当 <code>apiMessages.length ≥ maxHistoryCount - 1</code> 时自动发起总结（保留首条 system 人设与首条 user 锚定主题），与后端 <code>compressOrDropHistoryMessage</code> 形成前后两道消息治理。</p>
+          <Card color="#e67700" idx="E" title="会话截断与总结" tagline="enableAutoSummary · 默认开启">
+            <p>长会话由前端按策略截断（<code>maxHistoryCount</code> 默认 50 轮）；<b>自动会话总结</b>默认开启，当
+              <code>apiMessages.length ≥ maxHistoryCount - 1</code> 时自动发起总结（保留首条 system 人设、首条 user 锚定主题、<b>最后一条
+                user</b>
+              续作，并把被压缩的旧消息<b>归档</b>到 <code>summaryMessageMap</code> 供随时回看），与后端 <code>compressOrDropHistoryMessage</code>
+              形成前后两道消息治理。</p>
             </Card>
             <Card color="#c92a2a" idx="F" title="TTS 语音播报" tagline="speechSynthesis">
                 <p>答复可经浏览器语音合成朗读，配合流式渲染逐段播报——运维场景下的「免盯屏」信息获取方式。</p>
@@ -47,12 +51,25 @@
           <Card color="#7048e8" idx="M" title="AGENTS.md 注入" tagline="enableAgentsMarkdown">
             <p>开启后自动读取 <code>./AGENTS.md</code>（工作目录优先，Classpath <code>/AGENTS.md</code>
               兜底）作为系统消息注入，把项目编码约定、目录规范、构建命令等<b>团队语境</b>随每轮请求带上；文件不存在或内容为空时不注入，回显复用
-              <code>echo_loop_engineering</code>。</p>
+              <code>echo_system_inject</code>。</p>
           </Card>
-          <Card color="#2f9e44" idx="N" title="工具消息回收" tagline="enableRecycleToolMessage">
-            <p>长循环中早期 tool 结果对后续推理贡献有限却持续计费。开启后从尾部倒计数，超出保留条数（<code>recycleToolLastKeepCount</code>，DTO
-              默认 10、服务端兜底 5）且长度超阈值的 tool 消息（<code>recycleToolMessageMinLength</code>，默认 512）被替换为
-              <code>[recycled] tool result recycled; re-call if needed.</code>——模型仍知道「这里曾调用过，可重试」。</p>
+          <Card color="#2f9e44" idx="N" title="工具结果回收" tagline="enableRecycleToolMessage · ref:// 占位化">
+            <p>长循环中早期 tool 结果对后续推理贡献有限却持续计费。开启后从尾部倒计数，超出保留条数（<code>recycleToolMessageLastKeepCount</code>，默认
+              10、缺省或 ≤0 时服务端回落 10）且长度超阈值的 tool 消息（<code>recycleToolMessageMinLength</code>，默认
+              512）被替换为
+              <code>[recycled] tool result recycled to 'ref://{uuid}', use tool `ref_content` to read it if
+                needed.</code>——模型仍知道「这里曾调用过，可随时取回」。</p>
+          </Card>
+          <Card color="#f76707" idx="O" title="工具参数回收" tagline="enableRecycleToolArgument · 不丢调用意图">
+            <p>比结果更易被忽略的是 <b>assistant 的 tool_calls 参数</b>：一次写入大段文本、一个巨大的
+              SQL，会把后续每一轮请求都撑大。开启后同样从尾部倒计数，
+              保留最近 <code>recycleToolArgumentLastKeepCount</code>（默认 10）条之外、参数序列化长度超 <code>recycleToolArgumentMinLength</code>（默认
+              512）的
+              <code>function.arguments</code>，被 <code>RecycleTools.recycleArguments</code> <b>递归</b>遍历 Map / List /
+              数组 / 字符串，逐字段替换为
+              <code>ref://{uuid}</code>——调用意图与参数结构完整保留，原文进入本轮 <code>recycleMap</code> 并随 <code>echo_recycle_map</code>
+              回显，模型需要时用
+              <code>ref_content</code> 原样取回。仅当占位符比原文更短时才替换，短参数永不膨胀。</p>
             </Card>
         </CardGrid>
 
@@ -60,7 +77,16 @@
             <template slot="left">
                 <PanelTitle title="自动会话总结 — 触发与消息保留策略" />
                 <Callout color="#e67700" title="触发条件（前端 directSendMessage）">
-                    <p>开关 <code>enableAutoSummary</code> 需与 <code>enableTruncOverflowHistory</code> 协同开启；当 <code>apiMessages.length ≥ maxHistoryCount - 1</code> 时自动拦截发送动作，改发 <code>summary-history</code> 总结请求（提示词特意要求保留未完成任务、待办事项与关键用户信息，确保后续可无缝续接）。总结完成后按<b>保留策略</b>重建消息列表：首条 system 人设 + 首条 user + 紧随其后的 system + 最后一条 echo_truth_content / echo_truth_sync + 总结结果（assistant）；随后 <code>needContinue</code> 标志触发 <code>continueAfterSummaryHistory()</code> 自动发送 "continue" 并继续对话循环——<b>总结不打断流程，用户全程无感知</b>。</p>
+                  <p>开关 <code>enableAutoSummary</code>（默认开启）需与 <code>enableTruncOverflowHistory</code> 协同开启；当
+                    <code>apiMessages.length ≥ maxHistoryCount - 1</code>（<code>maxHistoryCount</code> 默认 50
+                    轮）时自动拦截发送动作，改发 <code>summary-history</code>
+                    总结请求（提示词特意要求保留未完成任务、待办事项与关键用户信息，确保后续可无缝续接）。总结完成后<b>先把被压缩的旧消息全量归档</b>到
+                    <code>summaryMessageMap[sessionId]</code>（可随时回看、编辑、重做、删除、复制），再按<b>保留策略</b>重建消息列表：首条
+                    system 人设 + 首条 user + 紧随其后的 system + 最后一条 echo_truth_content / echo_truth_sync + <b>最后一条
+                      user</b>（排除 <code>control=summary</code> 的总结指令，让模型知道用户真正在等什么）+
+                    总结结果（assistant）；随后 <code>needContinue</code> 标志触发
+                    <code>continueAfterSummaryHistory()</code> 自动发送 "continue"
+                    并继续对话循环——<b>总结不打断流程，用户全程无感知</b>。</p>
                 </Callout>
             </template>
             <template slot="right">
@@ -92,7 +118,9 @@
         <Callout color="#0b7285" title="正交开关 — 能力即插即用">
           <p>上述特性分别由 <code>enableTruth</code> / <code>enableVisionImage</code> /
             <code>enableEchoRequestPayload</code> / <code>enableLoopEngineering</code> /
-            <code>enableAgentsMarkdown</code> / <code>enableRecycleToolMessage</code> 等<b>请求级开关</b>控制（见 <code>OpenAiOperateDto</code>），前端功能面板一一对应；而插话与轮次语义则通过
+            <code>enableAgentsMarkdown</code> / <code>enableRecycleToolMessage</code> /
+            <code>enableRecycleToolArgument</code> / <code>enableToolRecommendByIntentRecognize</code>（技能语义推荐复用该开关）等<b>请求级开关</b>控制（见
+            <code>OpenAiOperateDto</code>），前端功能面板一一对应；而插话与轮次语义则通过
             <code>interject</code> / <code>action</code> 两个字段传入。每个开关独立生效、互不牵连——这是「消息循环为体、能力插件为用」设计哲学的直接体现。
           </p>
         </Callout>

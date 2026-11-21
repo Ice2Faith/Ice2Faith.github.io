@@ -22,10 +22,13 @@
         </TwoCol>
 
         <PanelTitle title="ToolManager 工具管理体系 — 三层架构全景" />
-        <BodyText size="13.5px">工具并非散落在 Spring 容器中各自为战。框架通过三层架构将它们组织为统一的工具管理体系，由 <code>SpringContextToolAutoConfiguration</code> 在启动时自动装配：</BodyText>
+      <BodyText size="13.5px">工具并非散落在 Spring 容器中各自为战。框架通过三层架构将它们组织为统一的工具管理体系，由
+        <code>i2f-springboot-ai-starter</code> 的
+        <code>AiToolsAutoConfiguration</code>（<code>@AutoConfigureOrder(5000)</code>）在启动时自动装配：
+      </BodyText>
         <DiagramPanel src="assets/diagrams/ch07-tool-manager.svg" caption="ToolManager 三层架构 — 工具从定义到执行的完整数据流" />
 
-        <PanelTitle title="SpringContextToolAutoConfiguration 装配的四大 Bean" />
+      <PanelTitle title="AiToolsAutoConfiguration 装配的四大 Bean（ai-starter · 前缀 i2f.springboot.ai.tools.*）"/>
         <SpecTable :headers="['Bean', '类型', '开关属性', '说明']">
             <tr v-for="row in beanRows" :key="row[0]">
                 <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td><td v-html="row[3]"></td>
@@ -39,20 +42,93 @@
             </tr>
         </SpecTable>
 
-      <PanelTitle title="内置工具清单 — 24 个 @Tools 类 + 2 个 MCP 服务桥接提供者"/>
+      <PanelTitle title="内置工具清单 — 运行期 28 个 @Tools 类（ops 24 + ai-starter 4）"/>
         <SpecTable :headers="['工具类', '代表工具', '能力', '关键标签']">
             <tr v-for="row in toolRows" :key="row[0]">
                 <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td><td v-html="row[3]"></td>
             </tr>
         </SpecTable>
-      <BodyText size="12.5px">※ 条件装配：随 <code>ai.skills.enable</code> / <code>ai.rags.enable</code> / <code>ai.rags.memory.enable</code>
-        / <code>ai.tools.session-record.enable</code> / <code>ai.tools.groovy.enable</code> / <code>ai.tools.skill-manage.enable</code>
-        / <code>ai.mcp-server.api.enable</code> 开关注入；<code>LoopEngineeringTools</code> 不是 @Tool
+      <BodyText size="12.5px">※ 条件装配：随 <code>i2f.springboot.ai.skills.enable</code> / <code>i2f.springboot.ai.rags.enable</code>
+        / <code>i2f.springboot.ai.rags.memory.enable</code>
+        （<b>ai-starter 前缀</b>）
+        / <code>ai.tools.session-record.enable</code> / <code>ai.tools.recycle.enable</code> / <code>ai.tools.groovy.enable</code>
+        / <code>ai.tools.skill-manage.enable</code>
+        / <code>ai.tools.ssh.enable</code>
+        / <code>ai.mcp-server.api.enable</code>（<b>ops-starter 旧前缀</b>）开关注入；<code>LoopEngineeringTools</code> 不是
+        @Tool
         Bean，而是静态提示词提供者（由请求字段 <code>enableLoopEngineering</code> 控制注入）；脚本类装配策略：Webjs
         默认开启，PowerShell（仅 Windows）/ Node.js / Python 默认关闭且需探测到可用运行环境——详见下文与第 13 章。
       </BodyText>
 
-        <PanelTitle title="BS 架构下的工具委托链 — 执行环境解耦" />
+      <Callout color="#0b7285" title="SshTools — 让模型「选主机」而不是「拼地址」">
+        <p><code>ai.tools.ssh.hosts[]</code> 以 <code>name</code> 为每台主机起名，模型只需传 <code>host</code>
+          名；<code>ssh_hosts</code> 返回启用主机的地址 / 默认工作目录 / 认证方式（<b>不回显密码</b>），并在
+          <code>host</code>
+          缺失或未知时把可用主机名写进 <code>hints</code>。<code>ssh_command</code> 一次调用建一次短会话，按输出末行
+          <code>exit status: N</code> 派生 <code>completed / exitStatus</code>，并将 <code>ll</code> / 交互式
+          <code>top</code>
+          重写为非交互形式；<code>ssh_upload</code> / <code>ssh_download</code> 的本机侧一律经
+          <code>LocalFileTools.getFile()</code> 沙箱（远端路径不限制），下载覆盖前按 <code>ai.tools.file.backup-file</code>
+          备份。四件工具均携带 <code>AUTO</code>/<code>HUMAN</code>/<code>WRITABLE</code> 标签，可经
+          <code>@McpServerExpose</code> 对外暴露。</p>
+      </Callout>
+
+      <Callout color="#c92a2a" title="ref_content — 让「上下文回收」可逆的那个工具">
+        <p><code>RecycleTools</code> 只有一件武器：<code>ref_content(ref)</code>。它的输入是回收时生成的 <code>ref://{uuid}</code>
+          占位符，输出是从 <code>ToolCallContextHolder.get("req").getRecycleMap()</code> 里取回的<b>原始内容</b>（附
+          <code>hints</code> 说明取回成功 / 缺失）。配套的静态方法 <code>recycleArguments(arguments, minLength,
+            recycleMap)</code>
+          递归遍历 Map / List / 数组 / 字符串：命中超长字符串时生成 <code>ref://{uuid}</code> 并写入
+          <code>recycleMap</code>，
+          <b>仅当占位符确实比原文短</b>才替换——短内容不回收，避免占位符反而更长。该类标注
+          <code>@McpServerExpose(false)</code>
+          不对外暴露为 MCP 工具，且通过静态扫描 <code>@Tool</code> 方法名生成 <code>toolNames()</code>；Controller 在
+          <code>enableRecycleToolMessage</code> / <code>enableRecycleToolArgument</code>
+          开启时据此把它<b>强制纳入本轮工具列表</b>，
+          保证「被回收的内容永远有取回通道」。</p>
+      </Callout>
+
+      <PanelTitle title="工具自动注册 — 三条通道，殊途同归到 ToolManager"/>
+      <BodyText size="13.5px">工具进入工具池不止「写个 <code>@Tool</code> Bean」一条路。<code>ToolRawHelper.parseTools(resolver,
+        context)</code> 在<b>每次列举工具时</b>遍历容器：实现 <code>ToolRawDefinitionsProvider</code> 的 Bean 直接贡献定义列表，其余
+        Bean 再经注解反射解析——因此「动态工具源」只需一个 Bean 即可接入，不用改任何装配代码。
+      </BodyText>
+      <SpecTable :headers="['通道', '入口', '生效时机', '典型实现']">
+        <tr v-for="row in registerRows" :key="row[0]">
+          <td v-html="row[0]"></td>
+          <td v-html="row[1]"></td>
+          <td v-html="row[2]"></td>
+          <td v-html="row[3]"></td>
+        </tr>
+      </SpecTable>
+
+      <PanelTitle title="Groovy 动态工具 — 把「脚本文件」变成「工具池」"/>
+      <BodyText size="13.5px"><code>GroovyDynamicToolProvider</code>（ai-starter，<code>@ConditionalOnClass</code> 探测
+        Groovy）实现 <code>ApplicationRunner</code>：启动后拉起守护线程 <code>groovy-tool-refresher</code>，每 <b>15 秒</b>递归扫描工作目录
+        <code>./tools/**/*.groovy</code>，只对 <code>lastModified</code> 变新的文件重新
+        <code>GroovyScript.parseAsClass</code> → 实例化 → <code>autowireBean</code> + <code>initializeBean</code>（脚本内可直接
+        <code>@Autowired</code> Spring Bean）→ <code>ToolRawHelper.parseTools</code> 反射出
+        <code>ToolRawDefinition</code> 写入 <code>ConcurrentHashMap</code> 缓存。列表读取与刷新之间用
+        <code>ReentrantLock</code> 互斥，单个脚本编译失败只记 warn、不污染其他工具。
+      </BodyText>
+      <TwoCol>
+        <template slot="left">
+          <Callout color="#0b7285" title="与 GroovyTools 的区别 — 一个是「装工具」，一个是「用工具」">
+            <p><code>GroovyDynamicToolProvider</code> 把 <b>.groovy 文件变成可被模型调用的工具</b>（工具名来自脚本内的
+              <code>@Tool</code>）；ops-starter 的 <code>GroovyTools</code> 则是<b>一个执行 Groovy 脚本的工具</b>（<code>groovy_run_script</code>，默认关闭）。前者面向「热插拔能力包」，后者面向「临时计算」。
+            </p>
+          </Callout>
+        </template>
+        <template slot="right">
+          <Callout color="#e8590c" title="默认开启，但有两个易忽视的约束">
+            <p>开关 <code>i2f.springboot.ai.tools.groovy-dynamic-tools.enable</code> 默认
+              <code>true</code>；扫描目录是<b>进程工作目录</b>下的 <code>./tools</code>（不是
+              classpath）；编译失败的脚本会在每轮刷新时重复报错，建议先在本地 Groovy 环境跑通再投放。</p>
+          </Callout>
+        </template>
+      </TwoCol>
+
+      <PanelTitle title="BS 架构下的工具委托链 — 执行环境解耦" />
         <BodyText size="13.5px">并非所有工具都该在服务端执行：有一类工具的本质是<b>向浏览器用户提问</b>——单选、多选表单等，真正的执行环境在浏览器。框架为此设计了一条<b>工具委托（Tool Delegation）链</b>：服务端只做<b>声明式占位</b>，浏览器化身「第二执行后端」完成实际执行，两端以 <code>tool_call_id</code> 精确对号，<b>模型全程无感知</b>。</BodyText>
         <DiagramPanel src="assets/diagrams/ch07-webjs-delegate.svg" caption="BS 工具委托链 — 服务端占位声明 → 浏览器拦截执行 → 服务端消费回填" />
         <StepList>
@@ -172,10 +248,10 @@
                 asyncTaskCode: '',
                 approvalFlowHtml: '',
                 beanRows: [
-                    ['<code>appMcpToolProvider</code>', '<code>ContextAppMcpToolProvider</code>', '<code>ai.tools.mcp.app.enable</code>', '将 Spring 容器中所有 @Tool/@Tools Bean 包装为名为 app_context 的工具提供者'],
-                    ['<code>mcpToolGatewayManager</code>', '<code>ContextMcpToolGatewayManager</code>', '<code>ai.tools.mcp.manager.enable</code>', '聚合所有 McpToolProvider Bean（本地 + 远程），实现统一工具路由'],
-                    ['<code>appToolManager</code>', '<code>ContextAppToolManager</code>', '<code>ai.tools.app.manager.enable</code>', '直接管理 @Tool/@Tools Bean，不经过 MCP 聚合层，与网关互斥'],
-                  ['<code>mcpProviderTools</code>', '<code>McpProviderTools</code>', '<code>ai.tools.mcp-gateway.enable</code>', '提供 4 个动态工具发现 / 检索 / 加载的元工具']
+                  ['<code>appMcpToolProvider</code>', '<code>ContextAppMcpToolProvider</code>', '<code>i2f.springboot.ai.tools.mcp.app.enable</code>', '将 Spring 容器中所有 @Tool/@Tools Bean 包装为名为 app_context 的工具提供者'],
+                  ['<code>mcpToolGatewayManager</code>', '<code>ContextMcpToolGatewayManager</code>', '<code>i2f.springboot.ai.tools.mcp.manager.enable</code>', '聚合所有 McpToolProvider Bean（本地 + 远程），实现统一工具路由'],
+                  ['<code>appToolManager</code>', '<code>ContextAppToolManager</code>', '<code>i2f.springboot.ai.tools.app.manager.enable</code>', '直接管理 @Tool/@Tools Bean，不经过 MCP 聚合层；与网关同类型，<b>先注册者生效</b>'],
+                  ['<code>mcpProviderTools</code>', '<code>McpProviderTools</code>', '<code>i2f.springboot.ai.tools.mcp-gateway.enable</code>', '提供 4 个动态工具发现 / 检索 / 加载的元工具（ai-starter 内装配）']
                 ],
                 schemaRows: [
                     ['<code>String / char</code>', '<span class="tag t-t">string</span>', '直接映射'],
@@ -191,6 +267,7 @@
                   ['<code>DatabaseUpdateTools</code>', '<code>sql_update_datasource</code>', 'SQL 变更执行（同样经 AST + 正则双重校验，且需人工审批）', '<span class="tag t-o">WRITABLE</span><span class="tag t-o">HUMAN</span>'],
                     ['<code>DatabaseMetadataTools</code>', '元数据查询', '表结构 / 索引 / 字段信息', '<span class="tag t-g">READONLY</span>'],
                     ['<code>CommandTools</code>', 'shell 执行', '本地命令行执行', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span>'],
+                  ['<code>SshTools</code> ※', '<code>ssh_hosts / ssh_command / ssh_upload / ssh_download</code>', '具名主机 SSH 工具：先查已注册主机，再按 host 名远程执行命令 / 上传 / 下载；本机路径复用 <code>LocalFileTools</code> 沙箱', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span><span class="tag t-g">AUTO</span>'],
                     ['<code>LocalFileTools</code>', '文件读写', '本地文件列举 / 读取 / 写入', '<span class="tag t-o">WRITABLE</span>'],
                     ['<code>TmpFileTools</code>', '临时文件', '上传 / 下载临时文件管理', '<span class="tag t-g">READONLY</span>'],
                     ['<code>TruthStoreTools</code>', '<code>store_truth</code>', '存储关键事实，注入后续对话', '<span class="tag t-o">WRITABLE</span>'],
@@ -208,6 +285,7 @@
                   ['<code>RagTools</code> ※', '<code>rag_search / rag_nearby</code>', '知识库相似度检索 + 命中文档的邻近分片回溯', '<span class="tag t-t">RAG</span>'],
                     ['<code>MemoryTools</code> ※', '<code>memory_search / save / delete</code>', '用户级记忆检索 / 保存 / 删除', '<span class="tag t-t">RAG</span>'],
                     ['<code>SessionRecordTools</code> ※', '<code>session_record_read / session_record_update</code>', '循环工程会话记录读写（request / plan / checklist / agent）', '<span class="tag t-g">AUTO</span>'],
+                  ['<code>RecycleTools</code> ※', '<code>ref_content</code>', '上下文回收搭档：取回被 <code>ref://</code> 占位化的工具结果 / 参数原文（回收期间强制加入工具列表）', '<span class="tag t-g">AUTO</span>'],
                   ['<code>LoopEngineeringTools</code> ※', '静态提示词（非 @Tool）', '注入五步工程化工作流提示词（进度恢复 → 需求 → 方案 → 待办 → 实施），由 <code>enableLoopEngineering</code> 控制', '<span class="tag t-g">AUTO</span>'],
                     ['<code>GroovyTools</code> ※', '<code>groovy_run_script</code>', 'Groovy 脚本动态执行（GroovyShell）', '<span class="tag t-r">EXECUTABLE</span><span class="tag t-o">HUMAN</span><span class="tag t-t">SCRIPT</span>'],
                     ['<code>WebjsTools</code>', '<code>webjs_form_radio / webjs_form_checkbox</code>', 'BS 工具委托：浏览器弹窗收集人类输入，结果经 <code>webjsToolResults</code> 回传（默认开启）', '<span class="tag t-g">AUTO</span><span class="tag t-b">WEBJS</span>'],
@@ -218,6 +296,11 @@
                   ['<code>OpsMcpServerAdditionalToolProvider</code>', '<code>ops.upload_local_file / ops.store_url_file_to_local / ops.query_async_task_status_by_url</code>', 'MCP 服务桥接工具：本地文件转 <code>upload://</code> 临时凭证、凭证落盘、按 <code>task://</code> 签名 URL 查询异步任务', '<span class="tag t-g">READONLY</span><span class="tag t-o">WRITABLE</span>'],
                   ['<code>OpsMcpServerApiToolProvider</code>', '<code>ops.get_server_guide / ops.mcp_api_token</code>', '向外部 MCP 客户端下发使用向导与接入令牌，并暴露 <code>/mcp/api/*</code> 文件上传下载端点', '<span class="tag t-g">READONLY</span>']
                 ],
+              registerRows: [
+                ['<code>@Tool</code> / <code>@Tools</code> Bean', '<code>ContextAppToolManager</code> → <code>ToolRawHelper.parseTools</code> 反射扫描', '每次 <code>listTools()</code> 实时解析', '控制器与各领域工具类'],
+                ['<code>ToolRawDefinitionsProvider</code>', '容器中实现该接口的 Bean，<code>getTools()</code> 返回定义列表', '每次 <code>listTools()</code> 实时拉取', '<code>GroovyDynamicToolProvider</code>'],
+                ['远程 MCP 供应商', '<code>ContextMcpToolGatewayManager</code> 聚合 <code>McpToolProvider</code> Bean（本地 + HTTP 客户端）', '网关装配时 + 客户端 5 分钟缓存', '<code>HttpSimpleMcpClientToolProvider</code>']
+              ],
                 scriptRows: [
                     ['<code>PowershellTools</code>', '<code>ai.tools.powershell.enable</code> + <b>仅 Windows 平台</b>（WindowsFormCondition）', '<code>run_powershell_command</code> 直接执行命令；<code>run_powershell_script</code> 写临时 ps1 以 <code>-File</code> 模式执行，规避命令行字符集问题'],
                     ['<code>NodejsTools</code>', '<code>ai.tools.nodejs.enable</code> + 探测 <code>node -v</code> 输出特征（NodejsInstalledCondition）', '<code>run_nodejs_script</code> 写临时 js 文件（UTF-8）执行'],

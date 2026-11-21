@@ -1,6 +1,8 @@
 <template>
     <div>
-        <LeadText>整个 AI 工具链遵循 i2f-turbo-java 一以贯之的"简练、独立、单一、易用"哲学，并在 AI 领域落地为四条核心原则。</LeadText>
+      <LeadText>整个 AI 工具链遵循 i2f-turbo-java 一以贯之的"简练、独立、单一、易用"哲学，并在 AI 领域落地为四条核心原则（另加一条由
+        <code>i2f-springboot-ai-starter</code> 承担的「扩展即 Bean」原则）。
+      </LeadText>
 
         <CardGrid>
             <Card color="#e8590c" idx="壹" title="平台无关化" tagline="Platform Agnostic">
@@ -14,6 +16,12 @@
             </Card>
             <Card color="#e67700" idx="肆" title="胖客户端 + HITL" tagline="Fat Client · Human In The Loop">
                 <p>需要用户参与（工具授权、危险操作把关）的场景选择<b>胖客户端</b>：状态维护在浏览器，服务端无状态、可水平扩展。全自动化场景（Dify / ComfyUI 式）才需要胖服务器——本框架明确选择了前者。</p>
+            </Card>
+          <Card color="#1971c2" idx="伍" title="扩展即 Bean" tagline="Extension by Bean">
+            <p>通用层 <code>i2f-springboot-ai-starter</code> 把全部可替换点做成 Bean 类型：<code>AiModel</code> / <code>ToolManager</code>
+              / <code>IJsonSerializer</code> / <code>RagEmbeddingModel</code> / <code>RagFileReader</code> / <code>SkillScriptRunner</code>
+              / <code>ToolRawDefinitionsProvider</code>。自己声明一个同类型 Bean 即整体换实现（统一 <code>@ConditionalOnMissingBean</code>
+              让渡），<b>不改一行装配代码</b>。</p>
             </Card>
         </CardGrid>
 
@@ -59,7 +67,7 @@
                     ['9', '<b>技能系统</b>', 'Skill-based Agent', '基于文档的可插拔技能（第 08 章）'],
                     ['10', '<b>事实注入</b>', 'Truth Injection / Memory', '三级记忆架构：Truth 会话级 + Memory 用户级 + RAG 系统级（第 09 / 12 章）'],
                     ['11', '<b>提示词工程</b>', 'Prompt Engineering', '角色系统与动态提示词注入策略'],
-                    ['12', '<b>上下文工程</b>', 'Context Window Management', '上下文窗口管理与压缩（截断/总结/LRU）'],
+                  ['12', '<b>上下文工程</b>', 'Context Window Management', '上下文窗口管理与压缩（截断/总结/LRU/工具结果与参数回收）'],
                     ['13', '<b>胖客户端</b>', 'Fat Client Architecture', '状态驱动的胖客户端架构（第 14 章）'],
                     ['14', '<b>流式输出</b>', 'SSE Streaming', 'Server-Sent Events 逐 Token 实时输出（第 04 章）'],
                     ['15', '<b>标签化权限</b>', 'Tool Tags &amp; Auto-Approval', '标签化权限与自动审批策略（第 07 章）']

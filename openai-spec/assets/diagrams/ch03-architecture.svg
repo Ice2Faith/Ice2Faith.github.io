@@ -1,13 +1,44 @@
-<svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 430" role="img" aria-label="分层架构图">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-label="分层架构图">
 <defs><marker id="lay-ah" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#46607a"/></marker></defs>
     <rect class="svg-node svg-node-acc" x="60" y="20" width="680" height="72" rx="3"/>
-    <text class="svg-lbl" x="80" y="48">i2f-springboot-ops-starter · openai 子系统</text>
-    <text class="svg-lbl-sm" x="80" y="70">controller / data / tool.impl(32) / skill / rag — 应用编排 · 安全网关 · SSE
+    <text class="svg-lbl" x="80" y="48">i2f-springboot-ops-starter · openai 子系统（控制台层）</text>
+    <text class="svg-lbl-sm" x="80" y="70">controller / data / tool.impl(23 个 @Tools) / async / tts — 应用编排 · 安全网关
+        · SSE
         中继 · HITL 审批
     </text>
-<rect class="svg-node svg-node-teal" x="60" y="122" width="330" height="72" rx="3"/><text class="svg-lbl" x="80" y="150">i2f-spring</text><text class="svg-lbl-sm" x="80" y="172">i2f-spring-core · i2f-spring-web（SpringContext / RestTemplate 适配）</text>
-<rect class="svg-node svg-node-teal" x="410" y="122" width="330" height="72" rx="3"/><text class="svg-lbl" x="430" y="150">i2f-extension</text><text class="svg-lbl-sm" x="430" y="172">ai-rag-sqlite · document(PDF) · jackson · groovy</text>
-<rect class="svg-node" x="60" y="224" width="680" height="72" rx="3"/><text class="svg-lbl" x="80" y="252">i2f-jdk / i2f-ai-rest-openai — OpenAI 兼容协议 REST 实现</text><text class="svg-lbl-sm" x="80" y="274">HttpOpenAiAiModel · HttpOpenAiModelStreamApi(SSE) · Embedding · Rerank · ModelsApi · 消息双向转换</text>
-<rect class="svg-node svg-node-dark" x="60" y="326" width="680" height="84" rx="3"/><text class="svg-lbl-w" x="80" y="354">i2f-jdk / i2f-ai-std — AI 工具链标准定义（平台无关 · 依赖无关）</text><text class="svg-lbl-sm" x="80" y="376" style="fill:#8fb3d6;">AiAgent(Re-Act) · AiModel · ToolManager · SkillsHelper · RagWorker · McpToolProvider · AiTags</text><text class="svg-lbl-sm" x="80" y="394" style="fill:#8fb3d6;">基座：i2f-network(HTTP) · i2f-sm-crypto(国密) · i2f-mutator · i2f-proxy · i2f-serialize-std</text>
-<path class="svg-line" d="M400,326 L400,300" marker-end="url(#lay-ah)"/><path class="svg-line" d="M400,224 L400,198" marker-end="url(#lay-ah)"/><path class="svg-line" d="M225,122 L225,96" marker-end="url(#lay-ah)"/><path class="svg-line" d="M575,122 L575,96" marker-end="url(#lay-ah)"/><text class="svg-lbl-sm" x="412" y="316">实现接口</text><text class="svg-lbl-sm" x="412" y="214">协议供给</text>
+    <rect class="svg-node svg-node-green" x="60" y="122" width="680" height="84" rx="3"/>
+    <text class="svg-lbl" x="80" y="148">i2f-springboot-ai-starter · 通用 AI 装配层（9 个自动配置类）</text>
+    <text class="svg-lbl-sm" x="80" y="170">AiCommon / AiModel / AiAgent / AiTools(+GroovyDynamicTool) /
+        AiSkills(+GroovySkillScriptRunner)
+    </text>
+    <text class="svg-lbl-sm" x="80" y="188">AiRags（启动增量入库 + 4 读取器） / AiServiceProxyInterface — 前缀
+        i2f.springboot.ai.*
+    </text>
+    <rect class="svg-node svg-node-teal" x="60" y="228" width="330" height="72" rx="3"/>
+    <text class="svg-lbl" x="80" y="256">i2f-spring</text>
+    <text class="svg-lbl-sm" x="80" y="278">i2f-spring-core · i2f-spring-web（SpringContext / RestTemplate 适配）</text>
+    <rect class="svg-node svg-node-teal" x="410" y="228" width="330" height="72" rx="3"/>
+    <text class="svg-lbl" x="430" y="256">i2f-extension</text>
+    <text class="svg-lbl-sm" x="430" y="278">ai-rag-sqlite · document(PDF) · jackson · groovy</text>
+    <rect class="svg-node" x="60" y="330" width="680" height="72" rx="3"/>
+    <text class="svg-lbl" x="80" y="358">i2f-jdk / i2f-ai-rest-openai — OpenAI 兼容协议 REST 实现</text>
+    <text class="svg-lbl-sm" x="80" y="380">HttpOpenAiAiModel · HttpOpenAiModelStreamApi(SSE) · Embedding · Rerank ·
+        ModelsApi · 消息双向转换
+    </text>
+    <rect class="svg-node svg-node-dark" x="60" y="432" width="680" height="84" rx="3"/>
+    <text class="svg-lbl-w" x="80" y="460">i2f-jdk / i2f-ai-std — AI 工具链标准定义（平台无关 · 依赖无关）</text>
+    <text class="svg-lbl-sm" x="80" y="482" style="fill:#8fb3d6;">AiAgent(Re-Act) · AiModel · ToolManager ·
+        ToolRawDefinitionsProvider · SkillsHelper · RagWorker · McpToolProvider
+    </text>
+    <text class="svg-lbl-sm" x="80" y="500" style="fill:#8fb3d6;">基座：i2f-network(HTTP) · i2f-sm-crypto(国密) ·
+        i2f-mutator · i2f-proxy · i2f-serialize-std
+    </text>
+    <path class="svg-line" d="M400,432 L400,406" marker-end="url(#lay-ah)"/>
+    <path class="svg-line" d="M400,330 L400,304" marker-end="url(#lay-ah)"/>
+    <path class="svg-line" d="M225,228 L225,210" marker-end="url(#lay-ah)"/>
+    <path class="svg-line" d="M575,228 L575,210" marker-end="url(#lay-ah)"/>
+    <path class="svg-line" d="M400,122 L400,96" marker-end="url(#lay-ah)"/>
+    <text class="svg-lbl-sm" x="412" y="422">实现接口</text>
+    <text class="svg-lbl-sm" x="412" y="320">协议供给</text>
+    <text class="svg-lbl-sm" x="412" y="114">依赖装配</text>
 </svg>

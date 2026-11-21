@@ -1,7 +1,7 @@
 <template>
   <div>
-    <LeadText><code>POST /ops/open-ai/stream</code> 是整个子系统最核心端点（<code>OpenAiOpsController#stream</code>，约
-      1100 行编排逻辑）。它返回一个 5 分钟超时的 <code>SseEmitter</code>，真正的编排跑在 work-stealing 线程池中。
+    <LeadText><code>POST /ops/open-ai/stream</code> 是整个子系统最核心端点（<code>OpenAiOpsController#stream</code>，千行级编排逻辑）。它返回一个
+      5 分钟超时的 <code>SseEmitter</code>，真正的编排跑在专用线程池中。
     </LeadText>
 
     <DiagramPanel src="assets/diagrams/ch04-sequence.svg"
@@ -14,7 +14,9 @@
           <code>HttpServletToolContextUtil.fillToolContext(request)</code> 把 <code>http_headers</code> /
           <code>http_parameters</code> / <code>http_client_ip</code> / <code>http_remote_addr</code> 写入
           <code>ToolCallContextHolder</code>（远程 MCP 工具据此得知接入来源），再经 <code>CompletableFuture.runAsync</code>
-          切入 work-stealing 池（<code>min(max(CPU×4+2, 16), 512)</code> 线程），HTTP 线程立即返回 SseEmitter。</p>
+          切入编排线程池 <code>pool</code>（<code>ThreadPoolExecutor</code>：core = CPU×2+2、max = CPU×4+2、有界队列 16、拒绝策略
+          <code>CallerRunsPolicy</code>），HTTP 线程立即返回 SseEmitter。工具契约执行另有 <code>toolPool</code>（同策略、队列
+          512）——队列有界 + 回压到调用线程，避免高并发下无界堆积导致 OOM。</p>
       </Step>
       <Step title="提示词注入时机判定 <code>needInjectSystemPrompt</code>">
         <p>仅当末消息是 user/system 时注入系统提示词；若末消息是 assistant/tool（多为中间过程）则默认不注入，但保留 <b>30%
@@ -44,12 +46,26 @@
             授权恢复检查</b>——存在待审批契约但审批弹窗已关闭（<code>resolved=false</code>）时自动重新唤起弹窗，避免待授权工具调用被静默丢弃。
         </p>
       </Step>
-      <Step title="工具消息回收 <code>enableRecycleToolMessage</code>">
-        <p>长工具链会把历史 <code>tool</code> 结果堆满上下文。开启后从尾部计数工具消息，超出 <code>recycleToolLastKeepCount</code>（默认
-          10，非法值回退 5）
-          且内容长度超过 <code>recycleToolMessageMinLength</code>（默认 512）的那些旧结果，内容被替换为
-          <code>[recycled] tool result recycled; re-call if needed.</code>——模型知道"这里曾有结果、需要可重新调用"，而
-          Token 开销被大幅压降。</p>
+      <Step title="上下文回收 <code>enableRecycleToolMessage / enableRecycleToolArgument</code>">
+        <p>长工具链会把历史 <code>tool</code> 结果与 <code>tool_calls</code> 参数堆满上下文，而它们对后续推理的贡献随轮次衰减。开启回收后从尾部倒计数：超出
+          <code>recycleToolMessageLastKeepCount</code>（默认 10，非法值回退 10）且长度超过 <code>recycleToolMessageMinLength</code>（默认
+          512）的旧 <b>tool 结果</b>，以及超出 <code>recycleToolArgumentLastKeepCount</code>（默认 10）、参数 JSON 长度超过
+          <code>recycleToolArgumentMinLength</code>（默认 512）的 <b>工具调用参数</b>（逐个 <code>tool_call.function.arguments</code>
+          递归处理 Map / List /
+          数组 / 字符串），统一由 <code>RecycleTools.recycleArguments</code> 替换为 <code>[recycled] ... use
+            'ref://{uuid}' by tool
+            `ref_content` ...</code> 占位符，原文进入本轮 <code>recycleMap</code>，流结束前以
+          <code>echo_recycle_map</code> 回显交给前端。
+          <b>可逆回收</b>：模型需要时调用 <code>ref_content</code> 取回原文；且仅当占位符确实更短时才替换，避免「越回收越长」。
+          回收期间 <code>RecycleTools</code> 的 <code>ref_content</code> 会被强制加入工具列表，保证取回通道始终可用。</p>
+      </Step>
+      <Step title="统一回显通道 <code>echoJsonMessage</code>">
+        <p>所有非流式事件（进度 / 提示词注入 / 工具定义 / 工具结果 / 事实三态 / 会话记录 / 回收映射 / 用量 / 插话 / 附件
+          / 异步任务）统一经
+          <code>echoJsonMessage(obj, type)</code> 发送：内部先序列化载荷，再按 <code>encryptOutput</code> 选择国密
+          <code>transfer.success</code> 或明文 <code>OpsSecureReturn.success</code>，最后 <code>withAttr("type",
+            type)</code> 并
+          <code>emitter.send</code>。各业务点只关心「发什么 + 打什么 type」，加密分支与传输细节零重复。</p>
       </Step>
       <Step title="流式中继 <code>SpringWebHttpProcessor</code>">
         <p>通过 <code>HttpRequest.doPost(url).json()</code> 携带 Bearer 令牌请求 LLM，逐行读取 <code>data:</code> 前缀的
@@ -186,7 +202,9 @@
     <SpecTable :headers="['子系统', '状态轨迹']">
       <tr>
         <td><b>会话生命周期</b></td>
-        <td>NEW → ACTIVE → SUMMARIZING（手动 / 自动总结）/ TRIMMED（截断）/ EXPORTED（导出）/ DELETED → 回到 ACTIVE</td>
+        <td>NEW → ACTIVE → SUMMARIZING（手动 / 自动总结，旧消息归档到 <code>summaryMessageMap</code>）/ TRIMMED（截断）/
+          EXPORTED（导出）/ DELETED → 回到 ACTIVE
+        </td>
       </tr>
       <tr>
         <td><b>工具加载</b></td>
@@ -198,7 +216,9 @@
       </tr>
       <tr>
         <td><b>技能系统</b></td>
-        <td>DISABLED → ENABLED → FILE_SCAN（30s 循环）→ LOADED → DECLARED（声明注入）→ EXECUTING</td>
+        <td>DISABLED → ENABLED → FILE_SCAN（30s 循环）→ LOADED → RECOMMENDED（按描述向量召回 top3 推荐）→ DECLARED（声明注入）→
+          EXECUTING
+        </td>
       </tr>
     </SpecTable>
   </div>

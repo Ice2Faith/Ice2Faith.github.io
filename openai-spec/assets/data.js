@@ -22,9 +22,9 @@ function getSpecData() {
             { id: 'ch15', no: '15', title: '扩展指南' }
         ],
         stats: [
-            {count: 66, label: 'Java 源文件', color: '#e8590c'},
-            { count: 26, label: '内置工具类', color: '#0b7285' },
-            {count: 17, label: '回显消息类型', color: '#2b8a3e'},
+            {count: 61, label: 'openai 子系统源', color: '#e8590c'},
+            {count: 27, label: '内置工具类', color: '#0b7285'},
+            {count: 20, label: '回显消息类型', color: '#2b8a3e'},
             {count: 12, label: 'REST 端点', color: '#1971c2'},
             { count: 22, label: '角色预设 (Role)', color: '#e67700' },
             { count: 4, label: 'AiModel 实现', color: '#c92a2a' }
@@ -40,7 +40,7 @@ function getSpecData() {
             { id: 'ch08', no: '08', en: 'Skill System', title: '技能系统：懒加载的领域知识包' },
             { id: 'ch09', no: '09', en: 'RAG Pipeline & Memory', title: 'RAG 知识库 · 记忆系统：向量检索与三级记忆' },
             {id: 'ch10', no: '10', en: 'MCP Dynamic Tools', title: 'MCP：动态工具装载 · 能力服务暴露 · 官方协议双版本'},
-            { id: 'ch11', no: '11', en: 'SM Crypto Transfer', title: '安全体系：国密全链路传输' },
+            {id: 'ch11', no: '11', en: 'SM Crypto Transfer', title: '安全体系：国密全链路传输 · 入口限流'},
             { id: 'ch12', no: '12', en: 'Advanced Features', title: '高级特性：让对话长出记忆与手脚' },
             { id: 'ch13', no: '13', en: 'Auto Configuration', title: '自动装配：一个依赖即一个工作台' },
             { id: 'ch14', no: '14', en: 'Fat Client', title: '前端工程：浏览器里的 Agent 状态机' },
@@ -51,6 +51,8 @@ function getSpecData() {
             { k: '版本 / 基线', v: '1.0-jdk8 · Java 8', acc: true },
             { k: '运行框架', v: 'Spring Boot 2.7.18' },
             { k: '子系统包名', v: 'i2f.springboot.ops.openai' },
+            {k: 'AI 基建 Starter', v: 'i2f-springboot-ai-starter · 9 个自动配置类'},
+            {k: '配置前缀', v: 'i2f.springboot.ai.* 基建 · ai.* 控制台'},
             { k: '访问入口', v: '/ops/open-ai/index.html' },
             { k: '安全传输', v: 'SM2 · SM3 · SM4 国密', acc: true }
         ]

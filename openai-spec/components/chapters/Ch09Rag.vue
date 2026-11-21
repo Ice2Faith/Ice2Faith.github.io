@@ -1,6 +1,10 @@
 <template>
     <div>
-        <LeadText>RAG（检索增强生成）让 LLM 基于<b>私有文档</b>作答：文档入库时被切分、向量化、持久化到 SQLite；对话时由 <code>rag_search</code> 工具按语义相似度召回片段，作为上下文交给模型。全链路零外部中间件——一个 SQLite 文件即是向量库。</LeadText>
+      <LeadText>RAG（检索增强生成）让 LLM 基于<b>私有文档</b>作答：文档入库时被切分、向量化、持久化到 SQLite；对话时由 <code>rag_search</code>
+        工具按语义相似度召回片段，作为上下文交给模型。全链路零外部中间件——一个 SQLite 文件即是向量库。装配全部由 <code>i2f-springboot-ai-starter</code>
+        的 <code>AiRagsAutoConfiguration</code> 负责（前缀 <code>i2f.springboot.ai.rags.*</code>），ops-starter 只消费
+        <code>RagWorker</code> / <code>RagTools</code> / <code>MemoryTools</code> 三个 Bean。
+      </LeadText>
 
         <DiagramPanel src="assets/diagrams/ch09-rag-pipeline.svg" caption="RAG 双管线 — 启动时批量入库，对话时按需检索" />
 
@@ -11,8 +15,18 @@
             </tr>
         </SpecTable>
 
-        <Callout color="#0b7285" title="文档生命周期 — 加载即归档">
-            <p>入库完成后，<code>loadDocs</code> 将整个 docs 目录移动到 <code>rags_history/history-{yyyyMMddHHmmss}</code> 并重建空目录——<b>同一文档永不被重复向量化</b>，同时保留完整历史可追溯。入库在后台线程异步执行，不阻塞应用启动。</p>
+      <Callout color="#0b7285" title="文档生命周期 — 启动增量入库 + 加载即归档">
+        <p><code>ragWorker</code> Bean 创建时就拉起后台线程：<b>sleep 3 秒</b>（等容器就绪）后扫描 <code>docs-path</code>（默认
+          <code>./rags</code>，目录不存在则创建并直接返回），用 <code>RagHelper.loadDocuments</code> + <code>SimpleRecursiveRagTextSplitter</code>（<code>max-segment-size-in-chars</code>
+          默认 512 · <code>max-overlap-rate</code> 默认 0.15）+ <code>ContextRagFileReader</code>（汇总容器内全部 <code>RagFileReader</code>）完成切分与向量化。入库完成后把整个
+          docs 目录 <b>移动到同级 <code>rags_history/history-{yyyyMMddHHmmss}</code></b>
+          并重建空目录——<b>同一份文档永不被重复向量化</b>，同时保留完整历史可追溯，全程不阻塞应用启动。</p>
+      </Callout>
+
+      <Callout color="#e8590c" title="实测缺陷 — enable-load-docs 是个悬空开关">
+        <p><code>AiRagsEmbeddingModelProperties.enableLoadDocs</code> 已声明（默认
+          <code>false</code>）却<b>没有任何代码读取</b>：入库线程在 <code>ragWorker</code> 装配时<b>无条件</b>启动。目前想真正关闭自动入库，只能清空文档目录，或关闭
+          <code>worker.enable</code>（会连带失去检索）。另：目录不存在时直接 <code>mkdirs</code> 返回，不会生成归档。</p>
         </Callout>
 
       <PanelTitle title="文档分片寻址 — rag_nearby 与 RagDocumentsStore"/>
@@ -54,11 +68,31 @@
           <td v-html="row[2]"></td>
         </tr>
       </SpecTable>
-      <Callout color="#e8590c" title="本地向量模型兜底 — 无需 Embedding 服务也能跑">
-        <p>未配置 <code>ai.rags.embedding.base-url</code> 且 Classpath 中存在 <code>onnxruntime</code> 与 <code>huggingface
-          tokenizers</code> 时，自动回退到进程内的 <code>BgeSmallZhOnnxRagEmbeddingModel</code>（bge-small-zh
-          中文小模型），并以实测向量维度<b>回写覆盖</b> <code>ai.rags.embedding.dimension</code>，保证向量库维度与模型一致。这意味着离线环境下也能零依赖启用
-          RAG 与记忆。</p>
+      <Callout color="#e8590c" title="向量模型不再自动降级 — ONNX 本地兜底需自行装配">
+        <p><code>AiRagsAutoConfiguration</code> 的 <code>ragEmbeddingModel</code> 直接装配 <code>HttpOpenAiRagEmbeddingModel</code>（base-url
+          / api-key / model 可配），<b>没有</b>「未配 baseUrl
+          就回退本地模型」的分支；<code>BgeSmallZhOnnxRagEmbeddingModel</code> 仍存在于
+          <code>i2f-extension-ai-embedding</code>，但不会再被自动选中。需要离线向量化时，自己声明一个 <code>RagEmbeddingModel</code>
+          Bean（<code>@ConditionalOnMissingBean</code> 自动让渡），并把 <code>dimension</code> 与模型实际维度对齐。</p>
+      </Callout>
+
+      <Callout color="#e8590c" title="向量缓存复用 — 同一段文本只付一次 embedding 费用">
+        <p><code>RagEmbeddingCache</code> 是「按需向量化 + 本地持久」的一层薄封装：内部 <code>LruMap&lt;String,
+          RagEmbedding&gt;</code>
+          以<b>原文文本</b>为键（默认容量 8192），<code>embed(model, text)</code> 命中即返回、未命中才调用模型并回填；<code>run()</code>
+          启动时先 <code>load()</code> 历史缓存，再拉起守护线程 <code>embedding-cache-flusher</code> 每 30 秒 <code>store()</code>
+          落盘到
+          <code>runtime-tmp/embedding-cache/{type}.json</code>。目前技能语义推荐以 <code>type = "skills"</code>
+          复用它——技能描述长期稳定，
+          缓存收益极高；进程重启后向量直接复用，不必重新计费。</p>
+      </Callout>
+
+      <Callout color="#2b8a3e" title="余弦相似度归一化 — [-1, 1] 且不出现 NaN">
+        <p><code>RagVector.cosineSimilar</code> 在点积归一化之后补了两道护栏：结果若为 <code>NaN</code>（零向量 /
+          浮点异常）直接归零；否则
+          <code>Math.max(-1.0, Math.min(1.0, ret))</code> 收敛到 <code>[-1, 1]</code> 区间。这让上层的排序与阈值判断（TopN
+          召回、技能推荐、
+          记忆检索）在异常向量与浮点误差下依然稳定——<b>坏向量不会污染整轮排序</b>。</p>
       </Callout>
 
       <PanelTitle title="记忆系统 Memory — 跨会话的用户级长期记忆" />
@@ -72,7 +106,10 @@
                         <td v-html="row[0]"></td><td v-html="row[1]"></td><td v-html="row[2]"></td>
                     </tr>
                 </SpecTable>
-                <BodyText size="12.5px">记忆存储基于 <code>SqliteBucketRagMemoryStore</code>（带桶分区的 SQLite 向量库），与 RAG 共享同一个 <code>RagEmbeddingModel</code> 向量化服务——由 <code>ai.rags.memory.enable</code> 开关独立控制装配。</BodyText>
+              <BodyText size="12.5px">记忆存储基于 <code>SqliteBucketRagMemoryStore</code>（带桶分区的 SQLite 向量库），与
+                RAG 共享同一个 <code>RagEmbeddingModel</code> 向量化服务——由
+                <code>i2f.springboot.ai.rags.memory.enable</code> 开关独立控制装配。
+              </BodyText>
             </template>
             <template slot="right">
                 <PanelTitle title="Bucket 桶隔离模型" />
@@ -111,14 +148,16 @@
             return {
                 memoryBucketHtml: '',
                 compRows: [
-                    ['向量模型', '<code>HttpOpenAiRagEmbeddingModel</code>', 'OpenAI 兼容 <code>/embeddings</code> 接口，baseUrl / apiKey / model 可配'],
-                  ['向量模型兜底', '<code>BgeSmallZhOnnxRagEmbeddingModel</code>', '未配置 baseUrl 且存在 onnxruntime + tokenizer 时启用的进程内中文小模型'],
+                  ['向量模型', '<code>HttpOpenAiRagEmbeddingModel</code>', 'OpenAI 兼容 <code>/embeddings</code> 接口，baseUrl / apiKey / model 可配（ai-starter 装配）'],
                     ['向量存储', '<code>SqliteRagEmbeddingStore</code>', 'SQLite 单文件向量库，维度可配，零中间件依赖'],
                   ['原文存储', '<code>SqliteRagDocumentsStore</code>', '按「文档 + 分片号」保存原始分片，支撑 <code>rag_nearby</code> 邻片展开'],
-                  ['调度器', '<code>RagWorker</code>', 'load 入库 / similar 检索的统一入口，可挂载原文存储'],
-                    ['切分器', '<code>SimpleRecursiveRagTextSplitter</code>', '最大分段长度 + 重叠率，递归切分长文'],
+                  ['记忆桶存储', '<code>SqliteBucketRagMemoryStore</code>', '按 bucket 分区的 SQLite 向量库，支撑 <code>memory_search / save / delete</code>'],
+                  ['调度器', '<code>RagWorker</code>', 'load 入库 / similar 检索的统一入口，可挂载原文存储；创建时拉起入库线程'],
+                  ['切分器', '<code>SimpleRecursiveRagTextSplitter</code>', '最大分段长度（512）+ 重叠率（0.15），递归切分长文'],
                   ['工具', '<code>RagTools</code>', '<code>rag_search</code> 语义检索（默认 topN=3）+ <code>rag_nearby</code> 按分片区间取回原文'],
-                    ['读取器', '<code>ListableRagFileReader</code>', 'Markitdown（Office）· EasyOCR（图片 / PDF-OCR）· Pandoc（文档转换）按开关组合']
+                  ['向量缓存', '<code>RagEmbeddingCache</code>', '按原文键缓存 <code>RagEmbedding</code>（LruMap 8192），每 30 秒落盘 <code>runtime-tmp/embedding-cache/{type}.json</code>，重启免重算'],
+                  ['读取器', '<code>ContextRagFileReader</code>', '汇总容器内全部 <code>RagFileReader</code> Bean；内置 Markitdown（Office）· EasyOCR（图片 / PDF-OCR）· Pandoc（文档转换）'],
+                  ['数据源桥接', '<code>RagDataSourceCollector</code>', '把 RAG 向量库 / 记忆库包装成 <code>DirectConnectionDatasource</code>，可在控制台直接用 SQL 查看（ops-starter）']
                 ],
               ragToolRows: [
                 ['<code>rag_search</code>', '<code>text</code> · <code>topN</code>（默认 3，建议 &lt; 10）', '命中片段 + <code>documentId</code> / <code>separateNo</code> 与下一步提示'],
@@ -132,15 +171,16 @@
                 ['<code>removeDocuments(documentId)</code>', '整篇删除，用于同名文档覆盖更新']
               ],
               switchRows: [
-                ['<code>ai.rags.enable</code>', '<code>true</code>', 'RAG 子系统总开关'],
-                ['<code>ai.rags.model.enable</code>', '<code>true</code>', '<code>RagEmbeddingModel</code>（HTTP 或本地 ONNX 兜底）'],
-                ['<code>ai.rags.store.enable</code>', '<code>true</code>', '<code>RagEmbeddingStore</code> → <code>SqliteRagEmbeddingStore</code>'],
-                ['<code>ai.rags.docs-store.enable</code>', '<code>true</code>', '<code>RagDocumentsStore</code> → <code>SqliteRagDocumentsStore</code>'],
-                ['<code>ai.rags.worker.enable</code>', '<code>true</code>', '<code>RagWorker</code> + 启动后台入库线程'],
-                ['<code>ai.rags.tool.enable</code>', '<code>true</code>', '<code>RagTools</code>（<code>rag_search</code> / <code>rag_nearby</code>）'],
-                ['<code>ai.rags.memory.bucket.enable</code>', '<code>true</code>', '<code>BucketRagEmbeddingStore</code> → <code>SqliteBucketRagMemoryStore</code>'],
-                ['<code>ai.rags.memory.enable</code>', '<code>true</code>', '<code>MemoryTools</code>（记忆三件套）'],
-                ['<code>ai.rags.datasource.enable</code>', '<code>true</code>', '<code>RagDataSourceCollector</code> 数据源采集']
+                ['<code>i2f.springboot.ai.rags.enable</code>', '<code>true</code>', 'RAG 子系统总开关'],
+                ['<code>…rags.embedding.enable</code>', '<code>true</code>', '<code>RagEmbeddingModel</code> → <code>HttpOpenAiRagEmbeddingModel</code>（base-url / api-key / model）'],
+                ['<code>…rags.store.enable</code>', '<code>true</code>', '<code>RagEmbeddingStore</code> → <code>SqliteRagEmbeddingStore</code>（dimension）'],
+                ['<code>…rags.docs-store.enable</code>', '<code>true</code>', '<code>RagDocumentsStore</code> → <code>SqliteRagDocumentsStore</code>'],
+                ['<code>…rags.worker.enable</code>', '<code>true</code>', '<code>RagWorker</code> + 启动 3 秒后后台增量入库'],
+                ['<code>…rags.tool.enable</code>', '<code>true</code>', '<code>RagTools</code>（<code>rag_search</code> / <code>rag_nearby</code>）'],
+                ['<code>…rags.memory.bucket.enable</code>', '<code>true</code>', '<code>BucketRagEmbeddingStore</code> → <code>SqliteBucketRagMemoryStore</code>'],
+                ['<code>…rags.memory.enable</code>', '<code>true</code>', '<code>MemoryTools</code>（记忆三件套）'],
+                ['<code>…rags.reader.markitdown / easycor / pdf-easycor / pandoc .enable</code>', '<code>true</code>', '四个命令式读取器：Office 转换 / 图片 OCR / PDF-OCR / 通用文档转换'],
+                ['<code>ai.rags.datasource.enable</code>', '<code>true</code>', '<code>RagDataSourceCollector</code>（ops-starter 内，旧前缀）把 RAG 库挂成只读数据源']
               ],
                 memToolRows: [
                     ['<code>memory_search</code>', '按语义相似度检索历史对话记忆（偏好 / 爱好 / 个人信息等），默认 topN=3', '<span class="tag t-g">READONLY</span>'],

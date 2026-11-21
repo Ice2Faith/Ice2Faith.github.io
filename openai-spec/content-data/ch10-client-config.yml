@@ -65,10 +65,13 @@ i2f:
           creator:
             enable: true
 
+          # ai-starter 提供的工具网关开关（前缀 i2f.springboot.ai.tools）
+          tools:
+            mcp-gateway:
+              enable: true
+
+# ops-starter 自带的 ai 工具（前缀 ai.tools）
 ai:
   tools:
-    enable: true
-    mcp-gateway:
-      enable: true                          # 启用 MCP 动态工具网关
     url-signer:
       sign-salt: abc123def456               # task:// 等签名 URL 的盐值

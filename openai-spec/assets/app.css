@@ -1089,6 +1089,44 @@ svg text {
     }
 }
 
+/* 图示动效变体：flow-slow / flow-fast 错峰，pulse-soft 弱呼吸，ring-spin 环形扫描 */
+.flow-slow {
+    animation-duration: 2.4s;
+}
+
+.flow-fast {
+    animation-duration: .75s;
+}
+
+.pulse-soft {
+    animation: nodePulseSoft 3.6s ease-in-out infinite;
+}
+
+@keyframes nodePulseSoft {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .7;
+    }
+}
+
+.ring-spin {
+    animation: ringSpin 28s linear infinite;
+}
+
+@keyframes ringSpin {
+    to {
+        stroke-dashoffset: -440;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flow-anim, .flow-slow, .flow-fast, .pulse-node, .pulse-soft, .ring-spin {
+        animation: none;
+    }
+}
+
 /* 步骤列表 */
 .step-list {
     counter-reset: step;

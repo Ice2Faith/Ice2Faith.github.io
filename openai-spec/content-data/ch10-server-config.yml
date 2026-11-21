@@ -59,7 +59,6 @@ i2f:
 
 ai:
   tools:
-    enable: true
     skill-manage:
       enable: true                 # SkillManageTools：skill_install / skill_uninstall / skill_extract
   mcp-server:

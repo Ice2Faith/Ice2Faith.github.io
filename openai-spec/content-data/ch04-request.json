@@ -38,6 +38,12 @@
   "action": "",
   "enableAgentsMarkdown": true,
   "enableRecycleToolMessage": true,
-  "recycleToolLastKeepCount": 10,
-  "recycleToolMessageMinLength": 512
+  "recycleToolMessageLastKeepCount": 10,
+  "recycleToolMessageMinLength": 512,
+  "enableRecycleToolArgument": true,
+  "recycleToolArgumentLastKeepCount": 10,
+  "recycleToolArgumentMinLength": 512,
+  "recycleMap": {
+    "ref://8f1c...": "（上一轮回显的 ref://xxx 对应原文，前端持久化后原样回传）"
+  }
 }

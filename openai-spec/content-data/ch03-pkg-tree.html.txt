@@ -1,33 +1,44 @@
-<span class="dir">i2f.springboot.ops.openai</span>
+<span class="dir">i2f.springboot.ops.openai</span> <span class="cm"># 控制台层 · 61 文件（应用编排 / 领域工具）</span>
 ├── <span class="pkg">controller</span>/
 │   ├── OpenAiOpsController <span class="cm"># 7 个 REST 端点 · SSE 编排核心</span>
 │   ├── QwenTtsOpsController / ServerSpeakTtsOpsController <span class="cm"># 语音合成代理</span>
 │   ├── HttpServletToolContextUtil <span class="cm"># 请求头/客户端 IP 写入 ToolCallContextHolder</span>
 │   └── OfficeFormatUtil <span class="cm"># Office 附件转换</span>
 ├── <span class="pkg">data</span>/
-│   ├── OpenAiOperateDto <span class="cm"># 操作请求：功能开关 + 插话 + 工具消息回收</span>
+│   ├── OpenAiOperateDto <span class="cm"># 操作请求：功能开关 + 插话 + 工具结果 / 参数回收 + recycleMap</span>
 │   ├── OpenAiCompletionVo / Dto <span class="cm"># 补全请求 VO/DTO</span>
 │   ├── OpenAiMessageVo <span class="cm"># 多态消息载体</span>
 │   ├── OpenAiMeta <span class="cm"># baseUrl · apiKey</span>
 │   ├── OpenAiToolApprovalDto / OpenAiToolDefinitionDto / OpenAiWebjsToolResult
-│   └── <span class="pkg">message</span>/ OpsOpenAiConsts <span class="cm"># 17 种回显类型 + summary-history 动作</span>
+│   └── <span class="pkg">message</span>/ OpsOpenAiConsts <span class="cm"># 20 种回显类型 + summary-history 动作</span>
 ├── <span class="pkg">tool</span>/
-│   ├── SpringContextToolAutoConfiguration <span class="cm"># 工具池 Bean 装配</span>
-│   ├── <span class="pkg">impl</span>/ 32 个 Java 文件（24 个 @Tools 类） <span class="cm"># @Tool 注解驱动</span>
+│   ├── <span class="pkg">impl</span>/ 33 个 Java 文件（23 个 @Tools 类） <span class="cm"># @Tool 注解驱动 · 开关仍是 ai.tools.*</span>
 │   │   ├── DatabaseQueryTools / DatabaseUpdateTools <span class="cm"># SQL 查询 / 变更（双重校验）</span>
 │   │   ├── GroovyTools / PythonTools / NodejsTools / PowershellTools <span class="cm"># 脚本执行（条件装配）</span>
 │   │   ├── SkillManageTools <span class="cm"># skill_install / uninstall / extract</span>
 │   │   ├── LoopEngineeringTools / SessionRecordTools <span class="cm"># 循环工程五步工作流与会话记录</span>
+│   │   ├── RecycleTools <span class="cm"># 上下文回收：ref:// 占位化 + ref_content 取回</span>
 │   │   ├── OpsMcpServerAdditionalToolProvider <span class="cm"># MCP 服务桥接：上传/落盘/异步任务查询</span>
 │   │   ├── OpsMcpServerApiToolProvider <span class="cm"># /mcp/api 端点 + 令牌 + 使用向导工具</span>
 │   │   ├── UrlSigner <span class="cm"># URL 签名（task:// 协议防伪造）</span>
 │   │   └── <span class="pkg">a2a</span>/ AgentTools <span class="cm"># Agent 间调用</span>
 │   └── <span class="pkg">impl.sql</span>/ SQL 校验器 <span class="cm"># AST + 正则双校验</span>
-├── <span class="pkg">skill</span>/
-│   ├── SkillAutoConfiguration <span class="cm"># 30s 热扫描 + SkillsTools Bean</span>
-│   └── GroovySkillScriptRunner <span class="cm"># SkillScriptRunner SPI 实现</span>
-├── <span class="pkg">rag</span>/ RagAutoConfiguration / MemoryTools <span class="cm"># 向量化 + SQLite 向量与文档分片存储</span>
 ├── <span class="pkg">async</span>/ AsyncTaskDispatcher / AsyncTaskHelper / AsyncTaskResolver <span class="cm"># 异步任务调度与 task:// 查询</span>
-├── <span class="pkg">properties</span>/ OpenAiOpsProperties <span class="cm"># 默认 / DashScope 端点与视觉参数</span>
+├── <span class="pkg">rag</span>/ RagEmbeddingCache · RagDataSourceCollector <span class="cm"># 向量磁盘缓存 + 把 RAG 库挂成数据源（ai.rags.datasource.enable）</span>
+├── <span class="pkg">properties</span>/ OpenAiOpsProperties <span class="cm"># ai.openai：默认 / DashScope 端点与视觉参数</span>
 ├── <span class="pkg">util</span>/ OpenAiOptionsUtil <span class="cm"># 端点就近取值</span>
 └── <span class="pkg">tts</span>/ QwenAudioTtsWebSocket · CommandTtsSpeaker <span class="cm"># 语音合成输出</span>
+
+<span class="dir">i2f-springboot-ai-starter · i2f.springboot.ai</span> <span class="cm"># 能力底座 · 17 文件 · 9 个自动配置类 · 前缀 i2f.springboot.ai.*</span>
+├── <span class="pkg">common</span>/ AiCommonAutoConfiguration <span class="cm"># IJsonSerializer(Jackson) + JsonSchemaAnnotationResolver</span>
+├── <span class="pkg">model</span>/ AiModelAutoConfiguration <span class="cm"># rest-openai(默认) / dashscope / openai SDK 三选一</span>
+├── <span class="pkg">agent</span>/ AiAgentAutoConfiguration <span class="cm"># AiAgent = model + serializer + 可选 ragWorker</span>
+├── <span class="pkg">tools</span>/
+│   ├── AiToolsAutoConfiguration <span class="cm"># @AutoConfigureOrder(5000)：appMcpToolProvider / ToolManager 二选一 / 元工具</span>
+│   ├── GroovyDynamicToolProvider <span class="cm"># ./tools/**/*.groovy → 15s 增量重载 → ToolRawDefinitionsProvider</span>
+│   └── McpProviderTools <span class="cm"># 4 个动态工具元工具（不对外暴露）</span>
+├── <span class="pkg">skills</span>/
+│   ├── AiSkillsAutoConfiguration <span class="cm"># skills/ 30s 热扫描 + SkillsTools（supplier 快照）</span>
+│   └── GroovySkillScriptRunner <span class="cm"># SkillScriptRunner SPI：.groovy 进程内执行（3 分钟超时）</span>
+├── <span class="pkg">rags</span>/ AiRagsAutoConfiguration · AiRagsEmbeddingModelProperties · MemoryTools <span class="cm"># 向量/原文/桶存储 + 启动增量入库 + 4 读取器 + 记忆三件套</span>
+└── <span class="pkg">services</span>/ AiServiceProxyInterfaceAutoConfiguration · FactoryBean <span class="cm"># @AiService 接口 → 懒加载代理 Bean</span>

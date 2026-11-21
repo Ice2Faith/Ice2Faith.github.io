@@ -10,14 +10,19 @@ public class OpenAiOperateDto {
     protected boolean enableSkills; // 技能系统开关
     protected boolean enableRags; // 知识库开关
     protected boolean enableLruTools; // MCP 动态工具开关
-    protected boolean enableToolRecommendByIntentRecognize; // 意图识别辅助工具推荐（依赖 enableLruTools）
+    protected boolean enableToolRecommendByIntentRecognize; // 意图识别辅助工具推荐（依赖 enableLruTools），同时启用技能语义推荐
     protected boolean enableEchoRequestPayload; // 请求报文回显
     protected boolean enableMergedSystemMsg; // 系统重排：合并系统消息至首条
     protected boolean enableFullAccess; // 全权限模式（前端免反复审批）
     protected boolean enableAgentsMarkdown; // 注入 ./AGENTS.md 项目约定
-    protected boolean enableRecycleToolMessage; // 工具消息回收（历史 tool 结果占位化）
-    protected Integer recycleToolLastKeepCount; // 保留最近 N 条工具消息，默认 10
+    // 回收工具结果
+    protected boolean enableRecycleToolMessage; // 工具结果回收（历史 tool 结果 ref:// 占位化）
+    protected Integer recycleToolMessageLastKeepCount; // 保留最近 N 条工具消息，默认 10
     protected Integer recycleToolMessageMinLength; // 仅回收超过此长度的内容，默认 512
+    // 回收工具参数
+    protected boolean enableRecycleToolArgument; // 工具调用参数回收（assistant.tool_calls.arguments 占位化）
+    protected Integer recycleToolArgumentLastKeepCount; // 保留最近 N 次工具调用参数，默认 10
+    protected Integer recycleToolArgumentMinLength; // 仅回收超过此长度的参数，默认 512
     protected boolean enableTruth; // 事实注入开关
     protected boolean enableMemories; // 记忆系统开关
     protected String memoryBucket; // 记忆桶（用户级隔离）
@@ -35,6 +40,8 @@ public class OpenAiOperateDto {
 
     protected boolean enableLoopEngineering; // 循环工程开关
     protected Map<String, String> sessionRecordsMap; // 循环工程会话记录（四类）
+    protected Map<String, String> recycleMap; // 上下文回收映射：ref://xxx → 原文（前端持有并原样回传）
 
     protected List<AsyncTaskItem> asyncTasks; // 异步任务状态列表（轮询回传）
+    protected List<OpenAiWebjsToolResult> webjsToolResults; // 浏览器端委托工具结果（tool_call_id → content）
 }

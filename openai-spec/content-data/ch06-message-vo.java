@@ -15,6 +15,7 @@ public class OpenAiMessageVo {
     protected OpenAiSystemMessage echo_skill; // 技能声明
     protected OpenAiSystemMessage echo_dynamic_tool; // MCP 动态工具指引
     protected OpenAiSystemMessage echo_loop_engineering; // 循环工程工作流
+    protected OpenAiSystemMessage echo_system_inject; // 附加系统注入（会话记录 / AGENTS.md / 技能推荐）
 
     // ---- 事实注入三态回显（Truth 三元组）----
     protected OpenAiSystemMessage echo_truth_prompt; // 事实使用方式
@@ -29,6 +30,6 @@ public class OpenAiMessageVo {
     protected List<AsyncTaskItem> asyncTasks; // 异步任务列表
 }
 
-// 其余回显类型（echo_progress / echo_lru_tools / echo_request_payload /
-// echo_session_records_map / echo_interject）不占独立字段：
-// Controller 直接把载荷序列化进 OpsSecureReturn.data，用 withAttr("type", ...) 打标记。
+// 其余回显类型（echo_progress / echo_usage / echo_lru_tools / echo_request_payload /
+// echo_session_records_map / echo_recycle_map / echo_interject）不占独立字段：
+// Controller 统一经 echoJsonMessage 把载荷序列化进 OpsSecureReturn.data，用 withAttr("type", ...) 打标记。

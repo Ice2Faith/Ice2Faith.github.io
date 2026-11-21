@@ -13,7 +13,15 @@
 
     <div class="reveal">
       <DiagramPanel src="assets/diagrams/masthead-loop.svg"
-                    caption="核心消息循环 — 一次对话即一轮消息列表的维护与推理"/>
+                    caption="0 层总览 · 核心消息循环 — 一次对话即一轮消息列表的维护与推理"/>
+      <DiagramPanel src="assets/diagrams/ch01-capability-star.svg"
+                    caption="能力星图 · 以 Re-Act 为中心，八条辐条即 Agent 可触达的能力域"/>
+      <DiagramPanel src="assets/diagrams/ch01-paradigm-map.svg"
+                    caption="范式定位 · 内核 ReAct + 外壳 Harness；实心=已具备，橙=部分实现，虚线=明确缺口"/>
+      <DiagramPanel src="assets/diagrams/ch01-frontend.svg"
+                    caption="1 层 · 前端 — 状态机、消息列表与事件驱动的视图编排"/>
+      <DiagramPanel src="assets/diagrams/ch01-controller.svg"
+                    caption="1 层 · Controller — 三重门校验、上下文装配、Re-Act 与 SSE 中继"/>
     </div>
   </div>
 </template>

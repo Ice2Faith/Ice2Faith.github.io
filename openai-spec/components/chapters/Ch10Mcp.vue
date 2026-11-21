@@ -37,6 +37,13 @@
         </tr>
       </SpecTable>
 
+      <BodyText size="13.5px">这四个元工具由 <code>i2f-springboot-ai-starter</code> 的 <code>AiToolsAutoConfiguration.mcpProviderTools</code>
+        装配（开关 <code>i2f.springboot.ai.tools.mcp-gateway.enable</code>），ops-starter 只负责把它们接进控制台会话。工具池有两路来源：<code>ContextMcpToolGatewayManager</code>
+        聚合的远程 <code>McpToolProvider</code>，以及 <code>ContextAppToolManager</code> 扫描的本地 Bean——后者每次 <code>listTools()</code>
+        都重新解析容器，因此运行期新出现的工具（例如落在
+        <code>./tools</code> 下的 Groovy 脚本，15 秒热载后）无需重启即可被目录看见。
+      </BodyText>
+
       <PanelTitle title="意图识别辅助工具推荐 — 先猜意图，再给工具" />
       <BodyText size="13.5px">动态工具虽能按需装载，但 LLM 仍需从零开始「翻目录」——对上百个工具提供商的场景，逐步发现本身就需要消耗额外的推理轮次。意图识别方案在
         LRU 动态工具的基础上引入<b>前置过滤</b>：利用 <code>@ToolIntent</code> 注解为每个工具标注意图标签，再由 LLM 根据用户问题<b>先推断意图</b>，将推断出的意图标签对应的工具<b>优先插入
