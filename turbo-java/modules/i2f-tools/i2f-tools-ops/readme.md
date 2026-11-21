@@ -12,16 +12,16 @@
 
 ### 内部依赖（i2f）
 
-| 依赖 | Maven 坐标 | scope | optional | 说明 |
-| --- | --- | --- | --- | --- |
-| i2f-launcher | `i2f.turbo:i2f-launcher` | compile | 否 | 提供 `ExtApplicationLauncher`（jar 的 `Main-Class`），实现两级启动与 `plugins` 动态类加载 |
-| i2f-springboot-ops-starter | `i2f.turbo:i2f-springboot-ops-starter` | compile | 否 | ops 控制台核心 Starter：OpenAI/DashScope 对话、数据源、`TmpFileTools`、`OpsConsts.BASE_URL_PROPERTY` 等 |
-| i2f-springboot-ssh-tunnel-starter | `i2f.turbo:i2f-springboot-ssh-tunnel-starter` | compile | 否 | SSH 隧道能力（`i2f.springboot.ssh.tunnel.*`），用于穿透到内网数据源 |
-| i2f-springboot-xproc4j-starter | `i2f.turbo:i2f-springboot-xproc4j-starter` | compile | 否 | XProc4J 存储过程引擎装配（`xproc4j.*` 配置段来源） |
-| i2f-springboot-ai-mcp-client | `i2f.turbo:i2f-springboot-ai-mcp-client` | compile | 否 | AI MCP 客户端能力（`ai.tools.mcp-gateway` 相关） |
-| i2f-extension-browser-selenium | `i2f.turbo:i2f-extension-browser-selenium` | compile | 否 | Selenium 网页搜索/抓取封装（`SeleniumWebSearchTools` 依赖） |
-| i2f-extension-browser-playwright | `i2f.turbo:i2f-extension-browser-playwright` | compile | 否 | Playwright 网页搜索/抓取封装（`PlaywrightWebSearchTools` 依赖） |
-| lombok | `org.projectlombok:lombok` | provided | 是 | 由本模块自带 DM 治理，广泛用于 `@Data`/`@NoArgsConstructor` |
+| 依赖                                | Maven 坐标                                      | scope    | optional | 说明                                                                                       |
+|-----------------------------------|-----------------------------------------------|----------|----------|------------------------------------------------------------------------------------------|
+| i2f-launcher                      | `i2f.turbo:i2f-launcher`                      | compile  | 否        | 提供 `ExtApplicationLauncher`（jar 的 `Main-Class`），实现两级启动与 `plugins` 动态类加载                  |
+| i2f-springboot-ops-starter        | `i2f.turbo:i2f-springboot-ops-starter`        | compile  | 否        | ops 控制台核心 Starter：OpenAI/DashScope 对话、数据源、`TmpFileTools`、`OpsConsts.BASE_URL_PROPERTY` 等 |
+| i2f-springboot-ssh-tunnel-starter | `i2f.turbo:i2f-springboot-ssh-tunnel-starter` | compile  | 否        | SSH 隧道能力（`i2f.springboot.ssh.tunnel.*`），用于穿透到内网数据源                                       |
+| i2f-springboot-xproc4j-starter    | `i2f.turbo:i2f-springboot-xproc4j-starter`    | compile  | 否        | XProc4J 存储过程引擎装配（`xproc4j.*` 配置段来源）                                                      |
+| i2f-springboot-ai-mcp-client      | `i2f.turbo:i2f-springboot-ai-mcp-client`      | compile  | 否        | AI MCP 客户端能力（配合 `i2f.springboot.ai.tools.mcp-gateway` 使用）                                |
+| i2f-extension-browser-selenium    | `i2f.turbo:i2f-extension-browser-selenium`    | compile  | 否        | Selenium 网页搜索/抓取封装（`SeleniumWebSearchTools` 依赖）                                          |
+| i2f-extension-browser-playwright  | `i2f.turbo:i2f-extension-browser-playwright`  | compile  | 否        | Playwright 网页搜索/抓取封装（`PlaywrightWebSearchTools` 依赖）                                      |
+| lombok                            | `org.projectlombok:lombok`                    | provided | 是        | 由本模块自带 DM 治理，广泛用于 `@Data`/`@NoArgsConstructor`                                           |
 
 ### 关键三方依赖（节选，均为 compile）
 
@@ -112,7 +112,8 @@ flowchart TD
 
 - 双形态启动：fat jar 自启（`ExtApplicationLauncher`）或 war 外置容器（`SpringBootServletInitializer`）。
 - 控制台访问：`http://localhost:8080/ops/`，Windows 启动后自动拉起浏览器。
-- 多数据源：内置 9+ JDBC 驱动，配合 `dynamic-datasource` 与 `ssh-tunnel` 连接主从/内网库；ops 面板可配 `i2f.springboot.ops.datasource.datasourceMap`。
+- 多数据源：内置 9+ JDBC 驱动，配合 `dynamic-datasource` 与 `ssh-tunnel` 连接主从/内网库；ops
+  面板可配 `i2f.springboot.ops.datasource.datasource-map`。
 - AI 工具：干支/八字排盘、Funic 数学求值、表单弹窗、屏幕抓取、Pandoc 转换、Selenium/Playwright 网页搜索抓取等，按开关条件注册并可被 LLM 调用。
 - 扩展点：`plugins/` 放自有 starter（经 `spring.factories`/`AutoConfiguration.imports` 注册）即被加载；`skills/` 放 AI 技能文档；`plugins/static/ops/open-ai/role-config.json` 拓展角色设定。
 - 通信安全：`i2f.springboot.ops.secure.cert` 未配置时启动自动生成证书对（见运行日志）。
@@ -129,18 +130,18 @@ flowchart TD
 
 ## 配置项参考（节选）
 
-| 配置 | 含义 | 默认 |
-| --- | --- | --- |
-| `server.port` / `server.servlet.context-path` | 端口 / 上下文（`/ops`） | 8080 |
-| `spring.profiles.active` | 激活 profile | `dev` |
-| `i2f.springboot.ops.open-ai.enable` / `dashscope.enable` | ops 对话提供方开关 | true |
-| `i2f.springboot.ops.secure.cert` | 通信证书（空则自动生成） | 注释 |
-| `i2f.springboot.ops.datasource.datasourceMap` | ops 允许连接的数据源 | 注释示例 |
-| `i2f.springboot.ssh.tunnel.enable` / `servers` | SSH 隧道 | 注释示例 |
-| `ai.tools.*.enable` | 各 AI 工具总开关（见上表） | 混合 |
-| `ai.tools.file.root-path` | 文件工具可访问根目录（越界即拒） | `./ai-root` |
-| `xproc4j.xml-locations` / `watching-directories` | 存储过程 XML 扫描/热更目录 | classpath 模式 |
-| `ai.rags.*` / `ai.tts.qwen.*` | RAG 向量与 TTS 参数 | 默认关闭 |
+| 配置                                                                                       | 含义                                            | 默认           |
+|------------------------------------------------------------------------------------------|-----------------------------------------------|--------------|
+| `server.port` / `server.servlet.context-path`                                            | 端口 / 上下文（`/ops`）                              | 8080         |
+| `spring.profiles.active`                                                                 | 激活 profile                                    | `dev`        |
+| `i2f.springboot.ops.open-ai.enable` / `dashscope.enable`                                 | ops 对话提供方开关                                   | true         |
+| `i2f.springboot.ops.secure.cert`                                                         | 通信证书（空则自动生成）                                  | 注释           |
+| `i2f.springboot.ops.datasource.datasource-map`                                           | ops 允许连接的数据源（字段名 `datasourceMap`）             | 注释示例         |
+| `i2f.springboot.ssh.tunnel.enable` / `servers`                                           | SSH 隧道                                        | 注释示例         |
+| `ai.tools.*` / `i2f.springboot.ai.tools.*`                                               | 工具开关（前者 ops-starter 工具，后者 ai-starter 网关/动态工具） | 混合           |
+| `ai.tools.file.root-path`                                                                | 文件工具可访问根目录（越界即拒）                              | `./ai-root`  |
+| `xproc4j.xml-locations` / `watching-directories`                                         | 存储过程 XML 扫描/热更目录                              | classpath 模式 |
+| `i2f.springboot.ai.rags.enable` / `i2f.springboot.ai.rags.embedding.*` / `ai.tts.qwen.*` | RAG 向量与 TTS 参数                                | 默认关闭         |
 
 ## 模块特性总结
 

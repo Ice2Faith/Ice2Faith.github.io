@@ -26,6 +26,7 @@ Ops Starter 是项目的**运维/运营一体化控制台**，将项目各核心
 4. **多主机代理** — 支持通过 HostId 机制跨主机代理操作，统一管理多台服务器
 5. **前端内嵌** — Vue 2 + Element UI 前端打包在 JAR 内，无需独立部署
 6. **SPI 扩展** — 通过 `IOpsProvider` 接口，各模块自动注册菜单项到控制台首页
+7. **请求限流** — `/ops/**` 入口三级令牌桶（全局 / 每 IP / ANT 路径），超限直接 429，默认开启
 
 ## 依赖关系
 
@@ -116,6 +117,66 @@ i2f:
       secure:
         cert: # SM2 证书，留空则自动生成
 ```
+
+## 请求限流防护
+
+`OpsLimitedAutoConfiguration`（`@ConditionalOnClass(FilterRegistrationBean.class)` + `@ConditionalOnExpression("${i2f.springboot.ops.limited.enable:true}")`）
+以 `FilterRegistrationBean` order=1 注册 `OpsLimitedRequestFilter`，默认挂在 `i2f.springboot.ops.base-url`（`/ops`
+）下。它与国密信封**正交**：
+加密解决「谁能读」，限流解决「能打多快」，两者互不接管。
+
+### 三级令牌桶
+
+`doFilterInternal` 依次过三道闸，任一层 `tryAcquire(1, TimeUnit.SECONDS)` 取不到令牌即抛 `OpsLimitedException`：
+
+| 层级     | 配置项                                             | 桶 Key                            | 默认值            |
+|--------|-------------------------------------------------|----------------------------------|----------------|
+| 全局     | `all-rule.enable/rate-per-second/capacity`      | `ops:limited:all`                | 100/s · 容量 300 |
+| 每 IP   | `every-ip-rule.rule.*`                          | `ops:limited:ip:{ip}`            | 100/s · 容量 300 |
+| ANT 路径 | `path-rules[].ant-path` + `path-rules[].rule.*` | `ops:limited:ant-path:{pattern}` | 无默认（需显式配置）     |
+
+- 全局与路径桶由 `ConcurrentMapKeyedLimiter` 持有，经 `get(key, producer)`
+  惰性创建 `TokenBucketRateLimiter(ratePerSecond, capacity)`；
+- 每 IP 桶存放在 `LruMap<String, ILimiter>` 中，上限由 `every-ip-rule.lru-max-size`（默认 8192，`accessOrder=true` 按访问序淘汰）
+  控制，自动装配类在 `new OpsLimitedRequestFilter()` 后按 `lru-max-size` 注入 `setMaxSize`，避免 IP 维度无限增长；
+- 路径规则用 `AntMatcher` 逐一比对 `ServletContextUtil.getFullPathWithoutContextPath(request)`，同一 pattern 共用一根桶；
+- 过滤范围由 `filter-url-pattern` 决定，留空时取 `OpsConsts.BASE_URL_PROPERTY`（默认 `/ops`）拼接 `/*`，注册后打印日志。
+
+### 拒绝语义
+
+- 三层判定共用一个 `try`，异常在末尾 `catch (OpsLimitedException)` 统一处理：`reset()` → `setStatus(429)` →
+  `text/html;charset=utf-8`，正文为 `global limited.` / `ip limited.` / `path limited.`；
+- 写回前先判 `response.isCommitted()`：SSE 已提交首帧时直接返回，避免 `reset()` 抛 `IllegalStateException`；
+- `chain.doFilter` 同样在 `try` 内——下游控制器/工具抛出的 `OpsLimitedException` 走同一出口，全链路 429 格式一致。
+
+### 配置
+
+```yaml
+i2f:
+  springboot:
+    ops:
+      limited:
+        # filter-url-pattern: /ops/*   # 留空则取 {base-url}/*
+        all-rule:
+          enable: true
+          rate-per-second: 100
+          capacity: 300
+        every-ip-rule:
+          lru-max-size: 8192
+          rule:
+            enable: true
+            rate-per-second: 100
+            capacity: 300
+        path-rules:
+          - ant-path: /ops/open-ai/*
+            rule:
+              enable: true
+              rate-per-second: 20
+              capacity: 50
+```
+
+> 令牌桶参数在首次取桶时固化，运行期改配置不生效，需重启；`every-ip-rule` 的 `enable/rate-per-second/capacity`
+> 已收拢到 `rule` 子对象，旧的平铺写法会被 Boot 宽松绑定静默忽略。
 
 ## 主机身份与代理
 
@@ -304,25 +365,39 @@ i2f:
 
 **内置 AI 工具（Function Calling）**:
 
-| 工具类                     | 说明                       |
-|-------------------------|--------------------------|
-| `DatetimeTools`         | 日期时间工具                   |
-| `RandomTools`           | 随机数工具                    |
-| `UidTools`              | UID 生成工具                 |
-| `JceTools`              | JCE 加密工具                 |
-| `CodecTools`            | 编解码工具                    |
-| `DatabaseMetadataTools` | 数据库元数据工具                 |
-| `DatabaseQueryTools`    | 数据库查询工具                  |
-| `LocalFileTools`        | 本地文件工具（411 行）            |
-| `CommandTools`          | 命令执行工具                   |
-| `WebDownloadTools`      | 网页下载工具                   |
-| `LunarTools`            | 农历日历工具                   |
-| `AgentTools`            | Agent-to-Agent 工具（126 行） |
+| 工具类                     | 说明                                    |
+|-------------------------|---------------------------------------|
+| `DatetimeTools`         | 日期时间工具                                |
+| `RandomTools`           | 随机数工具                                 |
+| `UidTools`              | UID 生成工具                              |
+| `JceTools`              | JCE 加密工具                              |
+| `CodecTools`            | 编解码工具                                 |
+| `DatabaseMetadataTools` | 数据库元数据工具                              |
+| `DatabaseQueryTools`    | 数据库查询工具                               |
+| `LocalFileTools`        | 本地文件工具（411 行）                         |
+| `CommandTools`          | 命令执行工具                                |
+| `SshTools`              | SSH 具名主机工具（命令 / 上传 / 下载，本机路径复用本地文件沙箱） |
+| `WebDownloadTools`      | 网页下载工具                                |
+| `LunarTools`            | 农历日历工具                                |
+| `AgentTools`            | Agent-to-Agent 工具（126 行）              |
 
 **SQL 安全验证**: `OpsSqlValidator` 接口 + 两种实现（正则 / JSqlParser AST），防止 AI 工具执行危险 SQL。
 
 **技能系统**: `SkillAutoConfiguration` 自动扫描文件系统技能定义，30
 秒刷新，通过 `ai.skills.enable` / `ai.skills.tool.enable` 配置开关。
+
+**ReAct 循环与插话（安全临界点）**:
+
+- 一次 `/stream` 请求 = 一次 LLM 往返：服务端在本轮返回前完成 `tool_calls` 执行并追加 `tool` 响应，前端收到 `tool_calls` 后再发起下一轮，形成 ReAct 循环
+- 前端严格「单飞」：同一会话同一时刻只允许一个请求在飞，`session.sending` 即单飞锁，多个续跑请求统一排队后串行执行
+- 循环运行中的用户输入一律进入会话维度插话队列 `session.interjects`，不再直接发起请求（避免两个 ReAct 循环并行交错）
+- 插话只在安全临界点投递：前端构建请求时取出队首插话放入 `req.interject`，后端 `appendInterjectMessage` 在 `tool_calls` 与 `tool` 成对完整、且工具回传的附加消息插入完成之后，把插话追加为本轮最后一条消息；不在安全边界（最后一条是待响应的 `assistant(tool_calls)`）则跳过，由下一轮继续携带
+- 插话显示与其他回显消息一致，统一由后端在真正插入的时机回显：后端用 `canAppendInterject` 校验后调用 `echoInterjectMessage` 发送 `echo_interject`（回显原始内容，早于 `convertOpenAiUserMessage` 追加附件清单），前端收到后按 `insertBeforeLast` 插入到助手占位之前，保证 LLM 的答复消息始终是最后一条；本轮结束仍未回显（异常/中断/不在安全边界）则退回队首，同一条连续 3 次未投递才丢弃
+- 本轮结束后统一在 `finally` 中通过 `drainSessionContinues` 串行调度下一轮（会话总结优先，其次普通续跑，最后插话投递）
+- 自动/手动会话总结同样纳入单飞调度：指令消息先落历史，再通过 `requestSessionContinue` 排队（`action=summary-history`）；续跑队列按 action 类型分槽存储（`summary-history` / `continue`），不同类型互不覆盖，调度优先级为「会话总结 > 普通续跑 > 插话投递」
+- 会话总结独占一轮：总结指令所在轮次及其后的工具续跑轮（`session.lastOptions.action=summary-history`）不投递插话，插话留在队列由下一轮投递；后端同时通过 `req.action`（`OpenAiOperateDto.action`）二次把关，命中 `ACTION_SUMMARY_HISTORY` 时不插入、不回显插话，避免一轮内同时携带总结指令与插话导致总结内容被干扰
+- 需要用户交互（工具授权/表单）或异常/中断时挂起，不自动续跑；页面刷新后重置 `sending` 等运行时状态，避免会话被视为运行中
+- 交互提示：输入框上方悬浮 `pending-interject-bar`，展示队首插话预览与排队数，并支持「撤回本条到输入框继续编辑」（回填时剔除发送时间前缀并自动聚焦输入框）与「丢弃本条」；窄屏（`max-width: 768px`）下收紧边距字号并隐藏文案只留图标
 
 ### 13. DashScope 通义千问 AI 工具
 
@@ -348,16 +423,17 @@ i2f:
 
 ## 自动装配
 
-### AutoConfiguration.imports（55 个自动配置类）
+### AutoConfiguration.imports（84 个自动配置类）
 
 所有自动配置类通过 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` 注册，覆盖：
 
 - 首页与菜单（`OpsHomeController`）
 - 安全传输（`OpsSecureTransfer` / `OpsSecureHelper` / `OpsSecureAutoConfiguration`）
+- 请求限流（`OpsLimitedAutoConfiguration` → `OpsLimitedRequestFilter`，order=1，默认 url-pattern `{base-url}/*`）
 - 主机标识（`HostIdHelper` / `HostIdProxyHelper`）
 - 数据源（`DatasourceAutoConfiguration` + 3 种 Collector + Provider + Helper + 2 个 Controller）
 - 各功能控制器（Redis / SSH / MinIO / AwsS3 / ElasticSearch / XProc4J / OpenAI / DashScope × 12）
-- AI 工具（`SkillAutoConfiguration` + 12 个 Tools 实现 + `SpringContextToolDefinitionProvider`）
+- AI 工具（24 个 openai 域 `@Tools` 实现 + 8 个 DashScope 多媒体工具 + `SpringContextToolDefinitionProvider`）
 
 ### IOpsProvider 扩展接口
 
@@ -397,25 +473,25 @@ public interface IOpsProvider {
 
 ## 源文件清单
 
-### Java 源码（132 文件）
+### Java 源码（185 文件）
 
-| 包               | 文件数 | 说明                                                     |
-|-----------------|-----|--------------------------------------------------------|
-| `home`          | 3   | 首页控制器 + IOpsProvider 接口 + 菜单 DTO                       |
-| `common`        | 12  | 安全传输/主机标识/异常/计时/JSON 写入器                               |
-| `app`           | 15  | 应用管理（3 控制器 + 10 DTO + 1 工具 + 1 表达式）                    |
-| `host`          | 4   | 主机管理（1 控制器 + 3 DTO）                                    |
-| `ssh`           | 4   | SSH 管理（1 控制器 + 3 DTO）                                  |
-| `datasource`    | 14  | 数据库管理（2 控制器 + 1 配置 + 3 Provider + 1 Helper + 7 DTO）    |
-| `redis`         | 5   | Redis 管理（1 控制器 + 1 动态工具 + 3 DTO）                       |
-| `elasticsearch` | 4   | ES 管理（1 控制器 + 1 Helper + 2 DTO）                        |
-| `minio`         | 3   | MinIO 管理（1 控制器 + 2 DTO）                                |
-| `awss3`         | 2   | AWS S3 管理（1 控制器 + 1 DTO）                               |
-| `xxljob`        | 4   | XXL-JOB 管理（1 控制器 + 3 DTO）                              |
-| `xproc4j`       | 4   | XProc4J 管理（1 控制器 + 1 Helper + 2 DTO）                   |
-| `openai`        | 19  | AI 对话（1 控制器 + 1 Skill 配置 + 1 Provider + 13 工具 + 3 DTO） |
-| `dashscope`     | 24  | DashScope（12 控制器 + 12 DTO）                             |
-| `util`          | 1   | HumanUtil（人类可读文件大小）                                    |
+| 包               | 文件数 | 说明                                                  |
+|-----------------|-----|-----------------------------------------------------|
+| `home`          | 5   | 首页控制器 + IOpsProvider 接口 + 菜单 DTO/分组                 |
+| `common`        | 22  | 安全传输/主机标识/限流（`limit` 子包 4 类）/异常/计时/JSON 写入器         |
+| `app`           | 16  | 应用管理（控制器 + DTO + 工具 + 表达式）                          |
+| `host`          | 3   | 主机管理（1 控制器 + 2 DTO）                                 |
+| `ssh`           | 2   | SSH 管理（1 控制器 + 1 DTO）                               |
+| `datasource`    | 17  | 数据库管理（控制器 + 配置 + Provider/Collector + Helper + DTO） |
+| `redis`         | 7   | Redis 管理（控制器 + 动态工具 + DTO）                          |
+| `elasticsearch` | 3   | ES 管理（1 控制器 + 1 Helper + 1 DTO）                     |
+| `minio`         | 2   | MinIO 管理（1 控制器 + 1 DTO）                             |
+| `awss3`         | 2   | AWS S3 管理（1 控制器 + 1 DTO）                            |
+| `xxljob`        | 3   | XXL-JOB 管理（1 控制器 + 2 DTO/Meta）                      |
+| `xproc4j`       | 3   | XProc4J 管理（1 控制器 + 1 Helper + 1 DTO）                |
+| `openai`        | 63  | AI 对话（控制器 + Skill 配置 + Provider + 工具实现 + DTO）       |
+| `dashscope`     | 36  | DashScope（12 控制器 + 工具实现 + DTO）                      |
+| `util`          | 1   | HumanUtil（人类可读文件大小）                                 |
 
 ## 设计特点
 
@@ -426,7 +502,8 @@ public interface IOpsProvider {
 5. **多主机代理** — HostId 机制 + `HostIdProxyHelper` 实现跨主机统一管理
 6. **前端内嵌** — 所有前端资源打包在 JAR 内，引入依赖即可使用
 7. **复用项目生态** — 文件系统操作复用 `IFileSystem` 抽象，数据库操作复用 `JdbcResolver`，AI 复用 `i2f-ai-std`
-8. **AI 工具集成** — 12 种内置 Function Calling 工具 + 技能系统 + SQL 安全验证
+8. **AI 工具集成** — 24 个领域 Function Calling 工具 + 8 个 DashScope 多媒体工具 + 技能系统 + SQL 安全验证
+9. **入口限流** — 三层令牌桶（全局 / 每 IP / ANT 路径）+ LRU 上限保护 IP 桶 + 统一 429 出口
 
 ## 相关文档
 
