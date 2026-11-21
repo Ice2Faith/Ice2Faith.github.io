@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 490" role="img" aria-label="Agent 范式定位评估图">
+    <text class="svg-lbl-sm" x="20" y="26" style="fill:#0b7285;letter-spacing:.18em;">PARADIGM MAP · 范式定位 — 内核
+        ReAct + 外壳 Harness，策略层 Plan-as-context + Agentic RAG
+    </text>
+    <rect class="svg-node svg-node-teal" x="650" y="12" width="10" height="10" rx="1"/>
+    <text class="svg-lbl-sm" x="666" y="21">已具备</text>
+    <rect class="svg-node svg-node-acc" x="712" y="12" width="10" height="10" rx="1"/>
+    <text class="svg-lbl-sm" x="728" y="21">部分实现</text>
+    <rect x="800" y="12" width="10" height="10" rx="1" fill="#f1f3f5" stroke="#adb5bd" stroke-width="1.2"
+          stroke-dasharray="3 3"/>
+    <text class="svg-lbl-sm" x="816" y="21">明确缺失</text>
+
+    <rect class="svg-node" x="20" y="44" width="140" height="78" rx="3"/>
+    <text class="svg-lbl" x="90" y="76" text-anchor="middle">内核层</text>
+    <text class="svg-lbl-sm" x="90" y="96" text-anchor="middle">循环怎么转</text>
+
+    <rect class="svg-node svg-node-teal" x="172" y="52" width="367" height="62" rx="3"/>
+    <text class="svg-lbl" x="355" y="76" text-anchor="middle">ReAct（function-calling 变体）</text>
+    <text class="svg-lbl-sm" x="355" y="96" text-anchor="middle">Thought 在 content · Action 是 tool_calls</text>
+
+    <rect class="svg-node svg-node-teal" x="553" y="52" width="367" height="62" rx="3"/>
+    <text class="svg-lbl" x="736" y="76" text-anchor="middle">Agent Loop / Loop Engineering</text>
+    <text class="svg-lbl-sm" x="736" y="96" text-anchor="middle">服务端一次跑完 · 前端一轮一请求续跑</text>
+
+    <rect class="svg-node" x="20" y="132" width="140" height="118" rx="3"/>
+    <text class="svg-lbl" x="90" y="185" text-anchor="middle">控制策略层</text>
+    <text class="svg-lbl-sm" x="90" y="205" text-anchor="middle">循环里放什么</text>
+
+    <rect class="svg-node svg-node-acc" x="172" y="140" width="240" height="48" rx="3"/>
+    <text class="svg-lbl" x="292" y="160" text-anchor="middle">Plan-as-context（Plan Mode）</text>
+    <text class="svg-lbl-sm" x="292" y="176" text-anchor="middle">plan/checklist 记录 · 无独立执行器</text>
+
+    <rect class="svg-node svg-node-teal" x="426" y="140" width="240" height="48" rx="3"/>
+    <text class="svg-lbl" x="546" y="160" text-anchor="middle">Agentic RAG（双通道）</text>
+    <text class="svg-lbl-sm" x="546" y="176" text-anchor="middle">被动注入 + rag_search 工具</text>
+
+    <rect class="svg-node svg-node-teal" x="680" y="140" width="240" height="48" rx="3"/>
+    <text class="svg-lbl" x="800" y="160" text-anchor="middle">Context Engineering</text>
+    <text class="svg-lbl-sm" x="800" y="176" text-anchor="middle">压缩 · ref:// 卸载 · KvCache</text>
+
+    <rect class="svg-node svg-node-acc" x="172" y="194" width="367" height="48" rx="3"/>
+    <text class="svg-lbl" x="355" y="214" text-anchor="middle">A2A 外联（非内部编排）</text>
+    <text class="svg-lbl-sm" x="355" y="230" text-anchor="middle">AgentTools 转发 · intent_recognize 预筛 · MCP 暴露
+    </text>
+
+    <rect class="svg-node svg-node-teal" x="553" y="194" width="367" height="48" rx="3"/>
+    <text class="svg-lbl" x="736" y="214" text-anchor="middle">工具 / 技能渐进披露</text>
+    <text class="svg-lbl-sm" x="736" y="230" text-anchor="middle">26 类 @Tools · SKILL.md 召回 · 目录装载</text>
+
+    <rect class="svg-node" x="20" y="260" width="140" height="64" rx="3"/>
+    <text class="svg-lbl" x="90" y="288" text-anchor="middle">运行时外层</text>
+    <text class="svg-lbl-sm" x="90" y="308" text-anchor="middle">模型之外的一切</text>
+
+    <rect class="svg-node svg-node-dark pulse-soft" x="172" y="268" width="180" height="48" rx="3"/>
+    <text class="svg-lbl-w" x="262" y="288" text-anchor="middle">Harness 外壳</text>
+    <text class="svg-lbl-sm" x="262" y="304" text-anchor="middle" style="fill:#8fb3d6;">Agent = Model + Harness</text>
+
+    <rect class="svg-node svg-node-teal" x="361" y="268" width="180" height="48" rx="3"/>
+    <text class="svg-lbl" x="451" y="288" text-anchor="middle">HITL 护栏</text>
+    <text class="svg-lbl-sm" x="451" y="304" text-anchor="middle">tag 分类 → 审批弹窗</text>
+
+    <rect class="svg-node svg-node-teal" x="550" y="268" width="180" height="48" rx="3"/>
+    <text class="svg-lbl" x="640" y="288" text-anchor="middle">MCP 双向</text>
+    <text class="svg-lbl-sm" x="640" y="304" text-anchor="middle">客户端联邦 · 服务端暴露</text>
+
+    <rect class="svg-node svg-node-teal" x="739" y="268" width="180" height="48" rx="3"/>
+    <text class="svg-lbl" x="829" y="288" text-anchor="middle">长程续跑</text>
+    <text class="svg-lbl-sm" x="829" y="304" text-anchor="middle">记录恢复 · 断点续做</text>
+
+    <rect class="svg-node" x="20" y="334" width="140" height="118" rx="3" style="fill:#f8f9fa;stroke-dasharray:5 4;"/>
+    <text class="svg-lbl" x="90" y="387" text-anchor="middle" style="fill:#868e96;">明确缺口</text>
+    <text class="svg-lbl-sm" x="90" y="407" text-anchor="middle">按 ROI 补齐</text>
+
+    <rect x="172" y="342" width="240" height="48" rx="3" fill="#f8f9fa" stroke="#adb5bd" stroke-width="1.2"
+          stroke-dasharray="4 4"/>
+    <text class="svg-lbl" x="292" y="362" text-anchor="middle" style="fill:#495057;">Reflection 自省回路</text>
+    <text class="svg-lbl-sm" x="292" y="378" text-anchor="middle" style="fill:#868e96;">只有失败计数，没有 critic 环
+    </text>
+
+    <rect x="426" y="342" width="240" height="48" rx="3" fill="#f8f9fa" stroke="#adb5bd" stroke-width="1.2"
+          stroke-dasharray="4 4"/>
+    <text class="svg-lbl" x="546" y="362" text-anchor="middle" style="fill:#495057;">Sandbox 隔离</text>
+    <text class="svg-lbl-sm" x="546" y="378" text-anchor="middle" style="fill:#868e96;">powershell / python 直连宿主
+    </text>
+
+    <rect x="680" y="342" width="240" height="48" rx="3" fill="#f8f9fa" stroke="#adb5bd" stroke-width="1.2"
+          stroke-dasharray="4 4"/>
+    <text class="svg-lbl" x="800" y="362" text-anchor="middle" style="fill:#495057;">DAG / Graph 编排</text>
+    <text class="svg-lbl-sm" x="800" y="378" text-anchor="middle" style="fill:#868e96;">线性循环，无分支依赖</text>
+
+    <rect x="172" y="396" width="240" height="48" rx="3" fill="#f8f9fa" stroke="#adb5bd" stroke-width="1.2"
+          stroke-dasharray="4 4"/>
+    <text class="svg-lbl" x="292" y="416" text-anchor="middle" style="fill:#495057;">Eval 回归 harness</text>
+    <text class="svg-lbl-sm" x="292" y="432" text-anchor="middle" style="fill:#868e96;">无评测集与基准</text>
+
+    <rect x="426" y="396" width="240" height="48" rx="3" fill="#f8f9fa" stroke="#adb5bd" stroke-width="1.2"
+          stroke-dasharray="4 4"/>
+    <text class="svg-lbl" x="546" y="416" text-anchor="middle" style="fill:#495057;">可校验 checklist</text>
+    <text class="svg-lbl-sm" x="546" y="432" text-anchor="middle" style="fill:#868e96;">完成与否靠模型自述</text>
+
+    <rect x="680" y="396" width="240" height="48" rx="3" fill="#f8f9fa" stroke="#adb5bd" stroke-width="1.2"
+          stroke-dasharray="4 4"/>
+    <text class="svg-lbl" x="800" y="416" text-anchor="middle" style="fill:#495057;">子 agent 上下文隔离</text>
+    <text class="svg-lbl-sm" x="800" y="432" text-anchor="middle" style="fill:#868e96;">A2A 整包继承历史</text>
+
+    <text class="svg-lbl-sm" x="20" y="476">判定：内核 ReAct · 外壳 Harness · 策略 Plan-as-context + Agentic RAG ——
+        强在护栏、上下文工程与双向 MCP；缺口集中在验证、隔离与编排
+    </text>
+</svg>

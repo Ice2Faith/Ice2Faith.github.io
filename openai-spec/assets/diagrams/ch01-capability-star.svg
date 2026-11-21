@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 620" role="img" aria-label="Agent 能力星图">
+    <text class="svg-lbl-sm" x="20" y="26" style="fill:#0b7285;letter-spacing:.18em;">CAPABILITY MAP · Agent
+        可触达的能力边界（中心为 Re-Act，辐条为能力域，副标题为该域内置工具分类）
+    </text>
+
+    <ellipse class="svg-line svg-dash ring-spin" cx="470" cy="310" rx="372" ry="222" fill="none"/>
+    <path class="svg-line flow-anim" d="M470,310 L470,88"/>
+    <path class="svg-line flow-anim flow-slow" d="M470,310 L733,153"/>
+    <path class="svg-line flow-anim flow-fast" d="M470,310 L842,310"/>
+    <path class="svg-line flow-anim flow-slow" d="M470,310 L733,467"/>
+    <path class="svg-line flow-anim flow-fast" d="M470,310 L470,532"/>
+    <path class="svg-line flow-anim flow-slow" d="M470,310 L207,467"/>
+    <path class="svg-line flow-anim" d="M470,310 L98,310"/>
+    <path class="svg-line flow-anim flow-slow" d="M470,310 L207,153"/>
+
+    <circle cx="470" cy="310" r="124" fill="none" class="svg-line svg-line-acc pulse-soft"
+            style="stroke-opacity:.55;animation-duration:3.2s"/>
+    <circle cx="470" cy="310" r="152" fill="none" class="svg-line pulse-soft"
+            style="stroke-opacity:.35;animation-duration:4.8s;animation-delay:-1.8s"/>
+
+    <rect class="svg-node svg-node-teal" x="382" y="57" width="176" height="62" rx="3"/>
+    <text class="svg-lbl" x="470" y="83" text-anchor="middle">工具体系 27 个 @Tools</text>
+    <text class="svg-lbl-sm" x="470" y="103" text-anchor="middle">数据库 · 主机 · 脚本 · 文件</text>
+
+    <rect class="svg-node svg-node-acc pulse-soft" x="645" y="122" width="176" height="62" rx="3"/>
+    <text class="svg-lbl" x="733" y="148" text-anchor="middle">MCP 动态工具</text>
+    <text class="svg-lbl-sm" x="733" y="168" text-anchor="middle">目录 · 检索 · 装载 + LRU</text>
+
+    <rect class="svg-node svg-node-green pulse-soft" x="754" y="279" width="176" height="62" rx="3"/>
+    <text class="svg-lbl" x="842" y="305" text-anchor="middle">RAG 知识库</text>
+    <text class="svg-lbl-sm" x="842" y="325" text-anchor="middle">增量入库 · 向量检索</text>
+
+    <rect class="svg-node svg-node-teal" x="645" y="436" width="176" height="62" rx="3"/>
+    <text class="svg-lbl" x="733" y="462" text-anchor="middle">记忆系统</text>
+    <text class="svg-lbl-sm" x="733" y="482" text-anchor="middle">会话 · 事实 · 桶分区</text>
+
+    <rect class="svg-node svg-node-green pulse-soft" x="382" y="501" width="176" height="62" rx="3"/>
+    <text class="svg-lbl" x="470" y="527" text-anchor="middle">技能 SKILL</text>
+    <text class="svg-lbl-sm" x="470" y="547" text-anchor="middle">SKILL.md · 30s 热载</text>
+
+    <rect class="svg-node svg-node-teal" x="119" y="436" width="176" height="62" rx="3"/>
+    <text class="svg-lbl" x="207" y="462" text-anchor="middle">异步与多媒体</text>
+    <text class="svg-lbl-sm" x="207" y="482" text-anchor="middle">TTS · 文生图 · task://</text>
+
+    <rect class="svg-node svg-node-dark" x="10" y="279" width="176" height="62" rx="3"/>
+    <text class="svg-lbl-w" x="98" y="305" text-anchor="middle">MCP 服务暴露</text>
+    <text class="svg-lbl-sm" x="98" y="325" text-anchor="middle" style="fill:#8fb3d6;">/mcp/api · v2024 / v2026</text>
+
+    <rect class="svg-node svg-node-acc" x="119" y="122" width="176" height="62" rx="3"/>
+    <text class="svg-lbl" x="207" y="148" text-anchor="middle">安全与限流</text>
+    <text class="svg-lbl-sm" x="207" y="168" text-anchor="middle">国密四件套 · 三层令牌桶</text>
+
+    <rect class="svg-node svg-node-dark" x="360" y="262" width="220" height="96" rx="3"/>
+    <text class="svg-lbl-w" x="470" y="292" text-anchor="middle">AiAgent · Re-Act</text>
+    <text class="svg-lbl-sm" x="470" y="316" text-anchor="middle" style="fill:#8fb3d6;">消息列表即状态 · 护栏可插拔
+    </text>
+    <text class="svg-lbl-sm" x="470" y="338" text-anchor="middle" style="fill:#8fb3d6;">AiModel ↔ ToolManager</text>
+
+    <text class="svg-lbl-sm" x="20" y="598">同一批工具同时供本机 Agent、MCP 客户端、MCP 服务端三方复用 ——
+        能力域可增删，中心循环不变
+    </text>
+</svg>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 404" role="img" aria-label="ai-starter 装配与扩展点图">
+    <defs>
+        <marker id="ah13s" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#2f9e44"/>
+        </marker>
+    </defs>
+    <rect class="svg-node svg-node-dark" x="16" y="14" width="908" height="44" rx="3"/>
+    <text class="svg-lbl-w" x="32" y="42">i2f-springboot-ai-starter — 通用 AI 装配：9 个类 · 前缀 i2f.springboot.ai.* ·
+        11 组 / 49 项配置
+    </text>
+
+    <path class="svg-dash" d="M122,58 L122,76" marker-end="url(#ah13s)"/>
+    <path class="svg-dash" d="M347,58 L347,76" marker-end="url(#ah13s)"/>
+    <path class="svg-dash" d="M572,58 L572,76" marker-end="url(#ah13s)"/>
+    <path class="svg-dash" d="M797,58 L797,76" marker-end="url(#ah13s)"/>
+
+    <rect class="svg-node svg-node-teal" x="16" y="76" width="213" height="92" rx="3"/>
+    <text class="svg-lbl" x="28" y="98">AiCommonAutoConfiguration</text>
+    <text class="svg-lbl-sm" x="28" y="118">IJsonSerializer → Jackson</text>
+    <text class="svg-lbl-sm" x="28" y="134">JsonSchemaAnnotationResolver</text>
+    <text class="svg-lbl-sm" x="28" y="150">门控 i2f.springboot.ai.enable</text>
+
+    <rect class="svg-node svg-node-teal" x="241" y="76" width="213" height="92" rx="3"/>
+    <text class="svg-lbl" x="253" y="98">AiModelAutoConfiguration</text>
+    <text class="svg-lbl-sm" x="253" y="118">AiModel 三选一（缺失才装配）</text>
+    <text class="svg-lbl-sm" x="253" y="134">rest-openai 默认 · dashscope</text>
+    <text class="svg-lbl-sm" x="253" y="150">openai SDK · 读超时 10min</text>
+
+    <rect class="svg-node svg-node-teal" x="466" y="76" width="213" height="92" rx="3"/>
+    <text class="svg-lbl" x="478" y="98">AiAgentAutoConfiguration</text>
+    <text class="svg-lbl-sm" x="478" y="118">AiAgent = model + serializer</text>
+    <text class="svg-lbl-sm" x="478" y="134">RagWorker / Resolver 可选注入</text>
+    <text class="svg-lbl-sm" x="478" y="150">Re-Act 循环的装配根</text>
+
+    <rect class="svg-node svg-node-teal" x="691" y="76" width="233" height="92" rx="3"/>
+    <text class="svg-lbl" x="703" y="98">AiToolsAutoConfiguration</text>
+    <text class="svg-lbl-sm" x="703" y="118">@AutoConfigureOrder(5000)</text>
+    <text class="svg-lbl-sm" x="703" y="134">appMcpToolProvider · ToolManager 二选一</text>
+    <text class="svg-lbl-sm" x="703" y="150">mcpProviderTools 四元工具</text>
+
+    <rect class="svg-node svg-node-green" x="16" y="180" width="213" height="92" rx="3"/>
+    <text class="svg-lbl" x="28" y="202">AiSkillsAutoConfiguration</text>
+    <text class="svg-lbl-sm" x="28" y="222">skills/ 30s 热扫描 → 快照 Map</text>
+    <text class="svg-lbl-sm" x="28" y="238">RW 锁 + supplier 读取</text>
+    <text class="svg-lbl-sm" x="28" y="254">GroovySkillScriptRunner(.groovy)</text>
+
+    <rect class="svg-node svg-node-green" x="241" y="180" width="213" height="92" rx="3"/>
+    <text class="svg-lbl" x="253" y="202">AiRagsAutoConfiguration</text>
+    <text class="svg-lbl-sm" x="253" y="222">embedding / store / docs-store</text>
+    <text class="svg-lbl-sm" x="253" y="238">worker：启动 3s 后增量入库</text>
+    <text class="svg-lbl-sm" x="253" y="254">reader.* 四个转换读取器</text>
+
+    <rect class="svg-node svg-node-green" x="466" y="180" width="213" height="92" rx="3"/>
+    <text class="svg-lbl" x="478" y="202">AiServiceProxyInterface…</text>
+    <text class="svg-lbl-sm" x="478" y="222">@AiService 接口 → 代理 Bean</text>
+    <text class="svg-lbl-sm" x="478" y="238">FactoryBean + lazyInit</text>
+    <text class="svg-lbl-sm" x="478" y="254">零实现类的 AI 服务契约</text>
+
+    <rect class="svg-node svg-node-acc" x="691" y="180" width="233" height="92" rx="3"/>
+    <text class="svg-lbl" x="703" y="202">GroovyDynamicToolProvider</text>
+    <text class="svg-lbl-sm" x="703" y="222">./tools/**/*.groovy 递归扫描</text>
+    <text class="svg-lbl-sm" x="703" y="238">15s 增量重编译 + Spring 注入</text>
+    <text class="svg-lbl-sm" x="703" y="254">ToolRawDefinitionsProvider SPI</text>
+
+    <rect class="svg-node svg-node-acc" x="16" y="292" width="908" height="96" rx="3"/>
+    <text class="svg-lbl" x="32" y="316">四个扩展消费点 — 只加 Bean，不改一行装配代码</text>
+    <text class="svg-lbl-sm" x="32" y="338">ToolRawDefinitionsProvider：动态工具源（ToolRawHelper.parseTools
+        每次列工具时收集，GroovyDynamicToolProvider 即实现）
+    </text>
+    <text class="svg-lbl-sm" x="32" y="356">RagFileReader：文档读取器（ContextRagFileReader 汇总容器内全部实现，markitdown
+        / pandoc / easyocr / pdf-easyocr）
+    </text>
+    <text class="svg-lbl-sm" x="32" y="374">SkillScriptRunner：按后缀接管脚本（.groovy 进程内执行）　·　@AiService：接口由
+        AiServiceDynamicProxyHandler 动态实现
+    </text>
+</svg>

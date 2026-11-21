@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 306" role="img" aria-label="Controller 层展开图">
+    <defs>
+        <marker id="ctl-o" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#e8590c"/>
+        </marker>
+        <marker id="ctl-t" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#0b7285"/>
+        </marker>
+    </defs>
+    <text class="svg-lbl-sm" x="20" y="26" style="fill:#e8590c;letter-spacing:.18em;">LAYER 1 · Controller — 安全网关 +
+        工具执行器 + SSE 中继（服务端不保存会话）
+    </text>
+
+    <rect class="svg-node svg-node-acc" x="20" y="42" width="196" height="72" rx="3"/>
+    <text class="svg-lbl" x="118" y="70" text-anchor="middle">① 入口三重门</text>
+    <text class="svg-lbl-sm" x="118" y="94" text-anchor="middle">解密验签 · 限流 · 防重放</text>
+
+    <rect class="svg-node svg-node-acc" x="256" y="42" width="196" height="72" rx="3"/>
+    <text class="svg-lbl" x="354" y="70" text-anchor="middle">② 上下文装配</text>
+    <text class="svg-lbl-sm" x="354" y="94" text-anchor="middle">角色 · 技能 · RAG · 记忆 · 工具</text>
+
+    <rect class="svg-node svg-node-acc pulse-node" x="492" y="42" width="196" height="72" rx="3"/>
+    <text class="svg-lbl" x="590" y="70" text-anchor="middle">③ AiAgent Re-Act</text>
+    <text class="svg-lbl-sm" x="590" y="94" text-anchor="middle">AiModel ↔ ToolManager 并行</text>
+
+    <rect class="svg-node svg-node-dark" x="728" y="42" width="192" height="72" rx="3"/>
+    <text class="svg-lbl-w" x="824" y="70" text-anchor="middle">④ SSE 中继</text>
+    <text class="svg-lbl-sm" x="824" y="94" text-anchor="middle" style="fill:#8fb3d6;">chunk + echo_* 回显</text>
+
+    <path class="svg-line-acc flow-anim" d="M216,78 L256,78" marker-end="url(#ctl-o)"/>
+    <path class="svg-line-acc flow-anim" d="M452,78 L492,78" marker-end="url(#ctl-o)"/>
+    <path class="svg-line-acc flow-anim" d="M688,78 L728,78" marker-end="url(#ctl-o)"/>
+    <path class="svg-line flow-anim flow-slow" d="M590,114 C590,150 470,146 470,180" marker-end="url(#ctl-t)"/>
+
+    <rect class="svg-node svg-node-teal" x="20" y="180" width="288" height="72" rx="3"/>
+    <text class="svg-lbl" x="164" y="208" text-anchor="middle">⑤ HITL 审批</text>
+    <text class="svg-lbl-sm" x="164" y="232" text-anchor="middle">信任标签免审 · 危险工具必审</text>
+
+    <rect class="svg-node svg-node-teal" x="326" y="180" width="288" height="72" rx="3"/>
+    <text class="svg-lbl" x="470" y="208" text-anchor="middle">⑥ 异步任务与副作用</text>
+    <text class="svg-lbl-sm" x="470" y="232" text-anchor="middle">临时文件 · TTS · 文生图 → async_task</text>
+
+    <rect class="svg-node svg-node-teal" x="632" y="180" width="288" height="72" rx="3"/>
+    <text class="svg-lbl" x="776" y="208" text-anchor="middle">⑦ 反向能力暴露</text>
+    <text class="svg-lbl-sm" x="776" y="232" text-anchor="middle">/mcp/api · MCP v2024 / v2026</text>
+
+    <path class="svg-line-teal flow-anim flow-slow" d="M308,216 L326,216" marker-end="url(#ctl-t)"/>
+    <path class="svg-line-teal flow-anim flow-slow" d="M614,216 L632,216" marker-end="url(#ctl-t)"/>
+    <text class="svg-lbl-sm" x="20" y="290">要点：一个 /ops/open-ai/stream 端点完成全部编排；模型 · 工具池 · 技能 · RAG
+        的装配都来自 i2f-springboot-ai-starter
+    </text>
+</svg>
